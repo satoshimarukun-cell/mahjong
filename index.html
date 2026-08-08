@@ -477,7 +477,11 @@ button{cursor:pointer}
           <input type="file" id="bgmFile" accept=".m4a,audio/mp4,audio/x-m4a,audio/aac,audio/*">
           <button class="btn" id="bgmStopBtn">停止</button>
         </div>
-        <div style="font-size:12px;color:#777">BGMは .m4a（AAC）を選択できます。選択した音声はループ再生します。iPhone/iPadでは最初の再生時にユーザー操作が必要な場合があります。</div>
+        <audio id="bgmAudioEl" controls loop playsinline preload="metadata"
+               style="width:100%;margin-top:8px;display:none"></audio>
+        <div id="bgmStatus" style="font-size:12px;color:#777;margin-top:6px">
+          BGMは .m4a（AAC）に対応しています。選択後に自動再生できない場合は、表示される ▶ を1回押してください。
+        </div>
       </div>
     </div>
   </div>
@@ -594,7 +598,10 @@ function saveState(){
 
 async function loadCloudState(){
   const {data,error}=await sb.from("mahjong_state").select("data").eq("id",1).maybeSingle();
-  if(error){ console.error("Supabase load:",error); return false; }
+  if(error){
+    console.error("Supabase load:",error);
+    return false;
+  }
   if(data?.data && Object.keys(data.data).length){
     state=data.data;
     localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
@@ -604,32 +611,137 @@ async function loadCloudState(){
 }
 async function saveCloudState(){
   const {error}=await sb.from("mahjong_state").upsert({id:1,data:state},{onConflict:"id"});
-  if(error) console.error("Supabase save:",error);
+  if(error){
+    console.error("Supabase save:",error);
+    alert("クラウド保存に失敗しました。\n"+error.message);
+    return false;
+  }
+  return true;
 }
-async function refreshAdmin(){
-  const {data:{user}}=await sb.auth.getUser();
-  if(!user){ isAdmin=false; applyAdminUI(); return; }
-  const {data,error}=await sb.from("mahjong_admins").select("user_id").eq("user_id",user.id).maybeSingle();
-  isAdmin=!!data && !error; applyAdminUI();
+async function refreshAdmin(showError=false){
+  try{
+    const {data:{user},error:userError}=await sb.auth.getUser();
+    if(userError){
+      console.error("Auth getUser:",userError);
+      isAdmin=false;
+      applyAdminUI();
+      if(showError) alert("ログイン状態の確認に失敗しました。\n"+userError.message);
+      return false;
+    }
+    if(!user){
+      isAdmin=false;
+      applyAdminUI();
+      return false;
+    }
+
+    // 管理者テーブルを直接読むのではなく、SECURITY DEFINER関数で判定
+    const {data,error}=await sb.rpc("is_mahjong_admin");
+    if(error){
+      console.error("Admin RPC:",error);
+      isAdmin=false;
+      applyAdminUI();
+      if(showError){
+        alert("ログイン自体は成功しましたが、管理者権限を確認できませんでした。\n"
+          + error.message
+          + "\n\nSupabaseのGRANT設定を確認してください。");
+      }
+      return false;
+    }
+
+    isAdmin = data === true;
+    applyAdminUI();
+
+    if(showError && !isAdmin){
+      alert("ログインには成功しましたが、このアカウントは管理者として登録されていません。");
+    }
+    return isAdmin;
+  }catch(e){
+    console.error("refreshAdmin:",e);
+    isAdmin=false;
+    applyAdminUI();
+    if(showError) alert("管理者確認でエラーが発生しました。\n"+(e?.message||e));
+    return false;
+  }
 }
 function applyAdminUI(){
-  ["settingsBtn","editHistoryBtn"].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=isAdmin?"":"none"; });
-  const input=document.querySelector(".left"); if(input) input.style.opacity=isAdmin?"1":".72";
+  ["settingsBtn","editHistoryBtn"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=isAdmin?"":"none";
+  });
+  const input=document.querySelector(".left");
+  if(input) input.style.opacity=isAdmin?"1":".72";
   document.querySelectorAll("#inputCard select,#inputCard button,#gameDate,#saveBtn").forEach(el=>el.disabled=!isAdmin);
+
+  const alb=document.getElementById("adminLoginBtn");
+  if(alb){
+    alb.textContent=isAdmin?"🔓 ログアウト":"🔐 管理者";
+    alb.title=isAdmin?"管理者としてログイン中":"管理者ログイン";
+  }
 }
 async function adminLogin(){
-  const email=prompt("管理者メールアドレス"); if(!email)return;
-  const password=prompt("パスワード"); if(!password)return;
-  const {error}=await sb.auth.signInWithPassword({email,password});
-  if(error){alert("ログインできませんでした。" );return;}
-  await refreshAdmin(); renderAll();
+  const email=prompt("管理者メールアドレス");
+  if(!email)return;
+
+  const password=prompt("パスワード");
+  if(!password)return;
+
+  const btn=document.getElementById("adminLoginBtn");
+  const oldText=btn?.textContent;
+  if(btn){ btn.disabled=true; btn.textContent="確認中…"; }
+
+  try{
+    const {data,error}=await sb.auth.signInWithPassword({
+      email:email.trim(),
+      password
+    });
+
+    if(error){
+      console.error("signInWithPassword:",error);
+      alert("ログインできませんでした。\n"+error.message);
+      return;
+    }
+
+    if(!data?.user){
+      alert("ログイン処理は完了しましたが、ユーザー情報を取得できませんでした。");
+      return;
+    }
+
+    const ok=await refreshAdmin(true);
+    if(ok){
+      alert("管理者としてログインしました。");
+      await loadCloudState();
+      renderAll();
+    }else{
+      renderAll();
+    }
+  }catch(e){
+    console.error("adminLogin:",e);
+    alert("ログイン処理でエラーが発生しました。\n"+(e?.message||e));
+  }finally{
+    if(btn) btn.disabled=false;
+    renderAll();
+  }
 }
 async function initCloud(){
-  await loadCloudState();
+  const loaded=await loadCloudState();
   cloudReady=true;
-  await refreshAdmin();
+  await refreshAdmin(false);
   renderAll();
+
+  if(!loaded){
+    console.info("クラウドに成績がまだ無いか、読み込み権限がありません。");
+  }
 }
+
+// Safari / PWAでセッション状態が変わったときもUIを同期
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_IN" || event==="SIGNED_OUT" || event==="INITIAL_SESSION" || event==="TOKEN_REFRESHED"){
+    setTimeout(async()=>{
+      await refreshAdmin(false);
+      renderAll();
+    },0);
+  }
+});
 
 
 function defaultGameDate(){
@@ -1263,29 +1375,95 @@ document.getElementById("resetAllBtn").onclick=()=>{
 document.getElementById("keyDone").onclick=()=>{form.editingIndex=null;closeKeypad();renderInput()};
 document.getElementById("overlayDone").onclick=()=>document.getElementById("rankingOverlay").classList.remove("show");
 
-let bgmAudio=null;
+let bgmAudio=document.getElementById("bgmAudioEl");
 let bgmObjectURL=null;
+const bgmStatus=document.getElementById("bgmStatus");
+
+function setBgmStatus(text,isError=false){
+  if(!bgmStatus)return;
+  bgmStatus.textContent=text;
+  bgmStatus.style.color=isError?"#c22":"#777";
+}
+
 document.getElementById("bgmFile").onchange=e=>{
-  const f=e.target.files?.[0];if(!f)return;
+  const f=e.target.files?.[0];
+  if(!f)return;
+
   const name=(f.name||"").toLowerCase();
   if(!name.endsWith(".m4a") && !f.type.startsWith("audio/")){
     alert("音声ファイルを選択してください。m4a（AAC）に対応しています。");
     return;
   }
-  if(bgmAudio) bgmAudio.pause();
-  if(bgmObjectURL) URL.revokeObjectURL(bgmObjectURL);
-  bgmObjectURL=URL.createObjectURL(f);
-  bgmAudio=new Audio(bgmObjectURL);
-  bgmAudio.loop=true;
-  bgmAudio.volume=.5;
-  bgmAudio.play()
-    .then(()=>{ document.getElementById("bgmStopBtn").textContent="停止"; })
-    .catch(()=>{ alert("BGMを再生できませんでした。もう一度ファイルを選択するか、画面をタップしてからお試しください。"); });
+
+  try{
+    bgmAudio.pause();
+    bgmAudio.removeAttribute("src");
+    bgmAudio.load();
+
+    if(bgmObjectURL) URL.revokeObjectURL(bgmObjectURL);
+    bgmObjectURL=URL.createObjectURL(f);
+
+    bgmAudio.src=bgmObjectURL;
+    bgmAudio.loop=true;
+    bgmAudio.volume=0.5;
+    bgmAudio.style.display="block";
+    bgmAudio.load();
+
+    setBgmStatus(`選択中: ${f.name} / 読み込み中…`);
+
+    const tryPlay=()=>{
+      bgmAudio.play()
+        .then(()=>{
+          document.getElementById("bgmStopBtn").textContent="停止";
+          setBgmStatus(`再生中: ${f.name}`);
+        })
+        .catch(err=>{
+          console.warn("BGM autoplay blocked/failed:",err);
+          document.getElementById("bgmStopBtn").textContent="再生";
+          setBgmStatus(`「${f.name}」を読み込みました。下の ▶ を押して再生してください。`);
+        });
+    };
+
+    bgmAudio.oncanplay=tryPlay;
+
+    bgmAudio.onerror=()=>{
+      const code=bgmAudio.error?.code;
+      const msg=bgmAudio.error?.message||"";
+      console.error("BGM media error:",bgmAudio.error);
+      setBgmStatus(
+        `この音声をSafariで再生できませんでした（エラー${code||"?"}）。`
+        + ` m4aでも中の音声形式によっては再生できないことがあります。${msg?" "+msg:""}`,
+        true
+      );
+    };
+
+    bgmAudio.onplay=()=>{
+      document.getElementById("bgmStopBtn").textContent="停止";
+      setBgmStatus(`再生中: ${f.name}`);
+    };
+    bgmAudio.onpause=()=>{
+      if(bgmAudio.currentTime>0 && !bgmAudio.ended){
+        document.getElementById("bgmStopBtn").textContent="再生";
+      }
+    };
+  }catch(err){
+    console.error("BGM setup:",err);
+    setBgmStatus("BGMの読み込みでエラーが発生しました。 "+(err?.message||err),true);
+  }
 };
+
 document.getElementById("bgmStopBtn").onclick=()=>{
-  if(!bgmAudio)return;
+  if(!bgmAudio?.src){
+    alert("先にBGMファイルを選択してください。");
+    return;
+  }
   if(bgmAudio.paused){
-    bgmAudio.play().then(()=>document.getElementById("bgmStopBtn").textContent="停止").catch(()=>{});
+    bgmAudio.play()
+      .then(()=>document.getElementById("bgmStopBtn").textContent="停止")
+      .catch(err=>{
+        console.error("BGM play:",err);
+        setBgmStatus("再生できませんでした。音声コントロールの ▶ もお試しください。",true);
+      });
   }else{
     bgmAudio.pause();
     document.getElementById("bgmStopBtn").textContent="再生";
@@ -1301,7 +1479,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=4", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=5", {
         updateViaCache: "none"
       });
 

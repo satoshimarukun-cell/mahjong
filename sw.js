@@ -1,4 +1,4 @@
-const CACHE_NAME = "mahjong-pwa-v4";
+const CACHE_NAME = "mahjong-pwa-v5";
 const STATIC_ASSETS = [
   "./manifest.webmanifest",
   "./icon-180.png",
