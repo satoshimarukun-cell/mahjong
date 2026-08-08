@@ -473,10 +473,10 @@ button{cursor:pointer}
       <div class="section">
         <h4>BGM</h4>
         <div class="form-row">
-          <input type="file" id="bgmFile" accept="audio/*">
+          <input type="file" id="bgmFile" accept=".m4a,audio/mp4,audio/x-m4a,audio/aac,audio/*">
           <button class="btn" id="bgmStopBtn">停止</button>
         </div>
-        <div style="font-size:12px;color:#777">ブラウザ版では「麻雀学園.m4a」を自動同梱できないため、端末の音声ファイルを選択するとループ再生します。</div>
+        <div style="font-size:12px;color:#777">BGMは .m4a（AAC）を選択できます。選択した音声はループ再生します。iPhone/iPadでは最初の再生時にユーザー操作が必要な場合があります。</div>
       </div>
     </div>
   </div>
@@ -670,12 +670,26 @@ function renderInput(){
     const select=row.querySelector("select");
     state.players.forEach(pl=>{
       const op=document.createElement("option");
-      op.value=pl.id;op.textContent=pl.name;op.selected=pl.id===id;
+      op.value=pl.id;
+      op.textContent=pl.name;
+      op.selected=pl.id===id;
+      // 他の席で選択済みのプレイヤーは選択不可
+      const usedElsewhere = state.selectedIDs.some((selectedID, seatIndex) =>
+        seatIndex !== i && selectedID === pl.id
+      );
+      op.disabled = usedElsewhere;
       select.appendChild(op);
     });
   }
   inputCard.querySelectorAll("[data-sel]").forEach(el=>el.addEventListener("change",e=>{
-    state.selectedIDs[+e.target.dataset.sel]=e.target.value;
+    const seat = +e.target.dataset.sel;
+    const newID = e.target.value;
+    if (state.selectedIDs.some((id, idx) => idx !== seat && id === newID)) {
+      alert("同じプレイヤーを複数の席には選べません。");
+      renderInput();
+      return;
+    }
+    state.selectedIDs[seat]=newID;
     saveState();renderAll();
   }));
   inputCard.querySelectorAll("[data-yaku]").forEach(el=>el.addEventListener("click",e=>{
@@ -1089,17 +1103,49 @@ function showRanking(result){
         <div class="pts ${result.points[pIdx]>=0?"plus":"minus"}">${result.points[pIdx]>=0?"+":""}${result.points[pIdx]}</div>
       </div>`;
     rows.appendChild(row);
-    setTimeout(()=>{row.classList.add("show");beep()},450*(i+1));
+    setTimeout(()=>{row.classList.add("show");playRankSound(i+1)},450*(i+1));
   });
-  setTimeout(()=>done.style.display="block",450*5);
+  setTimeout(()=>{done.style.display="block";playFinishSound()},450*5);
   overlay.classList.add("show");
 }
-function beep(){
+let sfxContext=null;
+function getSfxContext(){
+  if(!sfxContext) sfxContext=new (window.AudioContext||window.webkitAudioContext)();
+  if(sfxContext.state==="suspended") sfxContext.resume().catch(()=>{});
+  return sfxContext;
+}
+function playRankSound(rank){
   try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type="sine";o.frequency.value=660;g.gain.value=.04;
-    o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.08);
+    const ctx=getSfxContext();
+    const now=ctx.currentTime;
+    // 順位ごとに少し音程を変え、発表感のある2音チャイムにする
+    const base=[880,740,620,500][rank-1] || 660;
+    [0,0.075].forEach((delay,n)=>{
+      const o=ctx.createOscillator();
+      const g=ctx.createGain();
+      o.type=n===0?"triangle":"sine";
+      o.frequency.setValueAtTime(base*(n===0?1:1.25),now+delay);
+      g.gain.setValueAtTime(0.0001,now+delay);
+      g.gain.exponentialRampToValueAtTime(0.075,now+delay+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,now+delay+0.16);
+      o.connect(g);g.connect(ctx.destination);
+      o.start(now+delay);o.stop(now+delay+0.18);
+    });
+  }catch(e){}
+}
+function playFinishSound(){
+  try{
+    const ctx=getSfxContext();
+    const now=ctx.currentTime;
+    [523.25,659.25,783.99].forEach((freq,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type="sine";o.frequency.value=freq;
+      g.gain.setValueAtTime(0.0001,now+i*0.08);
+      g.gain.exponentialRampToValueAtTime(0.06,now+i*0.08+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,now+i*0.08+0.3);
+      o.connect(g);g.connect(ctx.destination);
+      o.start(now+i*0.08);o.stop(now+i*0.08+0.32);
+    });
   }catch(e){}
 }
 
@@ -1118,7 +1164,10 @@ function renderAll(){
 }
 
 document.getElementById("gameDate").onchange=e=>form.gameDate=e.target.value;
-document.getElementById("saveBtn").onclick=saveGame;
+document.getElementById("saveBtn").onclick=()=>{
+  try{ getSfxContext(); }catch(e){}
+  saveGame();
+};
 document.getElementById("cancelEditBtn").onclick=resetForm;
 
 document.getElementById("editHistoryBtn").onclick=()=>{
@@ -1157,12 +1206,33 @@ document.getElementById("keyDone").onclick=()=>{form.editingIndex=null;closeKeyp
 document.getElementById("overlayDone").onclick=()=>document.getElementById("rankingOverlay").classList.remove("show");
 
 let bgmAudio=null;
+let bgmObjectURL=null;
 document.getElementById("bgmFile").onchange=e=>{
   const f=e.target.files?.[0];if(!f)return;
-  if(bgmAudio){bgmAudio.pause();URL.revokeObjectURL(bgmAudio.src)}
-  bgmAudio=new Audio(URL.createObjectURL(f));bgmAudio.loop=true;bgmAudio.volume=.5;bgmAudio.play().catch(()=>{});
+  const name=(f.name||"").toLowerCase();
+  if(!name.endsWith(".m4a") && !f.type.startsWith("audio/")){
+    alert("音声ファイルを選択してください。m4a（AAC）に対応しています。");
+    return;
+  }
+  if(bgmAudio) bgmAudio.pause();
+  if(bgmObjectURL) URL.revokeObjectURL(bgmObjectURL);
+  bgmObjectURL=URL.createObjectURL(f);
+  bgmAudio=new Audio(bgmObjectURL);
+  bgmAudio.loop=true;
+  bgmAudio.volume=.5;
+  bgmAudio.play()
+    .then(()=>{ document.getElementById("bgmStopBtn").textContent="停止"; })
+    .catch(()=>{ alert("BGMを再生できませんでした。もう一度ファイルを選択するか、画面をタップしてからお試しください。"); });
 };
-document.getElementById("bgmStopBtn").onclick=()=>{if(bgmAudio)bgmAudio.pause()};
+document.getElementById("bgmStopBtn").onclick=()=>{
+  if(!bgmAudio)return;
+  if(bgmAudio.paused){
+    bgmAudio.play().then(()=>document.getElementById("bgmStopBtn").textContent="停止").catch(()=>{});
+  }else{
+    bgmAudio.pause();
+    document.getElementById("bgmStopBtn").textContent="再生";
+  }
+};
 
 setupKeypad();
 renderAll();
