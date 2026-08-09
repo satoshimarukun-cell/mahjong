@@ -2017,6 +2017,109 @@ body::before{
 }
 </style>
 
+
+<style id="year-stats-pop-hard-reset-v16">
+/* 年度別成績だけ旧ネオンテーマを完全に打ち消す */
+#yearStatsModal{
+  background:rgba(49,62,55,.46)!important;
+  backdrop-filter:blur(5px)!important;
+}
+#yearStatsModal .modal-card,
+#yearStatsModal .year-history-card{
+  background:#fffdf8!important;
+  color:#2f3d38!important;
+  border:3px solid #e6dcc9!important;
+  box-shadow:0 22px 65px rgba(52,65,59,.25)!important;
+}
+#yearStatsModal .modal-head{
+  background:#fff8e9!important;
+  border-bottom:2px solid #e9deca!important;
+}
+#yearStatsModal .modal-head h3{
+  color:#285846!important;
+}
+#yearStatsModal .modal-head .neo-eyebrow{
+  color:#d96b3f!important;
+  text-shadow:none!important;
+}
+#yearStatsModal .year-history-body{
+  background:#fbf7ee!important;
+  color:#34433e!important;
+}
+#yearStatsModal .year-archive-wrap{
+  background:#fff!important;
+  border:2px solid #dfd7c8!important;
+  box-shadow:none!important;
+}
+#yearStatsModal .year-archive-table{
+  background:#fff!important;
+}
+#yearStatsModal .year-archive-table thead th{
+  background:#28765a!important;
+  color:#fff!important;
+  border-color:#4a8a73!important;
+  text-shadow:none!important;
+  box-shadow:0 4px 0 rgba(24,88,65,.16)!important;
+}
+#yearStatsModal .year-archive-table tbody th{
+  background:#fff0b8!important;
+  color:#665116!important;
+  border-color:#ead998!important;
+  text-shadow:none!important;
+}
+#yearStatsModal .year-archive-table tbody td{
+  background:#fff!important;
+  color:#3c443f!important;
+  border-color:#ebe4d9!important;
+}
+#yearStatsModal .year-archive-table tbody tr:nth-child(even) td{
+  background:#fcfaf5!important;
+}
+#yearStatsModal .year-player-name,
+#yearStatsModal .year-player-meta{
+  color:#635f56!important;
+}
+#yearStatsModal .year-player-pt.plus{color:#d84955!important}
+#yearStatsModal .year-player-pt.minus{color:#367cc1!important}
+#yearStatsModal .year-title-cell{
+  background:#fffaf0!important;
+}
+#yearStatsModal .title-chip{
+  background:#fff!important;
+  color:#453f35!important;
+  border:2px solid #eadfc9!important;
+  box-shadow:none!important;
+}
+#yearStatsModal .title-chip.crown{
+  background:#fff0ad!important;
+  border-color:#ebce54!important;
+}
+#yearStatsModal .title-label{
+  color:#a06b20!important;
+  text-shadow:none!important;
+}
+#yearStatsModal .title-winner,
+#yearStatsModal .title-name{
+  color:#33433d!important;
+  text-shadow:none!important;
+}
+#yearStatsModal .title-value{
+  color:#e25745!important;
+  text-shadow:none!important;
+}
+#yearStatsModal .year-archive-note{
+  background:#f7f2e7!important;
+  color:#7f7769!important;
+  border-color:#e9dfd0!important;
+}
+#yearStatsModal .btn{
+  background:#2b805f!important;
+  color:#fff!important;
+  border:2px solid #236b50!important;
+  box-shadow:0 3px 0 #174c39!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -3439,7 +3542,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=15", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=16", {
         updateViaCache: "none"
       });
 
