@@ -386,385 +386,508 @@ button{cursor:pointer}
 </style>
 
 
-<style id="night-lounge-theme">
-/* =========================================================
-   雀譜 Night Lounge Theme
-   機能はそのまま、見た目だけ大改装
-   ========================================================= */
+<style id="neo-layout-v7">
 :root{
-  --red:#0b1f1d;
-  --gold:#e5c36b;
-  --paper:#101b1a;
-  --panel:#132321;
-  --text:#eef7f3;
-  --muted:#9db0aa;
-  --orange:#ffb15a;
-  --cyan:#6bd4ff;
-  --line:rgba(255,255,255,.09);
-  --emerald:#28c997;
-  --emerald-soft:#7de0c2;
-  --ink:#07100f;
+  --neo-bg:#eef2f5;
+  --neo-paper:#ffffff;
+  --neo-ink:#13201d;
+  --neo-muted:#74817d;
+  --neo-line:#dde5e2;
+  --neo-green:#0d6b57;
+  --neo-green2:#159878;
+  --neo-gold:#d7ac49;
+  --neo-red:#b74343;
+  --neo-shadow:0 10px 30px rgba(30,54,47,.08);
 }
+
 html,body{
-  background:
-    radial-gradient(circle at 18% 10%, rgba(40,201,151,.10), transparent 28%),
-    radial-gradient(circle at 90% 15%, rgba(229,195,107,.08), transparent 22%),
-    linear-gradient(145deg,#06100f 0%,#0b1716 52%,#0a1113 100%);
-  color:var(--text);
+  background:var(--neo-bg)!important;
+  color:var(--neo-ink);
 }
-body{min-height:100vh}
-.app{
-  grid-template-columns:minmax(520px,610px) minmax(600px,1fr);
-  gap:1px;
-  background:rgba(255,255,255,.05);
+body{
+  min-height:100vh;
+  margin:0;
 }
-.left{
-  position:relative;
-  background:
-    linear-gradient(180deg,rgba(10,31,29,.96),rgba(6,17,16,.98)),
-    repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 1px,transparent 1px 11px);
-  border-right:1px solid rgba(229,195,107,.18);
-  box-shadow:18px 0 60px rgba(0,0,0,.22);
-  padding:22px;
+
+.neo-shell{min-height:100vh}
+
+.neo-header{
+  min-height:92px;
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) minmax(300px,520px) minmax(270px,1fr);
+  align-items:center;
+  gap:22px;
+  padding:15px 26px;
+  background:#102723;
+  color:white;
+  border-bottom:4px solid var(--neo-gold);
+  box-shadow:0 8px 30px rgba(0,0,0,.16);
+  position:sticky;
+  top:0;
+  z-index:20;
 }
-.left::before{
-  content:"";
-  position:fixed;
-  left:0;top:0;bottom:0;width:4px;
-  background:linear-gradient(var(--gold),var(--emerald),transparent);
-  opacity:.75;
+
+.neo-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
-.right{
-  background:linear-gradient(180deg,rgba(9,18,19,.98),rgba(10,15,17,.99));
+.neo-brand-mark{
+  width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;
+  border-radius:15px;
+  font-size:28px;
+  box-shadow:inset 0 0 0 2px rgba(215,172,73,.55);
 }
-.header{
-  margin:2px 0 20px;
-  padding-bottom:15px;
-  border-bottom:1px solid rgba(229,195,107,.18);
+.neo-brand-name{
+  font-size:25px;
+  font-weight:950;
+  letter-spacing:.08em;
 }
-.header h1{
-  color:#f6e6ab;
-  font-size:31px;
-  letter-spacing:.06em;
-  text-shadow:0 2px 20px rgba(229,195,107,.15);
-}
-.header h1::after{
-  content:"  NIGHT LOUNGE";
-  display:inline-block;
-  margin-left:10px;
-  font-size:9px;
+.neo-brand-sub{
+  font-size:8px;
   letter-spacing:.28em;
-  color:var(--emerald-soft);
-  vertical-align:middle;
-  opacity:.7;
+  color:#97b7ad;
+  margin-top:2px;
 }
-.icon-btn{
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(229,195,107,.18);
-  color:#f6e6ab;
-  transition:.2s ease;
+
+.neo-champion{
+  min-height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.icon-btn:hover{transform:rotate(15deg);background:rgba(229,195,107,.10)}
-.card{
-  background:linear-gradient(145deg,rgba(24,43,40,.92),rgba(14,29,28,.94));
-  color:var(--text);
-  border:1px solid rgba(255,255,255,.075);
-  border-radius:20px;
-  box-shadow:0 14px 34px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.035);
-  padding:14px;
+.neo-champion .champion-card{
+  width:100%;
+  margin:0!important;
+  padding:8px 14px!important;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:14px;
+  align-items:center;
+  text-align:left!important;
+  border:none!important;
+  border-radius:16px!important;
+  background:linear-gradient(135deg,#f8e9b7,#d8b352)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.16);
 }
-.date-row label{color:#d8e8e2;font-size:13px;letter-spacing:.08em}
-.date-row input,.player-select,.score-btn,.form-row input,.player-edit-row input[type=text]{
-  background:#0b1615;
-  color:#f4fbf8;
-  border:1px solid rgba(125,224,194,.14);
+.neo-champion .champion-title{
+  color:#665012!important;
+  white-space:nowrap;
 }
-.date-row input{color-scheme:dark}
-.player-select-wrap{
-  background:rgba(255,255,255,.04)!important;
-  border:1px solid rgba(255,255,255,.07);
+.neo-champion .champion-name{
+  color:#17332d!important;
+  font-size:21px!important;
 }
-.player-select option{background:#10201e;color:#fff}
-.rank-badge{
-  border:1px solid rgba(229,195,107,.48);
-  box-shadow:inset 0 0 16px rgba(0,0,0,.24),0 0 18px rgba(229,195,107,.06);
+.neo-champion .champion-meta{
+  color:#62572e!important;
+  text-align:right;
+  font-size:11px!important;
 }
-.yaku-btn{color:#ffe08a}
-.score-btn{
+
+.neo-header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+}
+.neo-header .btn{
+  background:#1b3a34;
+  color:#e8f3ef;
+  border:1px solid rgba(255,255,255,.10);
+}
+.neo-header .btn.primary{
+  background:#fff;
+  color:#15352e;
+}
+.neo-header .icon-btn{
+  width:42px;height:42px;
   border-radius:12px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);
+  color:white;
+  background:#1b3a34;
+  border:1px solid rgba(255,255,255,.10);
 }
-.score-btn.focused{
-  border-color:var(--emerald);
-  box-shadow:0 0 0 3px rgba(40,201,151,.12),0 0 24px rgba(40,201,151,.10);
+
+.neo-main{
+  display:grid;
+  grid-template-columns:minmax(540px,44%) minmax(620px,56%);
+  gap:18px;
+  padding:18px;
+  max-width:1600px;
+  margin:0 auto;
 }
-.score-btn small{color:#6f8982}
-.save-btn{
-  border:1px solid rgba(229,195,107,.38);
-  background:linear-gradient(135deg,#f0d685,#caa64c);
-  color:#10201e;
-  border-radius:14px;
-  box-shadow:0 10px 25px rgba(229,195,107,.12);
-  transition:.2s ease;
+
+.neo-entry,.neo-dashboard{
+  background:var(--neo-paper);
+  border:1px solid var(--neo-line);
+  border-radius:24px;
+  box-shadow:var(--neo-shadow);
+  overflow:hidden;
 }
-.save-btn:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.05)}
-.save-btn:disabled{background:#263331;color:#71827d;border-color:transparent}
-.total-box .caption{color:#8ca39c}
-.rule{
-  margin:8px 4px 18px;
-  color:#a7c2ba;
-  font-size:12px;
-  letter-spacing:.05em;
+
+.neo-entry{padding:20px}
+
+.neo-section-heading,.neo-dashboard-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:15px;
 }
-.score-table{
-  background:rgba(8,18,17,.74);
-  color:#a9bbb5;
-  border:1px solid rgba(255,255,255,.06);
+.neo-section-heading h1,.neo-dashboard-head h2{
+  margin:2px 0 0;
+  font-size:25px;
+  color:#162d28;
+}
+.neo-eyebrow{
+  font-size:9px;
+  letter-spacing:.24em;
+  font-weight:900;
+  color:var(--neo-green2);
+}
+
+.neo-date-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 9px 7px 12px;
+  background:#f4f7f6;
+  border:1px solid var(--neo-line);
+  border-radius:12px;
+}
+.neo-date-box span{
+  font-size:11px;
+  color:var(--neo-muted);
+  font-weight:800;
+}
+.neo-date-box input{
+  border:none;
+  background:transparent;
+  color:#17332d;
+  font-weight:900;
+  outline:none;
+}
+
+.neo-rule-strip{
+  display:flex;
+  align-items:center;
+  min-height:34px;
+  margin:0 0 14px!important;
+  padding:7px 11px;
+  background:#eef8f4;
+  color:#34655a!important;
+  border-radius:10px;
+  font-size:11px!important;
+}
+
+.neo-player-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  margin:0!important;
+}
+
+.neo-player-grid .player-row{
+  position:relative;
+  display:grid!important;
+  grid-template-columns:46px 1fr!important;
+  grid-template-areas:
+    "rank player"
+    "rank score"
+    "yaku point";
+  gap:7px 8px!important;
+  padding:11px!important;
+  min-height:142px;
+  background:#f8faf9;
+  border:1px solid #dfe8e5;
   border-radius:16px;
 }
-.score-table h3{color:#f2d77f}
-.topbar{
-  background:rgba(7,15,16,.86);
-  border-bottom:1px solid rgba(255,255,255,.07);
-  backdrop-filter:blur(18px) saturate(140%);
-  padding:18px 20px;
+.neo-player-grid .rank-badge{
+  grid-area:rank;
+  align-self:start;
 }
-.topbar h2{
-  color:#eef7f3;
-  font-size:22px;
-  letter-spacing:.04em;
+.neo-player-grid .player-select-wrap{
+  grid-area:player;
+  min-width:0;
 }
-.btn{
-  background:#142523;
-  color:#dcebe6;
-  border:1px solid rgba(255,255,255,.075);
+.neo-player-grid .player-select{width:100%}
+.neo-player-grid .yaku-btn{
+  grid-area:yaku;
+  justify-self:start;
+  width:auto;
+  min-width:55px;
+  padding:0 8px;
+  border-radius:9px;
+  background:#fff8e6;
+}
+.neo-player-grid .score-btn{
+  grid-area:score;
+  width:100%!important;
+  height:48px!important;
+  background:white;
+  border:1px solid #dce5e2;
+  border-radius:11px;
+}
+.neo-player-grid .pt{
+  grid-area:point;
+  align-self:center;
+  justify-self:end;
+  width:auto!important;
+  min-width:70px;
+  padding:4px 7px;
+  border-radius:9px;
+  background:white;
+  font-size:18px;
+}
+
+.neo-save-panel{
+  margin-top:13px;
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:10px;
+  padding:10px;
+  background:#142f29;
+  border-radius:16px;
+}
+.neo-total{
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-areas:"cap edit" "val val";
+  align-items:end;
+  padding:3px 8px;
+}
+.neo-total #totalCaption{
+  grid-area:cap;
+  font-size:10px;
+  color:#89aaa0;
+}
+.neo-total .value{
+  grid-area:val;
+  font-size:29px;
+  font-weight:950;
+}
+.neo-total #cancelEditBtn{grid-area:edit}
+.neo-save-panel .save-btn{
   border-radius:12px;
+  background:linear-gradient(135deg,#f2d37d,#d6ad48);
+  color:#17332d;
+  font-size:18px;
+  box-shadow:none;
 }
-.btn:hover{background:#1b302d}
-.btn.active{background:linear-gradient(135deg,#1ca77c,#278f73);color:white}
-.btn.primary{
-  background:linear-gradient(135deg,#d7b85f,#f0d789);
-  color:#14201d;
-  border:none;
+
+.neo-help{
+  margin-top:11px;
+  border:1px dashed #ccd9d5;
+  border-radius:12px;
+  padding:8px 10px;
+  color:#657873;
+  font-size:11px;
 }
-.btn.danger{background:rgba(216,74,74,.12);color:#ff8d8d;border-color:rgba(255,100,100,.15)}
-.date-tabs{
-  background:#0c1718;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  padding:11px 18px;
+.neo-help summary{
+  cursor:pointer;
+  font-weight:850;
+  color:#42665d;
 }
-.date-tab{
-  background:#142220;
-  color:#8da59e;
-  border:1px solid transparent;
-  transition:.2s ease;
+.neo-help div{padding-top:8px;line-height:1.65}
+
+.neo-dashboard{
+  min-width:0;
 }
-.date-tab.active{
-  background:rgba(40,201,151,.12);
-  color:#8df0d0;
-  border-color:rgba(40,201,151,.24);
+.neo-dashboard-head{
+  margin:0;
+  padding:18px 20px 12px;
 }
-.daily{
-  background:#0d1819;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  padding:16px 18px;
+.neo-dashboard .date-tabs{
+  padding:10px 18px 12px;
+  background:white;
+  border-bottom:1px solid var(--neo-line);
 }
-.daily-title{
-  color:#719188;
-  letter-spacing:.14em;
-  text-transform:uppercase;
+.neo-dashboard .date-tab{
+  border-radius:9px;
+  padding:8px 12px;
+  background:#f1f4f3;
 }
-.daily-row{border-bottom:1px solid rgba(255,255,255,.055)}
-.name-chip,.h-player{
-  color:#f2f7f5;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:inset 0 0 18px rgba(255,255,255,.025);
+.neo-dashboard .date-tab.active{
+  background:var(--neo-green);
+  color:white;
 }
-.history-wrap{background:#0b1516}
-.history-table th,.history-table td{
-  border-bottom:1px solid rgba(255,255,255,.055);
-  border-right:1px solid rgba(255,255,255,.045);
-  color:#cfddd9;
+
+.neo-dashboard .daily{
+  padding:13px 17px;
+  background:#f7f9f8;
 }
-.history-table thead th{
-  background:#101e1e;
-  color:#8fa9a2;
+.neo-dashboard .daily-title{
+  margin-bottom:9px;
 }
-.history-table tbody tr:nth-child(even){background:rgba(255,255,255,.018)}
-.small-btn.edit{color:#7dd8ff;background:rgba(63,177,231,.10)}
-.small-btn.del{color:#ff9292;background:rgba(255,95,95,.10)}
-.modal{
-  background:rgba(0,5,5,.72);
-  backdrop-filter:blur(12px);
+.neo-dashboard .daily-row{
+  grid-template-columns:100px 42px minmax(100px,1fr) 72px 62px 105px;
+  background:white;
+  border:1px solid #e5ece9;
+  border-radius:11px;
+  margin-bottom:6px;
+  padding:8px 9px;
 }
+.neo-dashboard .daily-row:last-child{margin-bottom:0}
+
+.neo-dashboard .history-wrap{
+  background:white;
+  padding-bottom:12px;
+}
+.neo-dashboard .history-table{
+  min-width:100%;
+  width:100%;
+}
+.neo-dashboard .history-table th,
+.neo-dashboard .history-table td{
+  min-width:100px;
+  border-color:#e8eeec;
+}
+.neo-dashboard .history-table thead th{
+  background:#17342e;
+  color:white;
+}
+
+.btn{
+  border-radius:10px;
+}
+.btn.active{background:var(--neo-green);color:white}
+.btn.primary{background:var(--neo-green);color:white}
+
 .modal-card{
-  background:#0e1b1a;
-  color:#eef7f3;
-  border:1px solid rgba(229,195,107,.15);
-  box-shadow:0 28px 90px rgba(0,0,0,.58);
+  border-radius:22px;
 }
-.modal-head{
-  background:#0f1d1b;
-  border-bottom:1px solid rgba(255,255,255,.07);
-}
-.modal-head h3{color:#f3dda0}
-.section h4{color:#8fe5ca}
-.form-row label{color:#a8bbb5}
-.player-edit-row input[type=color]{filter:saturate(.8) brightness(.95)}
-.stats-list{gap:14px}
 .stats-card{
-  position:relative;
-  overflow:hidden;
-  background:linear-gradient(135deg,rgba(19,36,34,.98),rgba(10,23,23,.98));
-  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;
+}
+.stats-list .champion-card{
   border-radius:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,.17);
 }
-.stats-card::before{
-  content:"";
-  position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(var(--emerald),rgba(229,195,107,.7));
-}
-.stats-card:hover{
-  box-shadow:0 16px 38px rgba(0,0,0,.26);
-  border-color:rgba(40,201,151,.18);
-}
-.stats-name{color:#f5faf8}
-.stats-rank{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-.trend{background:#091413}
-.streak-badge{
-  background:rgba(229,195,107,.10);
-  color:#f4d989;
-  border:1px solid rgba(229,195,107,.16);
-}
-.champion-card{
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% -40%,rgba(229,195,107,.25),transparent 48%),
-    linear-gradient(135deg,#172722,#0e1c1b);
-  border:1px solid rgba(229,195,107,.40);
-  box-shadow:0 18px 50px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.035);
-}
-.champion-card::before{
-  content:"♛";
-  position:absolute;
-  right:20px;top:-26px;
-  font-size:110px;
-  color:rgba(229,195,107,.045);
-  transform:rotate(8deg);
-}
-.champion-title{color:#d7bb65;letter-spacing:.18em}
-.champion-name{color:#f8e4a5;text-shadow:0 0 24px rgba(229,195,107,.18)}
-.champion-meta{color:#91aaa3}
-.detail-grid{gap:7px}
-.detail-cell{
-  background:#0a1615;
-  color:#7f9992;
-  border:1px solid rgba(255,255,255,.05);
-}
-.detail-cell strong{color:#e8f4f0}
+
 .keypad{
-  background:linear-gradient(145deg,#142725,#0b1716);
-  border:1px solid rgba(229,195,107,.18);
-  box-shadow:0 22px 60px rgba(0,0,0,.55);
+  left:24px!important;
+  top:auto!important;
+  bottom:24px!important;
+  transform:none!important;
+  background:#142f29!important;
 }
-.key-grid button{
-  background:#10201e;
-  color:#eff8f5;
-  border:1px solid rgba(255,255,255,.06);
+
+@media(max-width:1100px){
+  .neo-header{
+    grid-template-columns:1fr auto;
+  }
+  .neo-champion{
+    grid-column:1 / -1;
+    grid-row:2;
+  }
+  .neo-main{
+    grid-template-columns:1fr;
+  }
+  .neo-entry,.neo-dashboard{
+    min-width:0;
+  }
 }
-.key-grid button:active{background:#1d3934}
-.key-done{
-  background:linear-gradient(135deg,#e5c36b,#c7a34d);
-  color:#14201d;
-}
-.overlay{
-  background:
-    radial-gradient(circle at 50% 20%,rgba(40,201,151,.10),transparent 30%),
-    rgba(2,8,8,.94);
-  backdrop-filter:blur(10px);
-}
-.overlay-title{
-  color:#f2d987;
-  letter-spacing:.12em;
-  text-shadow:0 0 32px rgba(229,195,107,.18);
-}
-.rank-result{
-  background:linear-gradient(90deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
-  border:1px solid rgba(255,255,255,.07);
-  box-shadow:0 12px 30px rgba(0,0,0,.24);
-}
-.rank-main{color:#f5fbf8}
-.overlay-done{
-  background:linear-gradient(135deg,#f0d685,#cba84f);
-  color:#13211e;
-}
-.pie::after{background:#132321}
-audio{filter:invert(.88) hue-rotate(120deg) saturate(.6)}
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:#071110}
-::-webkit-scrollbar-thumb{background:#27423d;border-radius:20px;border:2px solid #071110}
-@media(max-width:1000px){
-  .left{border-right:none;border-bottom:1px solid rgba(229,195,107,.16)}
-  .header h1::after{display:none}
+
+@media(max-width:700px){
+  .neo-header{
+    position:static;
+    grid-template-columns:1fr;
+    padding:13px;
+  }
+  .neo-header-actions{justify-content:flex-start;flex-wrap:wrap}
+  .neo-champion .champion-card{
+    grid-template-columns:1fr;
+    gap:2px;
+  }
+  .neo-champion .champion-meta{text-align:left}
+  .neo-main{padding:8px;gap:8px}
+  .neo-entry{padding:12px}
+  .neo-player-grid{grid-template-columns:1fr}
+  .neo-save-panel{grid-template-columns:1fr}
+  .neo-dashboard .daily-row{
+    grid-template-columns:90px 35px 1fr;
+  }
+  .neo-dashboard .daily-row > :nth-child(n+4){
+    display:none;
+  }
 }
 </style>
 
 </head>
 <body>
-<div class="app">
-  <section class="left">
-    <div class="header">
-      <h1>🀄️ 麻雀成績入力</h1>
-      <div class="spacer"></div>
-      <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
-    </div>
 
-    <div class="card">
-      <div class="date-row">
-        <label>対局日</label>
-        <input type="date" id="gameDate">
+<div class="neo-shell">
+  <header class="neo-header">
+    <div class="neo-brand">
+      <div class="neo-brand-mark">🀄️</div>
+      <div>
+        <div class="neo-brand-name">雀譜</div>
+        <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
 
-    <div class="card" id="inputCard"></div>
+    <div id="championBanner" class="neo-champion"></div>
 
-    <div class="card">
-      <div class="save-row">
-        <div class="total-box">
-          <div class="caption" id="totalCaption">合計点</div>
-          <div>
-            <span class="value total-ng" id="totalScore">0</span>
-            <button class="small-btn edit" id="cancelEditBtn" style="display:none">解除</button>
-          </div>
+    <div class="neo-header-actions">
+      <button class="btn" id="adminLoginBtn">🔐 管理者</button>
+      <button class="btn primary" id="totalStatsBtn">📊 通算成績</button>
+      <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
+    </div>
+  </header>
+
+  <main class="neo-main">
+    <section class="neo-entry">
+      <div class="neo-section-heading">
+        <div>
+          <div class="neo-eyebrow">NEW GAME</div>
+          <h1>対局入力</h1>
+        </div>
+        <div class="neo-date-box">
+          <span>対局日</span>
+          <input type="date" id="gameDate">
+        </div>
+      </div>
+
+      <div class="neo-rule-strip" id="ruleText"></div>
+
+      <div id="inputCard" class="neo-player-grid"></div>
+
+      <div class="neo-save-panel">
+        <div class="neo-total">
+          <span id="totalCaption">合計点</span>
+          <strong id="totalScore" class="value total-ng">0</strong>
+          <button class="small-btn edit" id="cancelEditBtn" style="display:none">解除</button>
         </div>
         <button class="save-btn" id="saveBtn" disabled>終局保存</button>
       </div>
-    </div>
 
-    <div class="rule" id="ruleText"></div>
+      <details class="neo-help">
+        <summary>入力ルールを見る</summary>
+        <div>
+          点数は下2桁の「00」を省略して入力します。例：25,000点 → <b>250</b>。<br>
+          4人合計が100,000点になると順位とポイントが確定します。<br>
+          役満ボタンは 0 → ⭐️ → ⭐️⭐️ → ⭐️⭐️⭐️ → 0 の順に切り替わります。
+        </div>
+      </details>
+    </section>
 
-    <div class="score-table">
-      <h3>点数入力について</h3>
-      点数は下2桁の「00」を省略して入力します。例：25,000点 → <b>250</b>。<br>
-      4人合計が100,000点になると順位とポイントが確定します。<br>
-      役満ボタンは 0 → ⭐️ → ⭐️⭐️ → ⭐️⭐️⭐️ → 0 の順に切り替わります。
-    </div>
-  </section>
+    <section class="neo-dashboard">
+      <div class="neo-dashboard-head">
+        <div>
+          <div class="neo-eyebrow">TODAY'S TABLE</div>
+          <h2>成績ダッシュボード</h2>
+        </div>
+        <button class="btn" id="editHistoryBtn">編集</button>
+      </div>
 
-  <section class="right">
-    <div class="topbar">
-      <h2>成績履歴・集計</h2>
-      <div class="spacer"></div>
-      <button class="btn" id="adminLoginBtn">🔐 管理者</button>
-       <button class="btn" id="editHistoryBtn">編集</button>
-      <button class="btn primary" id="totalStatsBtn">📊 通算成績</button>
-    </div>
-    <div class="date-tabs" id="dateTabs"></div>
-    <div id="historyContent"></div>
-  </section>
+      <div class="date-tabs" id="dateTabs"></div>
+      <div id="historyContent"></div>
+    </section>
+  </main>
 </div>
 
 <div class="keypad" id="keypad">
@@ -1666,6 +1789,8 @@ function escapeAttr(s){return escapeHtml(s)}
 function renderAll(){
   renderInput();
   renderHistory();
+  const championBanner=document.getElementById("championBanner");
+  if(championBanner) championBanner.innerHTML=championHtml();
   document.getElementById("editHistoryBtn").textContent=historyEditing?"完了":"編集";
   document.getElementById("editHistoryBtn").className="btn"+(historyEditing?" active":"");
   document.getElementById("totalStatsBtn").disabled=historyEditing;
@@ -1825,7 +1950,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=6", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=7", {
         updateViaCache: "none"
       });
 
