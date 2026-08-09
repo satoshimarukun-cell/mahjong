@@ -2883,10 +2883,11 @@ body::before{
 .dragon-brand-tiles img:nth-child(2){transform:translateY(3px) rotate(2deg)}
 .dragon-brand-tiles img:nth-child(3){transform:rotate(4deg)}
 .neo-brand{gap:10px!important}
-.neo-player-grid .player-row{border-top:1px solid #e5dccb!important}
+.neo-player-grid .player-row{border:4px solid var(--player-color,#e5dccb)!important;border-left-width:7px!important}
 .neo-player-grid .player-row.current-input{box-shadow:0 0 0 4px rgba(240,190,45,.34),0 8px 18px rgba(0,0,0,.10)!important}
-.player-select-wrap{border:2px solid transparent!important}
+.player-select-wrap{border:2px solid var(--player-color,#ddd)!important}
 .history-table thead th{transition:background .15s ease}
+.history-table thead th.player-head{background:var(--player-color,#075d39)!important;color:var(--player-text,#fff)!important}
 .history-table thead th:first-child{background:#087047!important;color:#fff!important}
 #statsModal .total-champion{border:2px solid #d6ae28!important;background:linear-gradient(135deg,#fff8cf,#f5d76f)!important}
 @media(max-width:900px){.dragon-brand-tiles img{width:36px;height:48px}.dragon-brand-tiles{gap:1px}}
@@ -3392,10 +3393,10 @@ function renderInput(){
     const rank=isComplete()?rankOf(i):0;
     const row=document.createElement("div");
     row.className="player-row"+(form.editingIndex===i?" current-input":"")+(historyEditing && !form.editingID?" locked":"");
-    row.style.setProperty("border-left",`7px solid #${liveColor(id)}`,"important");
+    row.style.setProperty("--player-color",`#${liveColor(id)}`);
     row.innerHTML=`
       <div class="rank-badge" style="background:${rank?rankColor(rank):"transparent"};color:${rank?rankText(rank):"#222"}">${rank?rank+"位":"-"}</div>
-      <div class="player-select-wrap" style="background:#${liveColor(id)}22;border-color:#${liveColor(id)}">
+      <div class="player-select-wrap" style="--player-color:#${liveColor(id)};background:#${liveColor(id)}22">
         <select class="player-select" data-sel="${i}"></select>
       </div>
       <button class="yaku-btn" data-yaku="${i}">${form.yakuman[i]? "⭐️".repeat(form.yakuman[i]) : '<span style="color:#aaa">役満</span>'}</button>
@@ -3559,7 +3560,7 @@ function renderHistory(){
   });
   html+=`</div><div class="history-wrap"><table class="history-table"><thead><tr><th>回</th>`;
   if(historyEditing) html+=`<th class="op">操作</th>`;
-  daily.forEach(p=>html+=`<th style="background:#${liveColor(p.id)};color:${contrastText(liveColor(p.id))}"><span class="h-player" style="background:transparent;color:inherit">${escapeHtml(p.name)}</span></th>`);
+  daily.forEach(p=>html+=`<th class="player-head" style="--player-color:#${liveColor(p.id)};--player-text:${contrastText(liveColor(p.id))}"><span class="h-player" style="background:transparent;color:inherit">${escapeHtml(p.name)}</span></th>`);
   html+=`</tr></thead><tbody>`;
 
   [...filtered].reverse().forEach((h,revIdx)=>{
