@@ -1006,6 +1006,118 @@ body{
 }
 </style>
 
+
+<style id="feature-pack-v9">
+/* ① 現在入力中のプレイヤーを明確化 */
+.neo-player-grid .player-row.current-input{
+  border:3px solid #d7ac49!important;
+  background:linear-gradient(135deg,#fffdf4,#f8fbf9)!important;
+  box-shadow:0 0 0 4px rgba(215,172,73,.16),0 12px 28px rgba(99,74,20,.14)!important;
+  transform:translateY(-1px);
+}
+.neo-player-grid .player-row.current-input::after{
+  content:"入力中";
+  position:absolute;
+  right:9px;
+  top:8px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#d7ac49;
+  color:#18342e;
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+.neo-player-grid .player-row.current-input .score-btn{
+  border-color:#d7ac49!important;
+  box-shadow:inset 0 0 0 1px #d7ac49,0 0 0 3px rgba(215,172,73,.12)!important;
+}
+.neo-player-grid .player-row.current-input .player-select-wrap{
+  box-shadow:0 0 0 2px rgba(215,172,73,.45);
+}
+
+/* ③ 年度別成績 */
+.year-select{
+  margin-right:10px;
+  min-width:105px;
+  border:1px solid #d9e3e0;
+  border-radius:10px;
+  padding:7px 10px;
+  background:#f7faf9;
+  color:#17332d;
+  font-weight:900;
+}
+#yearStatsModal .modal-card{
+  max-height:94vh!important;
+}
+#yearStatsModal .modal-head{
+  padding:10px 14px!important;
+  min-height:52px;
+}
+#yearStatsModal .modal-head h3{font-size:20px!important}
+#yearStatsModal .modal-body{padding:10px 12px 12px!important}
+#yearStatsModal .stats-list{gap:7px!important}
+#yearStatsModal .champion-card{
+  padding:7px 12px!important;
+  margin-bottom:7px!important;
+  min-height:54px;
+  display:grid!important;
+  grid-template-columns:150px minmax(150px,1fr) auto;
+  align-items:center;
+  gap:10px;
+}
+#yearStatsModal .champion-title{font-size:10px!important;margin:0!important}
+#yearStatsModal .champion-name{font-size:18px!important;margin:0!important}
+#yearStatsModal .champion-meta{font-size:10px!important;margin:0!important;white-space:nowrap}
+#yearStatsModal .stats-card{
+  min-height:128px;
+  padding:8px 10px!important;
+  display:grid!important;
+  grid-template-columns:180px 235px minmax(360px,1fr);
+  gap:10px!important;
+  align-items:center;
+}
+#yearStatsModal .stats-left{gap:8px!important;min-width:0}
+#yearStatsModal .pie{width:44px!important;height:44px!important}
+#yearStatsModal .pie::after{inset:11px!important}
+#yearStatsModal .stats-name{font-size:16px!important;padding:2px 6px!important}
+#yearStatsModal .stats-left .plus,
+#yearStatsModal .stats-left .minus{font-size:13px!important;line-height:1.15}
+#yearStatsModal .stats-left [style*="font-size:22px"]{font-size:17px!important}
+#yearStatsModal .stats-ranks{gap:3px!important}
+#yearStatsModal .stats-rank{padding:4px 2px!important;font-size:9px!important;border-radius:6px!important}
+#yearStatsModal .stats-rank strong{font-size:15px!important;line-height:1.05}
+#yearStatsModal .trend{height:58px!important}
+#yearStatsModal .trend .emoji{font-size:10px!important}
+#yearStatsModal .detail-grid{
+  display:grid!important;
+  grid-template-columns:repeat(9,minmax(58px,1fr))!important;
+  gap:3px!important;
+  margin-top:5px!important;
+}
+#yearStatsModal .detail-cell{
+  min-width:0!important;
+  padding:3px 2px!important;
+  font-size:8px!important;
+  line-height:1.05;
+  border-radius:5px!important;
+}
+#yearStatsModal .detail-cell strong{display:block;font-size:11px!important;margin-top:2px}
+#yearStatsModal .streak-badge{font-size:9px!important;padding:2px 5px!important;margin-left:4px!important}
+#yearStatsModal .stats-card > div:nth-child(2) > div:last-child{
+  margin-top:4px!important;
+  font-size:11px!important;
+}
+#yearStatsModal .stats-card > div:nth-child(3) > div:first-child{
+  font-size:9px!important;
+  margin-bottom:2px!important;
+}
+@media(max-width:1100px){
+  #yearStatsModal .stats-card{grid-template-columns:170px 220px minmax(300px,1fr)}
+  #yearStatsModal .detail-grid{grid-template-columns:repeat(3,1fr)!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -1023,6 +1135,7 @@ body{
 
     <div class="neo-header-actions">
       <button class="btn" id="adminLoginBtn">🔐 管理者</button>
+      <button class="btn" id="yearStatsBtn">📅 年度別成績</button>
       <button class="btn primary" id="totalStatsBtn">📊 通算成績</button>
       <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
     </div>
@@ -1142,6 +1255,21 @@ body{
       <div class="stats-list" id="statsList"></div>
     </div>
   </div>
+
+<div class="modal" id="yearStatsModal">
+  <div class="modal-card" style="width:min(1320px,96vw)">
+    <div class="modal-head">
+      <h3>年度別成績</h3>
+      <div class="spacer"></div>
+      <select id="yearStatsSelect" class="year-select"></select>
+      <button class="btn active" id="yearStatsDone">完了</button>
+    </div>
+    <div class="modal-body">
+      <div class="stats-list" id="yearStatsList"></div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="overlay" id="rankingOverlay">
@@ -1163,7 +1291,7 @@ let cloudReady = false;
 const CONFIG = {
   baseScore:30000,
   totalScorePool:100000,
-  graphLimit:50,
+  graphLimit:100,
   defaultRate:5.0,
   defaultOka:20,
   defaultUmaHigh:10,
@@ -1462,7 +1590,7 @@ function renderInput(){
     const p=getPlayer(id);
     const rank=isComplete()?rankOf(i):0;
     const row=document.createElement("div");
-    row.className="player-row"+(historyEditing && !form.editingID?" locked":"");
+    row.className="player-row"+(form.editingIndex===i?" current-input":"")+(historyEditing && !form.editingID?" locked":"");
     row.innerHTML=`
       <div class="rank-badge" style="background:${rank?rankColor(rank):"transparent"};color:${rank?rankText(rank):"#222"}">${rank?rank+"位":"-"}</div>
       <div class="player-select-wrap" style="background:#${liveColor(id)}66">
@@ -1605,7 +1733,7 @@ function renderHistory(){
     const b=document.createElement("button");
     b.className="date-tab"+(d===selectedDate?" active":"");
     b.textContent=d;
-    b.onclick=()=>{selectedDate=d;renderHistory()};
+    b.onclick=()=>{selectedDate=d;renderAll()};
     tabs.appendChild(b);
   });
 
@@ -1716,21 +1844,38 @@ function applySettings(){
   renderAll();
 }
 
-function calculateStats(){
-  const ids=[...new Set(state.history.flatMap(h=>h.playerIDs||[]))];
+function calculateStats(sourceHistory=state.history){
+  const ids=[...new Set(sourceHistory.flatMap(h=>h.playerIDs||[]))];
   const map=new Map();
   ids.forEach(id=>map.set(id,{id,name:liveName(id),totalBalance:0,totalPts:0,count:0,stars:0,ranks:[0,0,0,0],rankTrend:[],scoreTrend:[],maxPts:-Infinity,minPts:Infinity,currentWinStreak:0,currentLastStreak:0,maxWinStreak:0}));
-  [...state.history].reverse().forEach(h=>{
+  [...sourceHistory].reverse().forEach(h=>{
     for(let i=0;i<4;i++){
       const id=h.playerIDs?.[i]; if(!id) continue;
       let s=map.get(id); if(!s){continue}
-      const pt=h.points[i]; s.totalBalance+=Math.trunc(pt*h.rateAtTime*10); s.totalPts+=pt; s.count++; s.stars+=h.yakuman[i];
-      s.maxPts=Math.max(s.maxPts,pt); s.minPts=Math.min(s.minPts,pt);
-      const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v); const r=sorted.findIndex(x=>x.k===i)+1;
-      s.ranks[r-1]++; s.rankTrend.push(r); s.scoreTrend.push(h.scores[i]);
-      if(r===1){s.currentWinStreak++;s.maxWinStreak=Math.max(s.maxWinStreak,s.currentWinStreak)}else{s.currentWinStreak=0}
-      if(r===4)s.currentLastStreak++;else s.currentLastStreak=0;
-      if(s.rankTrend.length>CONFIG.graphLimit){s.rankTrend.shift();s.scoreTrend.shift();}
+      const pt=h.points[i];
+      s.totalBalance+=Math.trunc(pt*h.rateAtTime*10);
+      s.totalPts+=pt;
+      s.count++;
+      s.stars+=h.yakuman[i];
+      s.maxPts=Math.max(s.maxPts,pt);
+      s.minPts=Math.min(s.minPts,pt);
+      const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v);
+      const r=sorted.findIndex(x=>x.k===i)+1;
+      s.ranks[r-1]++;
+      s.rankTrend.push(r);
+      s.scoreTrend.push(h.scores[i]);
+      if(r===1){
+        s.currentWinStreak++;
+        s.maxWinStreak=Math.max(s.maxWinStreak,s.currentWinStreak);
+      }else{
+        s.currentWinStreak=0;
+      }
+      if(r===4)s.currentLastStreak++;
+      else s.currentLastStreak=0;
+      if(s.rankTrend.length>CONFIG.graphLimit){
+        s.rankTrend.shift();
+        s.scoreTrend.shift();
+      }
     }
   });
   return [...map.values()].sort((a,b)=>b.totalPts-a.totalPts);
@@ -1747,8 +1892,21 @@ function yearStats(year){
   });
   return [...totals.values()].sort((a,b)=>b.pts-a.pts);
 }
-function championHtml(){
-  const year=new Date().getFullYear(), ys=yearStats(year); if(!ys.length)return ""; const c=ys[0];
+function selectedStatsYear(){
+  if(selectedDate){
+    const y=parseInt(selectedDate.slice(0,4),10);
+    if(Number.isFinite(y)) return y;
+  }
+  if(form.gameDate){
+    const y=parseInt(String(form.gameDate).slice(0,4),10);
+    if(Number.isFinite(y)) return y;
+  }
+  return new Date().getFullYear();
+}
+function championHtml(year=selectedStatsYear()){
+  const ys=yearStats(year);
+  if(!ys.length)return `<div class="champion-card"><div class="champion-title">👑 ${year}年 雀王</div><div class="champion-name">記録なし</div><div class="champion-meta">この年度の成績はありません</div></div>`;
+  const c=ys[0];
   const avg=(c.ranks[0]+c.ranks[1]*2+c.ranks[2]*3+c.ranks[3]*4)/Math.max(1,c.count);
   return `<div class="champion-card"><div class="champion-title">👑 ${year}年 雀王</div><div class="champion-name">${escapeHtml(liveName(c.id))}</div><div class="champion-meta">${c.pts>=0?"+":""}${c.pts} pt ・ ${c.count}戦 ・ 平均${avg.toFixed(2)}位</div></div>`;
 }
@@ -1777,7 +1935,7 @@ function trendHtml(s){
   });
   const grid=[5,(H-10)/3+5,2*(H-10)/3+5,H-5].map(y=>`<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#ddd" stroke-dasharray="4 4"/>`).join("");
   const poly=pts.map(p=>`${p.x},${p.y}`).join(" ");
-  const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="#f08a24"/>`).join("");
+  const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="2" fill="#f08a24"/>`).join("");
   const emojis=pts.map(p=>{
     let e="";
     if(p.r===1 && p.score>=CONFIG.pandaScoreThreshold)e="🐼";
@@ -1785,33 +1943,76 @@ function trendHtml(s){
     if(!e)return "";
     return `<span class="emoji" style="left:${p.x/W*100}%;top:${p.y/H*100}%">${e}</span>`;
   }).join("");
-  return `<div class="trend"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<polyline points="${poly}" fill="none" stroke="#f08a24" stroke-width="2.5"/>${dots}</svg>${emojis}</div>`;
+  return `<div class="trend"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<polyline points="${poly}" fill="none" stroke="#f08a24" stroke-width="1.25"/>${dots}</svg>${emojis}</div>`;
+}
+function statsCardHtml(s){
+  const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
+  return `<div class="stats-card">
+    <div class="stats-left">
+      <div class="pie" style="background:${pieGradient(s.ranks)}"></div>
+      <div>
+        <div><span class="stats-name" style="background:#${liveColor(s.id)}55;padding:3px 8px;border-radius:6px">${escapeHtml(s.name)}</span> ${s.stars?`<span style="color:#e48a00">⭐️${s.stars}</span>`:""}</div>
+        <div class="${s.totalPts>=0?"plus":"minus"}" style="font-weight:900;margin-top:5px">${s.totalPts>=0?"+":""}${s.totalPts} pt</div>
+        <div class="${s.totalBalance>=0?"plus":"minus"}" style="font-size:22px;font-weight:900">${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
+        ${streakHtml(s)}
+      </div>
+    </div>
+    <div>
+      <div class="stats-ranks">
+        ${s.ranks.map((n,i)=>`<div class="stats-rank" style="background:${rankColor(i+1)};color:${rankText(i+1)}">${i+1}位<strong>${n}</strong>${(n/Math.max(1,s.count)*100).toFixed(1)}%</div>`).join("")}
+      </div>
+      <div style="text-align:center;margin-top:8px;font-weight:900;color:${getComputedStyle(document.documentElement).getPropertyValue("--red")}">${s.count}戦 / 平均${avg.toFixed(2)}位</div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#777;margin-bottom:4px">直近${CONFIG.graphLimit}戦</div>
+      ${trendHtml(s)}
+      ${detailHtml(s)}
+    </div>
+  </div>`;
 }
 function renderStats(){
   const list=document.getElementById("statsList");
   const stats=calculateStats();
-  if(!stats.length){list.innerHTML='<div class="empty">通算成績はまだありません。</div>';return}
-  list.innerHTML=championHtml()+stats.map(s=>{
-    const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
-    return `<div class="stats-card">
-      <div class="stats-left">
-        <div class="pie" style="background:${pieGradient(s.ranks)}"></div>
-        <div>
-          <div><span class="stats-name" style="background:#${liveColor(s.id)}55;padding:3px 8px;border-radius:6px">${escapeHtml(s.name)}</span> ${s.stars?`<span style="color:#e48a00">⭐️${s.stars}</span>`:""}</div>
-          <div class="${s.totalPts>=0?"plus":"minus"}" style="font-weight:900;margin-top:5px">${s.totalPts>=0?"+":""}${s.totalPts} pt</div>
-          <div class="${s.totalBalance>=0?"plus":"minus"}" style="font-size:22px;font-weight:900">${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
-          ${streakHtml(s)}
-        </div>
-      </div>
-      <div>
-        <div class="stats-ranks">
-          ${s.ranks.map((n,i)=>`<div class="stats-rank" style="background:${rankColor(i+1)};color:${rankText(i+1)}">${i+1}位<strong>${n}</strong>${(n/Math.max(1,s.count)*100).toFixed(1)}%</div>`).join("")}
-        </div>
-        <div style="text-align:center;margin-top:8px;font-weight:900;color:${getComputedStyle(document.documentElement).getPropertyValue("--red")}">${s.count}戦 / 平均${avg.toFixed(2)}位</div>
-      </div>
-      <div><div style="font-size:12px;font-weight:800;color:#777;margin-bottom:4px">直近${CONFIG.graphLimit}戦</div>${trendHtml(s)}${detailHtml(s)}</div>
-    </div>`;
-  }).join("");
+  if(!stats.length){
+    list.innerHTML='<div class="empty">通算成績はまだありません。</div>';
+    return;
+  }
+  list.innerHTML=championHtml(selectedStatsYear())+stats.map(statsCardHtml).join("");
+}
+function availableYears(){
+  return [...new Set(state.history.map(h=>new Date(h.date).getFullYear()))]
+    .filter(Number.isFinite)
+    .sort((a,b)=>b-a);
+}
+function renderYearStats(year){
+  const list=document.getElementById("yearStatsList");
+  const filtered=state.history.filter(h=>new Date(h.date).getFullYear()===year);
+  const stats=calculateStats(filtered);
+  if(!stats.length){
+    list.innerHTML=`<div class="empty">${year}年の成績はまだありません。</div>`;
+    return;
+  }
+  list.innerHTML=championHtml(year)+stats.map(statsCardHtml).join("");
+}
+function setupYearStatsModal(preferredYear=selectedStatsYear()){
+  const select=document.getElementById("yearStatsSelect");
+  const years=availableYears();
+  select.innerHTML="";
+  if(!years.length){
+    const y=new Date().getFullYear();
+    select.innerHTML=`<option value="${y}">${y}年</option>`;
+    renderYearStats(y);
+    return;
+  }
+  years.forEach(y=>{
+    const op=document.createElement("option");
+    op.value=String(y);
+    op.textContent=`${y}年`;
+    if(y===preferredYear)op.selected=true;
+    select.appendChild(op);
+  });
+  if(!years.includes(preferredYear)) select.value=String(years[0]);
+  renderYearStats(parseInt(select.value,10));
 }
 
 function exportCSV(){
@@ -1979,11 +2180,13 @@ function renderAll(){
   renderInput();
   renderHistory();
   const championBanner=document.getElementById("championBanner");
-  if(championBanner) championBanner.innerHTML=championHtml();
+  if(championBanner) championBanner.innerHTML=championHtml(selectedStatsYear());
   document.getElementById("editHistoryBtn").textContent=historyEditing?"完了":"編集";
   document.getElementById("editHistoryBtn").className="btn"+(historyEditing?" active":"");
   document.getElementById("totalStatsBtn").disabled=historyEditing;
   document.getElementById("totalStatsBtn").style.opacity=historyEditing?".5":"1";
+  document.getElementById("yearStatsBtn").disabled=historyEditing;
+  document.getElementById("yearStatsBtn").style.opacity=historyEditing?".5":"1";
   const alb=document.getElementById("adminLoginBtn"); if(alb) alb.textContent=isAdmin?"🔓 ログアウト":"🔐 管理者";
   applyAdminUI();
 }
@@ -2007,9 +2210,18 @@ document.getElementById("editHistoryBtn").onclick=()=>{
 };
 document.getElementById("totalStatsBtn").onclick=()=>{
   if(historyEditing)return;
-  renderStats();document.getElementById("statsModal").classList.add("show");
+  renderStats();
+  document.getElementById("statsModal").classList.add("show");
 };
 document.getElementById("statsDone").onclick=()=>document.getElementById("statsModal").classList.remove("show");
+
+document.getElementById("yearStatsBtn").onclick=()=>{
+  if(historyEditing)return;
+  setupYearStatsModal(selectedStatsYear());
+  document.getElementById("yearStatsModal").classList.add("show");
+};
+document.getElementById("yearStatsDone").onclick=()=>document.getElementById("yearStatsModal").classList.remove("show");
+document.getElementById("yearStatsSelect").onchange=e=>renderYearStats(parseInt(e.target.value,10));
 
 document.getElementById("settingsBtn").onclick=()=>{
   renderSettings();document.getElementById("settingsModal").classList.add("show");
@@ -2139,7 +2351,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=8", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=9", {
         updateViaCache: "none"
       });
 
