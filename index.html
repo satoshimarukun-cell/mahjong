@@ -1007,7 +1007,10 @@ body{
 </style>
 
 
-<style id="feature-pack-v9">
+
+
+
+<style id="feature-pack-v10">
 /* ① 現在入力中のプレイヤーを明確化 */
 .neo-player-grid .player-row.current-input{
   border:3px solid #d7ac49!important;
@@ -1036,85 +1039,158 @@ body{
   box-shadow:0 0 0 2px rgba(215,172,73,.45);
 }
 
-/* ③ 年度別成績 */
-.year-select{
-  margin-right:10px;
-  min-width:105px;
-  border:1px solid #d9e3e0;
-  border-radius:10px;
-  padding:7px 10px;
-  background:#f7faf9;
-  color:#17332d;
-  font-weight:900;
-}
-#yearStatsModal .modal-card{
+/* 年度別成績：歴代一覧 */
+#yearStatsModal .year-history-card{
+  width:min(1480px,98vw)!important;
   max-height:94vh!important;
 }
 #yearStatsModal .modal-head{
-  padding:10px 14px!important;
-  min-height:52px;
+  padding:12px 16px!important;
 }
-#yearStatsModal .modal-head h3{font-size:20px!important}
-#yearStatsModal .modal-body{padding:10px 12px 12px!important}
-#yearStatsModal .stats-list{gap:7px!important}
-#yearStatsModal .champion-card{
-  padding:7px 12px!important;
-  margin-bottom:7px!important;
-  min-height:54px;
-  display:grid!important;
-  grid-template-columns:150px minmax(150px,1fr) auto;
+#yearStatsModal .modal-head h3{
+  margin:1px 0 0!important;
+  font-size:21px!important;
+}
+#yearStatsModal .year-history-body{
+  padding:10px 12px 14px!important;
+  overflow:auto;
+}
+.year-archive-wrap{
+  overflow:auto;
+  border:1px solid #dde6e3;
+  border-radius:14px;
+  background:white;
+}
+.year-archive-table{
+  width:100%;
+  min-width:1180px;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed;
+}
+.year-archive-table th,
+.year-archive-table td{
+  border-right:1px solid #e5ece9;
+  border-bottom:1px solid #e5ece9;
+  padding:8px 7px;
+  vertical-align:middle;
+}
+.year-archive-table thead th{
+  position:sticky;
+  top:0;
+  z-index:3;
+  background:#15362f;
+  color:white;
+  font-size:11px;
+  letter-spacing:.03em;
+  text-align:center;
+}
+.year-archive-table thead th:first-child{
+  left:0;
+  z-index:5;
+}
+.year-archive-table tbody th{
+  position:sticky;
+  left:0;
+  z-index:2;
+  width:80px;
+  background:#f2f7f5;
+  color:#17352f;
+  text-align:center;
+}
+.year-archive-table tbody tr:nth-child(even) td{
+  background:#fafcfb;
+}
+.year-archive-table .year-cell{
+  font-size:18px;
+  font-weight:950;
+}
+.year-archive-table .player-year-cell{
+  min-width:155px;
+}
+.year-player-name{
+  display:flex;
   align-items:center;
-  gap:10px;
+  gap:6px;
+  margin-bottom:5px;
+  font-size:12px;
+  font-weight:950;
 }
-#yearStatsModal .champion-title{font-size:10px!important;margin:0!important}
-#yearStatsModal .champion-name{font-size:18px!important;margin:0!important}
-#yearStatsModal .champion-meta{font-size:10px!important;margin:0!important;white-space:nowrap}
-#yearStatsModal .stats-card{
-  min-height:128px;
-  padding:8px 10px!important;
-  display:grid!important;
-  grid-template-columns:180px 235px minmax(360px,1fr);
-  gap:10px!important;
-  align-items:center;
-}
-#yearStatsModal .stats-left{gap:8px!important;min-width:0}
-#yearStatsModal .pie{width:44px!important;height:44px!important}
-#yearStatsModal .pie::after{inset:11px!important}
-#yearStatsModal .stats-name{font-size:16px!important;padding:2px 6px!important}
-#yearStatsModal .stats-left .plus,
-#yearStatsModal .stats-left .minus{font-size:13px!important;line-height:1.15}
-#yearStatsModal .stats-left [style*="font-size:22px"]{font-size:17px!important}
-#yearStatsModal .stats-ranks{gap:3px!important}
-#yearStatsModal .stats-rank{padding:4px 2px!important;font-size:9px!important;border-radius:6px!important}
-#yearStatsModal .stats-rank strong{font-size:15px!important;line-height:1.05}
-#yearStatsModal .trend{height:58px!important}
-#yearStatsModal .trend .emoji{font-size:10px!important}
-#yearStatsModal .detail-grid{
-  display:grid!important;
-  grid-template-columns:repeat(9,minmax(58px,1fr))!important;
-  gap:3px!important;
-  margin-top:5px!important;
-}
-#yearStatsModal .detail-cell{
-  min-width:0!important;
-  padding:3px 2px!important;
-  font-size:8px!important;
+.year-player-pt{
+  font-size:17px;
+  font-weight:950;
   line-height:1.05;
-  border-radius:5px!important;
 }
-#yearStatsModal .detail-cell strong{display:block;font-size:11px!important;margin-top:2px}
-#yearStatsModal .streak-badge{font-size:9px!important;padding:2px 5px!important;margin-left:4px!important}
-#yearStatsModal .stats-card > div:nth-child(2) > div:last-child{
-  margin-top:4px!important;
-  font-size:11px!important;
+.year-player-sub{
+  margin-top:4px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2px;
 }
-#yearStatsModal .stats-card > div:nth-child(3) > div:first-child{
-  font-size:9px!important;
-  margin-bottom:2px!important;
+.year-rank-mini{
+  padding:3px 2px;
+  border-radius:5px;
+  color:white;
+  text-align:center;
+  font-size:9px;
+  font-weight:900;
 }
-@media(max-width:1100px){
-  #yearStatsModal .stats-card{grid-template-columns:170px 220px minmax(300px,1fr)}
-  #yearStatsModal .detail-grid{grid-template-columns:repeat(3,1fr)!important}
+.year-rank-mini.r2{color:#222}
+.year-player-meta{
+  margin-top:4px;
+  color:#758680;
+  font-size:9px;
+  font-weight:800;
+}
+.year-no-play{
+  color:#b0bbb7;
+  text-align:center;
+  font-size:11px;
+}
+.year-title-cell{
+  min-width:300px;
+  background:#fffdf7!important;
+}
+.title-board{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(130px,1fr));
+  gap:5px;
+}
+.title-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:5px;
+  padding:5px 7px;
+  border:1px solid #eadfbf;
+  border-radius:8px;
+  background:#fffaf0;
+  font-size:9px;
+}
+.title-chip .title-label{
+  color:#8e7432;
+  font-weight:900;
+}
+.title-chip .title-winner{
+  color:#18352f;
+  font-weight:950;
+  white-space:nowrap;
+}
+.title-chip.crown{
+  grid-column:1/-1;
+  background:linear-gradient(135deg,#fff0b5,#f1d16e);
+  border-color:#dfbd52;
+}
+.title-chip.crown .title-label,
+.title-chip.crown .title-winner{
+  font-size:11px;
+}
+.year-archive-note{
+  padding:8px 10px;
+  color:#788883;
+  font-size:10px;
+  background:#f8faf9;
+  border-top:1px solid #e5ece9;
 }
 </style>
 
@@ -1246,7 +1322,7 @@ body{
 </div>
 
 <div class="modal" id="statsModal">
-  <div class="modal-card" style="width:min(1120px,96vw)">
+  <div class="modal-card" style="width:min(1320px,96vw)">
     <div class="modal-head">
       <h3>通算成績集計</h3><div class="spacer"></div>
       <button class="btn active" id="statsDone">完了</button>
@@ -1255,21 +1331,22 @@ body{
       <div class="stats-list" id="statsList"></div>
     </div>
   </div>
-
-<div class="modal" id="yearStatsModal">
-  <div class="modal-card" style="width:min(1320px,96vw)">
-    <div class="modal-head">
-      <h3>年度別成績</h3>
-      <div class="spacer"></div>
-      <select id="yearStatsSelect" class="year-select"></select>
-      <button class="btn active" id="yearStatsDone">完了</button>
-    </div>
-    <div class="modal-body">
-      <div class="stats-list" id="yearStatsList"></div>
-    </div>
-  </div>
 </div>
 
+<div class="modal" id="yearStatsModal">
+  <div class="modal-card year-history-card">
+    <div class="modal-head">
+      <div>
+        <div class="neo-eyebrow">SEASON ARCHIVES</div>
+        <h3>年度別成績・歴代タイトル</h3>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn active" id="yearStatsDone">完了</button>
+    </div>
+    <div class="modal-body year-history-body">
+      <div id="yearStatsList"></div>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="rankingOverlay">
@@ -1984,35 +2061,114 @@ function availableYears(){
     .filter(Number.isFinite)
     .sort((a,b)=>b-a);
 }
-function renderYearStats(year){
-  const list=document.getElementById("yearStatsList");
+
+function annualStatsMap(year){
   const filtered=state.history.filter(h=>new Date(h.date).getFullYear()===year);
   const stats=calculateStats(filtered);
-  if(!stats.length){
-    list.innerHTML=`<div class="empty">${year}年の成績はまだありません。</div>`;
-    return;
-  }
-  list.innerHTML=championHtml(year)+stats.map(statsCardHtml).join("");
+  return new Map(stats.map(s=>[s.id,s]));
 }
-function setupYearStatsModal(preferredYear=selectedStatsYear()){
-  const select=document.getElementById("yearStatsSelect");
+
+function annualTitles(year){
+  const filtered=state.history.filter(h=>new Date(h.date).getFullYear()===year);
+  const stats=calculateStats(filtered);
+  if(!stats.length)return null;
+
+  const avg=s=>(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
+  const topRate=s=>s.ranks[0]/Math.max(1,s.count);
+  const rentaiRate=s=>(s.ranks[0]+s.ranks[1])/Math.max(1,s.count);
+  const avoidLastRate=s=>(s.count-s.ranks[3])/Math.max(1,s.count);
+
+  const maxBy=(fn)=>{
+    const best=Math.max(...stats.map(fn));
+    return stats.filter(s=>fn(s)===best);
+  };
+  const minBy=(fn)=>{
+    const best=Math.min(...stats.map(fn));
+    return stats.filter(s=>fn(s)===best);
+  };
+  const names=arr=>arr.map(s=>liveName(s.id)).join("・");
+
+  return {
+    champion:names(maxBy(s=>s.totalPts)),
+    topKing:names(maxBy(s=>s.ranks[0])),
+    topRateKing:names(maxBy(topRate)),
+    rentaiKing:names(maxBy(rentaiRate)),
+    defenseKing:names(maxBy(avoidLastRate)),
+    avgKing:names(minBy(avg)),
+    yakumanKing:names(maxBy(s=>s.stars)),
+    highScoreKing:names(maxBy(s=>s.maxPts))
+  };
+}
+
+function renderYearArchive(){
+  const host=document.getElementById("yearStatsList");
   const years=availableYears();
-  select.innerHTML="";
+
   if(!years.length){
-    const y=new Date().getFullYear();
-    select.innerHTML=`<option value="${y}">${y}年</option>`;
-    renderYearStats(y);
+    host.innerHTML='<div class="empty">年度別成績はまだありません。</div>';
     return;
   }
-  years.forEach(y=>{
-    const op=document.createElement("option");
-    op.value=String(y);
-    op.textContent=`${y}年`;
-    if(y===preferredYear)op.selected=true;
-    select.appendChild(op);
+
+  const activePlayerIDs=state.players.map(p=>p.id).filter(id=>
+    state.history.some(h=>(h.playerIDs||[]).includes(id))
+  );
+
+  let html=`<div class="year-archive-wrap">
+    <table class="year-archive-table">
+      <thead><tr>
+        <th style="width:82px">年度</th>
+        ${activePlayerIDs.map(id=>`<th>${escapeHtml(liveName(id))}</th>`).join("")}
+        <th style="width:310px">年間タイトル</th>
+      </tr></thead><tbody>`;
+
+  years.forEach(year=>{
+    const map=annualStatsMap(year);
+    const titles=annualTitles(year);
+
+    html+=`<tr><th class="year-cell">${year}</th>`;
+
+    activePlayerIDs.forEach(id=>{
+      const s=map.get(id);
+      if(!s){
+        html+=`<td class="player-year-cell"><div class="year-no-play">出場なし</div></td>`;
+        return;
+      }
+      const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
+      html+=`<td class="player-year-cell">
+        <div class="year-player-name">
+          <span class="name-chip" style="background:#${liveColor(id)}55">${escapeHtml(liveName(id))}</span>
+        </div>
+        <div class="year-player-pt ${s.totalPts>=0?"plus":"minus"}">${s.totalPts>=0?"+":""}${s.totalPts} pt</div>
+        <div class="year-player-sub">
+          <div class="year-rank-mini" style="background:${rankColor(1)}">1位 ${s.ranks[0]}</div>
+          <div class="year-rank-mini r2" style="background:${rankColor(2)}">2位 ${s.ranks[1]}</div>
+          <div class="year-rank-mini" style="background:${rankColor(3)}">3位 ${s.ranks[2]}</div>
+          <div class="year-rank-mini" style="background:${rankColor(4)}">4位 ${s.ranks[3]}</div>
+        </div>
+        <div class="year-player-meta">${s.count}戦 / 平均${avg.toFixed(2)}位 / ${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
+      </td>`;
+    });
+
+    html+=`<td class="year-title-cell">
+      ${titles?`<div class="title-board">
+        <div class="title-chip crown"><span class="title-label">👑 雀王</span><span class="title-winner">${escapeHtml(titles.champion)}</span></div>
+        <div class="title-chip"><span class="title-label">🏆 最多トップ</span><span class="title-winner">${escapeHtml(titles.topKing)}</span></div>
+        <div class="title-chip"><span class="title-label">🔥 トップ率王</span><span class="title-winner">${escapeHtml(titles.topRateKing)}</span></div>
+        <div class="title-chip"><span class="title-label">🤝 連対王</span><span class="title-winner">${escapeHtml(titles.rentaiKing)}</span></div>
+        <div class="title-chip"><span class="title-label">🛡️ ラス回避王</span><span class="title-winner">${escapeHtml(titles.defenseKing)}</span></div>
+        <div class="title-chip"><span class="title-label">🎯 平均順位王</span><span class="title-winner">${escapeHtml(titles.avgKing)}</span></div>
+        <div class="title-chip"><span class="title-label">⭐️ 役満王</span><span class="title-winner">${escapeHtml(titles.yakumanKing)}</span></div>
+        <div class="title-chip"><span class="title-label">🚀 最高pt</span><span class="title-winner">${escapeHtml(titles.highScoreKing)}</span></div>
+      </div>`:`-`}
+    </td></tr>`;
   });
-  if(!years.includes(preferredYear)) select.value=String(years[0]);
-  renderYearStats(parseInt(select.value,10));
+
+  html+=`</tbody></table>
+    <div class="year-archive-note">
+      雀王＝年間総合pt首位。タイトルが同数・同率の場合は複数受賞として表示します。
+    </div>
+  </div>`;
+  host.innerHTML=html;
 }
 
 function exportCSV(){
@@ -2217,11 +2373,10 @@ document.getElementById("statsDone").onclick=()=>document.getElementById("statsM
 
 document.getElementById("yearStatsBtn").onclick=()=>{
   if(historyEditing)return;
-  setupYearStatsModal(selectedStatsYear());
+  renderYearArchive();
   document.getElementById("yearStatsModal").classList.add("show");
 };
 document.getElementById("yearStatsDone").onclick=()=>document.getElementById("yearStatsModal").classList.remove("show");
-document.getElementById("yearStatsSelect").onchange=e=>renderYearStats(parseInt(e.target.value,10));
 
 document.getElementById("settingsBtn").onclick=()=>{
   renderSettings();document.getElementById("settingsModal").classList.add("show");
@@ -2351,7 +2506,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=9", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=10", {
         updateViaCache: "none"
       });
 
