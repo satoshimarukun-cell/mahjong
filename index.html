@@ -1194,6 +1194,90 @@ body{
 }
 </style>
 
+
+<style id="year-archive-v11">
+#yearStatsModal .year-history-card{
+  width:min(1500px,98vw)!important;
+}
+.year-archive-table{
+  min-width:1120px!important;
+  table-layout:fixed!important;
+}
+.year-archive-table thead th:first-child,
+.year-archive-table tbody th{
+  width:72px!important;
+}
+.year-archive-table .player-year-cell{
+  min-width:0!important;
+  width:auto!important;
+  padding:7px 5px!important;
+}
+.year-archive-table thead th.player-col-head{
+  width:12.5%!important;
+}
+.year-archive-table thead th.title-col-head{
+  width:37.5%!important;
+}
+.year-title-cell{
+  min-width:0!important;
+  width:auto!important;
+  padding:7px!important;
+}
+.year-player-name{
+  margin-bottom:3px!important;
+  font-size:10px!important;
+}
+.year-player-name .name-chip{
+  padding:2px 5px!important;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.year-player-pt{
+  font-size:15px!important;
+}
+.year-player-sub{
+  gap:1px!important;
+}
+.year-rank-mini{
+  padding:2px 1px!important;
+  font-size:8px!important;
+}
+.year-player-meta{
+  font-size:8px!important;
+  line-height:1.25;
+}
+.title-board{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:4px!important;
+}
+.title-chip{
+  min-width:0;
+  padding:5px 6px!important;
+  font-size:8.5px!important;
+}
+.title-chip .title-winner{
+  display:flex;
+  gap:4px;
+  align-items:baseline;
+  min-width:0;
+}
+.title-chip .title-name{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.title-chip .title-value{
+  color:#9b6f19;
+  font-weight:950;
+  white-space:nowrap;
+}
+.title-chip.crown .title-value{
+  color:#684d09;
+}
+</style>
+
 </head>
 <body>
 
@@ -2080,23 +2164,32 @@ function annualTitles(year){
 
   const maxBy=(fn)=>{
     const best=Math.max(...stats.map(fn));
-    return stats.filter(s=>fn(s)===best);
+    return {players:stats.filter(s=>fn(s)===best),value:best};
   };
   const minBy=(fn)=>{
     const best=Math.min(...stats.map(fn));
-    return stats.filter(s=>fn(s)===best);
+    return {players:stats.filter(s=>fn(s)===best),value:best};
   };
-  const names=arr=>arr.map(s=>liveName(s.id)).join("・");
+  const names=o=>o.players.map(s=>liveName(s.id)).join("・");
+
+  const champion=maxBy(s=>s.totalPts);
+  const topKing=maxBy(s=>s.ranks[0]);
+  const topRateKing=maxBy(topRate);
+  const rentaiKing=maxBy(rentaiRate);
+  const defenseKing=maxBy(avoidLastRate);
+  const avgKing=minBy(avg);
+  const yakumanKing=maxBy(s=>s.stars);
+  const highScoreKing=maxBy(s=>s.maxPts);
 
   return {
-    champion:names(maxBy(s=>s.totalPts)),
-    topKing:names(maxBy(s=>s.ranks[0])),
-    topRateKing:names(maxBy(topRate)),
-    rentaiKing:names(maxBy(rentaiRate)),
-    defenseKing:names(maxBy(avoidLastRate)),
-    avgKing:names(minBy(avg)),
-    yakumanKing:names(maxBy(s=>s.stars)),
-    highScoreKing:names(maxBy(s=>s.maxPts))
+    champion:{name:names(champion),value:`${champion.value>=0?"+":""}${champion.value} pt`},
+    topKing:{name:names(topKing),value:`${topKing.value}回`},
+    topRateKing:{name:names(topRateKing),value:`${(topRateKing.value*100).toFixed(1)}%`},
+    rentaiKing:{name:names(rentaiKing),value:`${(rentaiKing.value*100).toFixed(1)}%`},
+    defenseKing:{name:names(defenseKing),value:`${(defenseKing.value*100).toFixed(1)}%`},
+    avgKing:{name:names(avgKing),value:`${avgKing.value.toFixed(2)}位`},
+    yakumanKing:{name:names(yakumanKing),value:`${yakumanKing.value}回`},
+    highScoreKing:{name:names(highScoreKing),value:`${highScoreKing.value>=0?"+":""}${highScoreKing.value} pt`}
   };
 }
 
@@ -2109,34 +2202,35 @@ function renderYearArchive(){
     return;
   }
 
-  const activePlayerIDs=state.players.map(p=>p.id).filter(id=>
-    state.history.some(h=>(h.playerIDs||[]).includes(id))
-  );
+  const maxPlayers=Math.max(...years.map(year=>calculateStats(
+    state.history.filter(h=>new Date(h.date).getFullYear()===year)
+  ).length),1);
 
   let html=`<div class="year-archive-wrap">
     <table class="year-archive-table">
       <thead><tr>
-        <th style="width:82px">年度</th>
-        ${activePlayerIDs.map(id=>`<th>${escapeHtml(liveName(id))}</th>`).join("")}
-        <th style="width:310px">年間タイトル</th>
+        <th>年度</th>
+        ${Array.from({length:maxPlayers},(_,i)=>`<th class="player-col-head">${i+1}位</th>`).join("")}
+        <th class="title-col-head">年間タイトル</th>
       </tr></thead><tbody>`;
 
   years.forEach(year=>{
-    const map=annualStatsMap(year);
+    const filtered=state.history.filter(h=>new Date(h.date).getFullYear()===year);
+    const ranked=calculateStats(filtered).sort((a,b)=>b.totalPts-a.totalPts);
     const titles=annualTitles(year);
 
     html+=`<tr><th class="year-cell">${year}</th>`;
 
-    activePlayerIDs.forEach(id=>{
-      const s=map.get(id);
+    for(let pos=0;pos<maxPlayers;pos++){
+      const s=ranked[pos];
       if(!s){
-        html+=`<td class="player-year-cell"><div class="year-no-play">出場なし</div></td>`;
-        return;
+        html+=`<td class="player-year-cell"><div class="year-no-play">-</div></td>`;
+        continue;
       }
       const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
       html+=`<td class="player-year-cell">
         <div class="year-player-name">
-          <span class="name-chip" style="background:#${liveColor(id)}55">${escapeHtml(liveName(id))}</span>
+          <span class="name-chip" style="background:#${liveColor(s.id)}55">${pos+1}位 ${escapeHtml(liveName(s.id))}</span>
         </div>
         <div class="year-player-pt ${s.totalPts>=0?"plus":"minus"}">${s.totalPts>=0?"+":""}${s.totalPts} pt</div>
         <div class="year-player-sub">
@@ -2145,27 +2239,35 @@ function renderYearArchive(){
           <div class="year-rank-mini" style="background:${rankColor(3)}">3位 ${s.ranks[2]}</div>
           <div class="year-rank-mini" style="background:${rankColor(4)}">4位 ${s.ranks[3]}</div>
         </div>
-        <div class="year-player-meta">${s.count}戦 / 平均${avg.toFixed(2)}位 / ${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
+        <div class="year-player-meta">${s.count}戦 / 平均${avg.toFixed(2)}位<br>${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
       </td>`;
-    });
+    }
+
+    const titleHtml=(label,obj,cls="")=>`<div class="title-chip ${cls}">
+      <span class="title-label">${label}</span>
+      <span class="title-winner">
+        <span class="title-name">${escapeHtml(obj.name)}</span>
+        <span class="title-value">${escapeHtml(obj.value)}</span>
+      </span>
+    </div>`;
 
     html+=`<td class="year-title-cell">
       ${titles?`<div class="title-board">
-        <div class="title-chip crown"><span class="title-label">👑 雀王</span><span class="title-winner">${escapeHtml(titles.champion)}</span></div>
-        <div class="title-chip"><span class="title-label">🏆 最多トップ</span><span class="title-winner">${escapeHtml(titles.topKing)}</span></div>
-        <div class="title-chip"><span class="title-label">🔥 トップ率王</span><span class="title-winner">${escapeHtml(titles.topRateKing)}</span></div>
-        <div class="title-chip"><span class="title-label">🤝 連対王</span><span class="title-winner">${escapeHtml(titles.rentaiKing)}</span></div>
-        <div class="title-chip"><span class="title-label">🛡️ ラス回避王</span><span class="title-winner">${escapeHtml(titles.defenseKing)}</span></div>
-        <div class="title-chip"><span class="title-label">🎯 平均順位王</span><span class="title-winner">${escapeHtml(titles.avgKing)}</span></div>
-        <div class="title-chip"><span class="title-label">⭐️ 役満王</span><span class="title-winner">${escapeHtml(titles.yakumanKing)}</span></div>
-        <div class="title-chip"><span class="title-label">🚀 最高pt</span><span class="title-winner">${escapeHtml(titles.highScoreKing)}</span></div>
+        ${titleHtml("👑 雀王",titles.champion,"crown")}
+        ${titleHtml("🏆 最多トップ",titles.topKing)}
+        ${titleHtml("🔥 トップ率王",titles.topRateKing)}
+        ${titleHtml("🤝 連対王",titles.rentaiKing)}
+        ${titleHtml("🛡️ ラス回避王",titles.defenseKing)}
+        ${titleHtml("🎯 平均順位王",titles.avgKing)}
+        ${titleHtml("⭐️ 役満王",titles.yakumanKing)}
+        ${titleHtml("🚀 最高pt",titles.highScoreKing)}
       </div>`:`-`}
     </td></tr>`;
   });
 
   html+=`</tbody></table>
     <div class="year-archive-note">
-      雀王＝年間総合pt首位。タイトルが同数・同率の場合は複数受賞として表示します。
+      各年度の個人欄は年間総合pt順に左から並びます。雀王＝年間総合pt首位。タイトルが同数・同率の場合は複数受賞です。
     </div>
   </div>`;
   host.innerHTML=html;
@@ -2506,7 +2608,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=10", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=11", {
         updateViaCache: "none"
       });
 
