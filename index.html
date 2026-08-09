@@ -2120,6 +2120,222 @@ body::before{
 }
 </style>
 
+
+<style id="wafu-modern-v17">
+:root{
+  --wm-green:#174d3d;
+  --wm-green-2:#236b54;
+  --wm-green-3:#dfeee7;
+  --wm-ivory:#fffaf0;
+  --wm-paper:#fffdf8;
+  --wm-gold:#d7b657;
+  --wm-gold-2:#f0d98c;
+  --wm-ink:#2d3934;
+  --wm-muted:#7a847f;
+  --wm-line:#e7dfd2;
+  --wm-sakura:#ef9aa8;
+  --wm-red:#e34d59;
+  --wm-blue:#4e91cb;
+  --wm-shadow:0 12px 30px rgba(47,65,56,.10);
+}
+
+html,body{
+  background:
+    radial-gradient(circle at 12% 6%,rgba(239,154,168,.10),transparent 18%),
+    radial-gradient(circle at 90% 8%,rgba(215,182,87,.12),transparent 18%),
+    #f3efe6!important;
+  color:var(--wm-ink)!important;
+}
+
+/* Header */
+.neo-header{
+  background:linear-gradient(180deg,#1d5c49,#17493a)!important;
+  border-bottom:5px solid var(--wm-gold)!important;
+  box-shadow:0 8px 22px rgba(34,72,56,.18)!important;
+  min-height:88px!important;
+}
+.neo-brand-name{color:#fffdf5!important}
+.neo-brand-sub{color:#d8ebe3!important}
+.neo-brand-mark.pop-brand-tile{
+  background:#fffdf8!important;
+  border-color:#eadfca!important;
+  box-shadow:0 4px 0 #d7c8ac,0 8px 18px rgba(0,0,0,.14)!important;
+}
+.neo-header .btn,.neo-header .icon-btn{
+  background:#fffaf0!important;
+  color:#315648!important;
+  border:2px solid #e9dfcf!important;
+  box-shadow:0 3px 0 #d8cbb5!important;
+}
+.neo-header .btn.primary{
+  background:#fff1b7!important;
+  color:#5c4a14!important;
+  border-color:#e8ce72!important;
+}
+.mahjong-rack img{filter:drop-shadow(0 2px 2px rgba(0,0,0,.12))}
+
+/* main panels */
+.neo-entry,.neo-dashboard{
+  background:var(--wm-paper)!important;
+  border:2px solid #e7dece!important;
+  border-radius:24px!important;
+  box-shadow:var(--wm-shadow)!important;
+}
+.neo-section-heading h1,.neo-dashboard-head h2{color:#214f40!important}
+.neo-eyebrow{color:#c66b78!important}
+.neo-rule-strip{
+  background:#eef7f2!important;
+  color:#4c725f!important;
+  border-color:#d8e9e0!important;
+}
+
+/* player cards */
+.neo-player-grid .player-row{
+  background:#fff!important;
+  border:2px solid #e8dfd2!important;
+  box-shadow:0 4px 0 #eee5d7!important;
+}
+.neo-player-grid .player-row:nth-child(1){border-top:6px solid #e75d67!important}
+.neo-player-grid .player-row:nth-child(2){border-top:6px solid #e4bf4f!important}
+.neo-player-grid .player-row:nth-child(3){border-top:6px solid #62b879!important}
+.neo-player-grid .player-row:nth-child(4){border-top:6px solid #353535!important}
+
+.neo-player-grid .player-row.current-input{
+  background:#fff8e8!important;
+  border:3px solid var(--wm-gold)!important;
+  box-shadow:0 0 0 4px rgba(215,182,87,.17),0 5px 0 #d1ad4c!important;
+}
+.neo-player-grid .player-row.current-input::after{
+  background:#f0d47d!important;
+  color:#5b4813!important;
+}
+
+/* buttons and totals */
+.neo-save-panel{
+  background:linear-gradient(135deg,#1f654f,#174b3c)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06),0 4px 0 #123f32!important;
+}
+.neo-save-panel .save-btn{
+  background:linear-gradient(180deg,#f5dc84,#e7c760)!important;
+  color:#5d4b14!important;
+  border:2px solid #d9b84f!important;
+  box-shadow:0 4px 0 #b9942d!important;
+}
+
+/* dashboard */
+.date-tab.active{
+  background:#236b54!important;
+  border-color:#236b54!important;
+}
+.history-table thead th{
+  background:#245f4c!important;
+}
+.daily-row{
+  border-color:#e5ded1!important;
+}
+
+/* stats */
+.modal-card{
+  background:#fffdf8!important;
+  border:3px solid #e6dcc9!important;
+}
+.modal-head{
+  background:#fff7e9!important;
+}
+.stats-card{
+  background:#fff!important;
+  border:2px solid #e8dfd2!important;
+}
+.detail-cell{
+  background:#fbf8f1!important;
+}
+#statsModal .detail-cell strong.best-stat{
+  color:#d9404c!important;
+}
+
+/* annual archive */
+#yearStatsModal .year-history-body{
+  background:#faf5ea!important;
+}
+#yearStatsModal .year-archive-wrap{
+  background:#fff!important;
+  border:2px solid #dfd5c3!important;
+}
+#yearStatsModal .year-archive-table thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:120!important;
+  background:#245f4c!important;
+  color:#fff!important;
+  border-color:#4a806e!important;
+  box-shadow:0 3px 0 rgba(36,95,76,.18)!important;
+}
+#yearStatsModal .year-archive-table tbody th{
+  position:sticky!important;
+  left:0!important;
+  z-index:80!important;
+  background:#fff0b5!important;
+  color:#6b5514!important;
+}
+
+/* ===== 年度別：個人欄の順位色を強制 ===== */
+#yearStatsModal .year-rank-mini{
+  color:#fff!important;
+  border:none!important;
+  box-shadow:none!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(1){
+  background:#e53935!important;
+  color:#fff!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(2){
+  background:#fdd835!important;
+  color:#222!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(3){
+  background:#43a047!important;
+  color:#fff!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(4){
+  background:#111!important;
+  color:#fff!important;
+}
+
+/* title area */
+#yearStatsModal .year-title-cell{
+  background:#fffaf0!important;
+}
+#yearStatsModal .title-chip{
+  background:#fff!important;
+  border:2px solid #eadfca!important;
+}
+#yearStatsModal .title-chip.crown{
+  background:linear-gradient(180deg,#fff2b9,#f8dfa0)!important;
+  border-color:#e3c86d!important;
+}
+#yearStatsModal .title-label{color:#9a6b21!important}
+#yearStatsModal .title-winner{color:#33453e!important}
+#yearStatsModal .title-value{color:#df4c57!important}
+
+/* subtle sakura accents */
+.neo-entry::after{
+  content:"✿";
+  position:absolute;
+  left:16px;bottom:10px;
+  font-size:58px;
+  color:rgba(239,154,168,.08);
+  pointer-events:none;
+}
+.neo-dashboard::before{
+  content:"✿";
+  position:absolute;
+  left:16px;top:82px;
+  font-size:42px;
+  color:rgba(239,154,168,.06);
+  pointer-events:none;
+}
+</style>
+
 </head>
 <body>
 
@@ -3542,7 +3758,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=16", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=17", {
         updateViaCache: "none"
       });
 
