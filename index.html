@@ -817,6 +817,195 @@ body{
 }
 </style>
 
+
+<style id="stats-compact-v8">
+/* =========================================================
+   通算成績 5人1画面向けコンパクトレイアウト
+   ========================================================= */
+
+#statsModal .modal-card{
+  width:min(1320px,96vw)!important;
+  max-height:92vh!important;
+}
+
+#statsModal .modal-head{
+  padding:10px 14px!important;
+  min-height:52px;
+}
+
+#statsModal .modal-head h3{
+  font-size:20px!important;
+}
+
+#statsModal .modal-body{
+  padding:10px 12px 12px!important;
+}
+
+#statsModal .stats-list{
+  gap:7px!important;
+}
+
+#statsModal .champion-card{
+  padding:7px 12px!important;
+  margin-bottom:7px!important;
+  min-height:54px;
+  display:grid!important;
+  grid-template-columns:150px minmax(150px,1fr) auto;
+  align-items:center;
+  gap:10px;
+}
+
+#statsModal .champion-title{
+  font-size:10px!important;
+  margin:0!important;
+}
+
+#statsModal .champion-name{
+  font-size:18px!important;
+  margin:0!important;
+}
+
+#statsModal .champion-meta{
+  font-size:10px!important;
+  margin:0!important;
+  white-space:nowrap;
+}
+
+#statsModal .stats-card{
+  min-height:128px;
+  padding:8px 10px!important;
+  display:grid!important;
+  grid-template-columns:180px 235px minmax(360px,1fr);
+  gap:10px!important;
+  align-items:center;
+}
+
+#statsModal .stats-left{
+  gap:8px!important;
+  min-width:0;
+}
+
+#statsModal .pie{
+  width:44px!important;
+  height:44px!important;
+}
+
+#statsModal .pie::after{
+  inset:11px!important;
+}
+
+#statsModal .stats-name{
+  font-size:16px!important;
+  padding:2px 6px!important;
+}
+
+#statsModal .stats-left > div:last-child{
+  min-width:0;
+}
+
+#statsModal .stats-left .plus,
+#statsModal .stats-left .minus{
+  font-size:13px!important;
+  line-height:1.15;
+}
+
+#statsModal .stats-left [style*="font-size:22px"]{
+  font-size:17px!important;
+}
+
+#statsModal .stats-ranks{
+  gap:3px!important;
+}
+
+#statsModal .stats-rank{
+  padding:4px 2px!important;
+  font-size:9px!important;
+  border-radius:6px!important;
+}
+
+#statsModal .stats-rank strong{
+  font-size:15px!important;
+  line-height:1.05;
+}
+
+#statsModal .trend{
+  height:58px!important;
+}
+
+#statsModal .trend .emoji{
+  font-size:10px!important;
+}
+
+#statsModal .detail-grid{
+  display:grid!important;
+  grid-template-columns:repeat(9,minmax(58px,1fr))!important;
+  gap:3px!important;
+  margin-top:5px!important;
+}
+
+#statsModal .detail-cell{
+  min-width:0!important;
+  padding:3px 2px!important;
+  font-size:8px!important;
+  line-height:1.05;
+  border-radius:5px!important;
+}
+
+#statsModal .detail-cell strong{
+  display:block;
+  font-size:11px!important;
+  margin-top:2px;
+}
+
+#statsModal .streak-badge{
+  font-size:9px!important;
+  padding:2px 5px!important;
+  margin-left:4px!important;
+}
+
+#statsModal .stats-card > div:nth-child(2) > div:last-child{
+  margin-top:4px!important;
+  font-size:11px!important;
+}
+
+/* 右カラムのラベル */
+#statsModal .stats-card > div:nth-child(3) > div:first-child{
+  font-size:9px!important;
+  margin-bottom:2px!important;
+}
+
+/* iPad横向けに5人を極力1画面に */
+@media (min-width:1000px) and (min-height:700px){
+  #statsModal .modal-card{
+    height:94vh!important;
+    max-height:94vh!important;
+  }
+  #statsModal .modal-body{
+    overflow:auto;
+  }
+}
+
+/* 狭い画面では無理に潰さず縦並び */
+@media(max-width:1100px){
+  #statsModal .stats-card{
+    grid-template-columns:170px 220px minmax(300px,1fr);
+  }
+  #statsModal .detail-grid{
+    grid-template-columns:repeat(3,1fr)!important;
+  }
+}
+
+@media(max-width:800px){
+  #statsModal .stats-card{
+    grid-template-columns:1fr!important;
+    min-height:auto;
+  }
+  #statsModal .detail-grid{
+    grid-template-columns:repeat(3,1fr)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -1950,7 +2139,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=7", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=8", {
         updateViaCache: "none"
       });
 
