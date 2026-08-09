@@ -1278,6 +1278,39 @@ body{
 }
 </style>
 
+
+<style id="fix-pack-v12">
+/* 年度別成績：ヘッダー固定 */
+#yearStatsModal .year-history-body{
+  overflow:auto!important;
+  position:relative;
+}
+#yearStatsModal .year-archive-wrap{
+  overflow:visible!important;
+}
+#yearStatsModal .year-archive-table thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:20!important;
+  box-shadow:0 2px 0 rgba(255,255,255,.18),0 4px 8px rgba(18,54,47,.12);
+}
+#yearStatsModal .year-archive-table thead th:first-child{
+  left:0!important;
+  z-index:24!important;
+}
+#yearStatsModal .year-archive-table tbody th{
+  position:sticky!important;
+  left:0!important;
+  z-index:10!important;
+}
+
+/* 通算成績：各指標のトップ値 */
+#statsModal .detail-cell strong.best-stat{
+  color:#d52f2f!important;
+  font-weight:1000!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -2071,9 +2104,46 @@ function championHtml(year=selectedStatsYear()){
   const avg=(c.ranks[0]+c.ranks[1]*2+c.ranks[2]*3+c.ranks[3]*4)/Math.max(1,c.count);
   return `<div class="champion-card"><div class="champion-title">👑 ${year}年 雀王</div><div class="champion-name">${escapeHtml(liveName(c.id))}</div><div class="champion-meta">${c.pts>=0?"+":""}${c.pts} pt ・ ${c.count}戦 ・ 平均${avg.toFixed(2)}位</div></div>`;
 }
-function detailHtml(s){
-  const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count), pct=n=>(n/Math.max(1,s.count)*100).toFixed(1)+"%";
-  return `<div class="detail-grid"><div class="detail-cell">トップ率<strong>${pct(s.ranks[0])}</strong></div><div class="detail-cell">連対率<strong>${pct(s.ranks[0]+s.ranks[1])}</strong></div><div class="detail-cell">ラス回避率<strong>${pct(s.count-s.ranks[3])}</strong></div><div class="detail-cell">平均順位<strong>${avg.toFixed(2)}</strong></div><div class="detail-cell">最高pt<strong>${isFinite(s.maxPts)?(s.maxPts>=0?"+":"")+s.maxPts:"-"}</strong></div><div class="detail-cell">最低pt<strong>${isFinite(s.minPts)?(s.minPts>=0?"+":"")+s.minPts:"-"}</strong></div><div class="detail-cell">最大連勝<strong>${s.maxWinStreak}</strong></div><div class="detail-cell">役満<strong>⭐️${s.stars}</strong></div><div class="detail-cell">対局数<strong>${s.count}</strong></div></div>`;
+function totalBestStats(stats){
+  const avg=s=>(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
+  const topRate=s=>s.ranks[0]/Math.max(1,s.count);
+  const rentaiRate=s=>(s.ranks[0]+s.ranks[1])/Math.max(1,s.count);
+  const avoidLastRate=s=>(s.count-s.ranks[3])/Math.max(1,s.count);
+
+  const maxVal=fn=>Math.max(...stats.map(fn));
+  const minVal=fn=>Math.min(...stats.map(fn));
+
+  return {
+    topRate:maxVal(topRate),
+    rentaiRate:maxVal(rentaiRate),
+    avoidLastRate:maxVal(avoidLastRate),
+    avg:minVal(avg),
+    maxPts:maxVal(s=>s.maxPts),
+    minPts:minVal(s=>s.minPts),
+    maxWinStreak:maxVal(s=>s.maxWinStreak),
+    stars:maxVal(s=>s.stars),
+    count:maxVal(s=>s.count)
+  };
+}
+function detailHtml(s,best=null){
+  const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
+  const top=s.ranks[0]/Math.max(1,s.count);
+  const rentai=(s.ranks[0]+s.ranks[1])/Math.max(1,s.count);
+  const avoid=(s.count-s.ranks[3])/Math.max(1,s.count);
+  const pct=v=>(v*100).toFixed(1)+"%";
+  const cls=(ok)=>ok?' class="best-stat"':'';
+
+  return `<div class="detail-grid">
+    <div class="detail-cell">トップ率<strong${cls(best&&top===best.topRate)}>${pct(top)}</strong></div>
+    <div class="detail-cell">連対率<strong${cls(best&&rentai===best.rentaiRate)}>${pct(rentai)}</strong></div>
+    <div class="detail-cell">ラス回避率<strong${cls(best&&avoid===best.avoidLastRate)}>${pct(avoid)}</strong></div>
+    <div class="detail-cell">平均順位<strong${cls(best&&avg===best.avg)}>${avg.toFixed(2)}</strong></div>
+    <div class="detail-cell">最高pt<strong${cls(best&&s.maxPts===best.maxPts)}>${isFinite(s.maxPts)?(s.maxPts>=0?"+":"")+s.maxPts:"-"}</strong></div>
+    <div class="detail-cell">最低pt<strong${cls(best&&s.minPts===best.minPts)}>${isFinite(s.minPts)?(s.minPts>=0?"+":"")+s.minPts:"-"}</strong></div>
+    <div class="detail-cell">最大連勝<strong${cls(best&&s.maxWinStreak===best.maxWinStreak && best.maxWinStreak>0)}>${s.maxWinStreak}</strong></div>
+    <div class="detail-cell">役満<strong${cls(best&&s.stars===best.stars && best.stars>0)}>⭐️${s.stars}</strong></div>
+    <div class="detail-cell">対局数<strong${cls(best&&s.count===best.count)}>${s.count}</strong></div>
+  </div>`;
 }
 function pieGradient(ranks){
   const total=ranks.reduce((a,b)=>a+b,0)||1;
@@ -2106,7 +2176,7 @@ function trendHtml(s){
   }).join("");
   return `<div class="trend"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<polyline points="${poly}" fill="none" stroke="#f08a24" stroke-width="1.25"/>${dots}</svg>${emojis}</div>`;
 }
-function statsCardHtml(s){
+function statsCardHtml(s,best=null){
   const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
   return `<div class="stats-card">
     <div class="stats-left">
@@ -2127,7 +2197,7 @@ function statsCardHtml(s){
     <div>
       <div style="font-size:12px;font-weight:800;color:#777;margin-bottom:4px">直近${CONFIG.graphLimit}戦</div>
       ${trendHtml(s)}
-      ${detailHtml(s)}
+      ${detailHtml(s,best)}
     </div>
   </div>`;
 }
@@ -2138,7 +2208,8 @@ function renderStats(){
     list.innerHTML='<div class="empty">通算成績はまだありません。</div>';
     return;
   }
-  list.innerHTML=championHtml(selectedStatsYear())+stats.map(statsCardHtml).join("");
+  const best=totalBestStats(stats);
+  list.innerHTML=championHtml(selectedStatsYear())+stats.map(s=>statsCardHtml(s,best)).join("");
 }
 function availableYears(){
   return [...new Set(state.history.map(h=>new Date(h.date).getFullYear()))]
@@ -2188,7 +2259,9 @@ function annualTitles(year){
     rentaiKing:{name:names(rentaiKing),value:`${(rentaiKing.value*100).toFixed(1)}%`},
     defenseKing:{name:names(defenseKing),value:`${(defenseKing.value*100).toFixed(1)}%`},
     avgKing:{name:names(avgKing),value:`${avgKing.value.toFixed(2)}位`},
-    yakumanKing:{name:names(yakumanKing),value:`${yakumanKing.value}回`},
+    yakumanKing:yakumanKing.value>0
+      ? {name:names(yakumanKing),value:`${yakumanKing.value}回`}
+      : {name:"該当なし",value:""},
     highScoreKing:{name:names(highScoreKing),value:`${highScoreKing.value>=0?"+":""}${highScoreKing.value} pt`}
   };
 }
@@ -2608,7 +2681,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=11", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=12", {
         updateViaCache: "none"
       });
 
