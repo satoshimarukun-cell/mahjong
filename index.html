@@ -2336,6 +2336,548 @@ html,body{
 }
 </style>
 
+
+<style id="tabletop-scoreboard-v18">
+:root{
+  --tb-green:#075a36;
+  --tb-green2:#0b7447;
+  --tb-green3:#124d35;
+  --tb-cream:#fffaf0;
+  --tb-paper:#fffdf7;
+  --tb-gold:#e6bb45;
+  --tb-gold2:#fff0a5;
+  --tb-red:#e84143;
+  --tb-orange:#ef861d;
+  --tb-lime:#65ae47;
+  --tb-blue:#2875bd;
+  --tb-purple:#7a63b4;
+  --tb-ink:#252b28;
+  --tb-line:#dfd5c4;
+  --tb-shadow:0 8px 22px rgba(44,63,54,.14);
+}
+
+/* ==============================
+   全体背景：麻雀卓のグリーン
+   ============================== */
+html{
+  background:#0a5738!important;
+}
+body{
+  background:
+    radial-gradient(circle at 20% 15%,rgba(255,255,255,.025) 0 1px,transparent 1.5px),
+    linear-gradient(180deg,#0b6140 0,#075535 100%)!important;
+  background-size:22px 22px,auto!important;
+  color:var(--tb-ink)!important;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;z-index:-1;
+  background:
+    repeating-radial-gradient(ellipse at 0 100%,transparent 0 18px,rgba(255,255,255,.016) 19px 20px,transparent 21px 38px);
+  background-size:78px 38px;
+  opacity:.6;
+}
+
+/* ==============================
+   ヘッダー：参考画像の横長ナビ
+   ============================== */
+.neo-header{
+  min-height:98px!important;
+  padding:8px 18px!important;
+  grid-template-columns:330px minmax(280px,1fr) auto!important;
+  gap:10px!important;
+  background:#fffaf0!important;
+  color:#243b31!important;
+  border-bottom:4px solid #d8c7a6!important;
+  box-shadow:0 5px 18px rgba(26,63,46,.20)!important;
+  border-radius:0 0 18px 18px!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:50!important;
+}
+.neo-brand{
+  align-self:stretch;
+  background:linear-gradient(135deg,#0b6842,#064a30)!important;
+  margin:-8px 0 -8px -18px!important;
+  padding:8px 18px!important;
+  border-radius:0 18px 18px 0!important;
+  min-width:315px;
+}
+.neo-brand-mark.pop-brand-tile{
+  width:62px!important;height:72px!important;
+  border:3px solid #f0dfbd!important;
+  box-shadow:0 4px 0 #d1b982,0 6px 14px rgba(0,0,0,.16)!important;
+}
+.neo-brand-name{
+  font-size:33px!important;
+  color:#fff!important;
+  letter-spacing:.08em!important;
+  text-shadow:0 2px 0 rgba(0,0,0,.10)!important;
+}
+.neo-brand-sub{
+  color:#e8f5ee!important;
+  font-size:9px!important;
+}
+.neo-header-actions{
+  height:72px!important;
+  display:flex!important;
+  align-items:stretch!important;
+  gap:0!important;
+  border:2px solid #e6dbc8;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 0 #d8ccb8;
+  background:#fffdf8;
+}
+.neo-header .btn,.neo-header .icon-btn{
+  margin:0!important;
+  border:0!important;
+  border-right:1px solid #ddd3c4!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  min-width:122px!important;
+  height:100%!important;
+  background:#fffdf8!important;
+  color:#29483b!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:2px!important;
+  font-size:12px!important;
+}
+.neo-header .btn.primary{
+  background:linear-gradient(180deg,#0b7648,#075d3b)!important;
+  color:#fff!important;
+}
+.pop-nav-btn img{
+  width:29px!important;height:38px!important;
+}
+.pop-nav-btn.icon-only{
+  min-width:62px!important;
+}
+.neo-champion{
+  height:72px!important;
+  padding:0 8px!important;
+}
+.neo-champion .champion-card{
+  height:100%!important;
+  border:2px solid #e5c24e!important;
+  background:linear-gradient(180deg,#fff4be,#ffe696)!important;
+  box-shadow:0 4px 0 #d5b143!important;
+}
+.neo-champion .champion-title{color:#8b650a!important}
+.neo-champion .champion-name{color:#174a37!important}
+.neo-champion .champion-meta{color:#6e633e!important}
+
+.mahjong-rack{display:none!important}
+
+/* ==============================
+   メイン画面
+   ============================== */
+.neo-main{
+  max-width:1500px!important;
+  margin:14px auto!important;
+  padding:0 14px 18px!important;
+  gap:14px!important;
+}
+.neo-entry,.neo-dashboard{
+  border-radius:18px!important;
+  border:3px solid #e0d5c3!important;
+  background:#fffaf0!important;
+  box-shadow:0 8px 0 rgba(42,73,58,.16),0 14px 30px rgba(28,58,45,.10)!important;
+}
+.neo-entry{padding:16px!important}
+.neo-section-heading,.neo-dashboard-head{
+  border-bottom:2px solid #e9ddc9!important;
+  padding-bottom:10px!important;
+}
+.neo-section-heading h1,.neo-dashboard-head h2{
+  color:#0b5a38!important;
+  font-size:27px!important;
+}
+.neo-eyebrow{
+  color:#b97a19!important;
+  font-size:10px!important;
+  font-weight:950!important;
+}
+.neo-date-box{
+  background:white!important;
+  border:2px solid #ddd2c1!important;
+  box-shadow:0 3px 0 #e8decd!important;
+}
+.neo-rule-strip{
+  background:#edf6eb!important;
+  color:#34624c!important;
+  border:2px solid #d7e6d4!important;
+}
+
+/* ==============================
+   入力カード：牌札っぽく
+   ============================== */
+.neo-player-grid .player-row{
+  background:#fffdf8!important;
+  border:2px solid #e3d9c8!important;
+  border-radius:15px!important;
+  box-shadow:0 4px 0 #e9dfd0!important;
+}
+.neo-player-grid .player-row:nth-child(1){border-left:7px solid var(--tb-red)!important}
+.neo-player-grid .player-row:nth-child(2){border-left:7px solid var(--tb-orange)!important}
+.neo-player-grid .player-row:nth-child(3){border-left:7px solid var(--tb-lime)!important}
+.neo-player-grid .player-row:nth-child(4){border-left:7px solid #222!important}
+.neo-player-grid .player-row.current-input{
+  border:3px solid #efc23f!important;
+  background:#fff8db!important;
+  box-shadow:0 0 0 4px rgba(239,194,63,.20),0 5px 0 #d6ad35!important;
+}
+.neo-player-grid .player-row.current-input::after{
+  background:#f1c94a!important;
+  color:#654b00!important;
+  content:"入力中"!important;
+}
+.rank-badge{
+  width:44px!important;height:44px!important;
+  font-weight:950!important;
+  background:linear-gradient(#fffdf7,#f0eadf)!important;
+  border:2px solid #cba93a!important;
+  box-shadow:0 3px 0 #dbc781!important;
+}
+.player-select-wrap,.score-btn,.pt{
+  background:#fff!important;
+  border:2px solid #e1d8c9!important;
+}
+.yaku-btn{
+  background:#fff3d2!important;
+  border:1px solid #e8ce8f!important;
+}
+
+/* 保存は卓グリーン×金 */
+.neo-save-panel{
+  background:linear-gradient(180deg,#0c6842,#075135)!important;
+  border:3px solid #06432d!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.05),0 5px 0 #033824!important;
+}
+.neo-save-panel .save-btn{
+  background:linear-gradient(180deg,#ffe47b,#e8bd33)!important;
+  color:#6a5100!important;
+  border:2px solid #cda121!important;
+  box-shadow:0 4px 0 #aa8210!important;
+}
+.neo-help{
+  background:#fffdf7!important;
+  border:2px dashed #d8c7a6!important;
+}
+
+/* ==============================
+   成績ダッシュボード
+   ============================== */
+.date-tabs{
+  background:#f7f0e3!important;
+  border-bottom:2px solid #e4d8c6!important;
+}
+.date-tab{
+  background:white!important;
+  border:2px solid #ded4c5!important;
+}
+.date-tab.active{
+  background:#087044!important;
+  color:white!important;
+  border-color:#075b39!important;
+}
+.daily{
+  background:#f4f7ef!important;
+}
+.daily-row{
+  background:#fff!important;
+  border:2px solid #e3ddd1!important;
+}
+.history-table thead th{
+  background:#075d39!important;
+  color:#fff!important;
+  font-weight:950!important;
+}
+.history-table tbody td{
+  background:#fffdf8!important;
+}
+
+/* ==============================
+   通算成績
+   ============================== */
+.modal{
+  background:rgba(17,57,40,.52)!important;
+  backdrop-filter:blur(4px)!important;
+}
+.modal-card{
+  background:#fffaf0!important;
+  border:3px solid #dfd3bd!important;
+  box-shadow:0 20px 60px rgba(20,48,36,.25)!important;
+}
+.modal-head{
+  background:#fff8e8!important;
+  border-bottom:2px solid #e7d9c3!important;
+}
+.modal-head h3{color:#0a5b39!important}
+.stats-card{
+  background:#fffdf7!important;
+  border:2px solid #e1d7c5!important;
+  box-shadow:0 3px 0 #e9dfd0!important;
+}
+.stats-rank{
+  border-radius:8px!important;
+  border:2px solid rgba(0,0,0,.07)!important;
+}
+.detail-cell{
+  background:#f8f4eb!important;
+  border:1px solid #e6ded1!important;
+}
+#statsModal .detail-cell strong.best-stat{
+  color:#d9333b!important;
+}
+
+/* ==============================
+   年度別：参考画像の核
+   ============================== */
+#yearStatsModal{
+  padding:20px!important;
+}
+#yearStatsModal .year-history-card{
+  width:min(1480px,98vw)!important;
+  height:calc(100vh - 40px)!important;
+  max-height:none!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+}
+#yearStatsModal .modal-head{
+  flex:0 0 78px!important;
+  min-height:78px!important;
+  padding:12px 18px!important;
+}
+#yearStatsModal .modal-head h3{
+  font-size:27px!important;
+  margin:1px 0!important;
+}
+#yearStatsModal .year-history-body{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:auto!important;
+  padding:0!important;
+  background:#fffaf0!important;
+}
+
+/* sticky headerをスクロール領域直下で確実化 */
+#yearStatsModal .year-archive-wrap{
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:white!important;
+}
+#yearStatsModal .year-archive-table{
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  table-layout:fixed!important;
+  min-width:1180px!important;
+}
+#yearStatsModal .year-archive-table thead{
+  position:sticky!important;
+  top:0!important;
+  z-index:150!important;
+}
+#yearStatsModal .year-archive-table thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:160!important;
+  height:46px!important;
+  background:linear-gradient(180deg,#087048,#075b3b)!important;
+  color:#fff!important;
+  font-size:12px!important;
+  border-right:1px solid #4e896f!important;
+  border-bottom:3px solid #e1c566!important;
+  box-shadow:0 3px 7px rgba(25,72,53,.18)!important;
+}
+#yearStatsModal .year-archive-table thead th:first-child{
+  left:0!important;
+  z-index:190!important;
+  width:82px!important;
+}
+#yearStatsModal .year-archive-table tbody th.year-cell{
+  position:sticky!important;
+  left:0!important;
+  z-index:100!important;
+  width:82px!important;
+  background:linear-gradient(180deg,#0b7047,#075b3b)!important;
+  color:white!important;
+  border-right:3px solid #e1c566!important;
+  border-bottom:1px solid #4c876d!important;
+  text-align:center!important;
+}
+.year-big{
+  font-size:24px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+}
+.year-games{
+  margin-top:10px!important;
+  font-size:9px!important;
+  line-height:1.25!important;
+  color:#e1f2eb!important;
+}
+.year-games strong{
+  font-size:15px!important;
+}
+.year-wind-tile{
+  width:33px;height:42px;
+  margin:10px auto 0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:6px;
+  background:linear-gradient(#fffef9,#ece5d9);
+  color:#222;
+  font-size:20px;
+  font-weight:950;
+  border:1px solid #d5c9b6;
+  box-shadow:0 3px 0 #bba98d,0 5px 10px rgba(0,0,0,.10);
+}
+#yearStatsModal .year-archive-table td{
+  background:#fffdf8!important;
+  border-right:1px solid #e4dac9!important;
+  border-bottom:1px solid #e4dac9!important;
+  vertical-align:middle!important;
+}
+#yearStatsModal .year-archive-table tbody tr:nth-child(even) td{
+  background:#fffbf2!important;
+}
+
+/* 個人欄をカードに見せる */
+#yearStatsModal .player-year-cell{
+  padding:10px 8px!important;
+}
+#yearStatsModal .year-player-name .name-chip{
+  display:inline-block!important;
+  padding:4px 8px!important;
+  border-radius:8px!important;
+  font-size:14px!important;
+  font-weight:950!important;
+  box-shadow:0 2px 0 rgba(0,0,0,.08)!important;
+}
+#yearStatsModal .year-player-pt{
+  font-size:18px!important;
+  margin:5px 0!important;
+}
+#yearStatsModal .year-player-sub{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:2px!important;
+  max-width:66px!important;
+}
+#yearStatsModal .year-rank-mini{
+  display:grid!important;
+  grid-template-columns:34px 1fr!important;
+  padding:2px 4px!important;
+  font-size:9px!important;
+  border-radius:5px!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(1){
+  background:#e43d3d!important;color:white!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(2){
+  background:#ef8a1f!important;color:white!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(3){
+  background:#4a9d42!important;color:white!important;
+}
+#yearStatsModal .year-rank-mini:nth-child(4){
+  background:#225d9b!important;color:white!important;
+}
+#yearStatsModal .year-player-meta{
+  margin-top:6px!important;
+  font-size:9px!important;
+  color:#575a57!important;
+}
+
+/* 年間タイトル：右側大きく */
+#yearStatsModal .year-archive-table thead th.title-col-head{
+  width:42%!important;
+}
+#yearStatsModal .year-title-cell{
+  background:#fffaf0!important;
+  padding:9px!important;
+}
+#yearStatsModal .title-board{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:5px!important;
+}
+#yearStatsModal .title-chip{
+  min-height:30px!important;
+  padding:5px 8px!important;
+  background:#fffdf9!important;
+  border:2px solid #e5dac4!important;
+  border-radius:9px!important;
+  box-shadow:0 1px 0 #eee2ce!important;
+}
+#yearStatsModal .title-chip.crown{
+  grid-column:1/-1!important;
+  min-height:38px!important;
+  background:linear-gradient(180deg,#fff2a8,#ffe489)!important;
+  border-color:#e7c349!important;
+}
+#yearStatsModal .title-label{
+  color:#9c7012!important;
+  font-weight:950!important;
+}
+#yearStatsModal .title-winner{
+  color:#303a34!important;
+}
+#yearStatsModal .title-value{
+  color:#d8454a!important;
+  font-size:11px!important;
+}
+#yearStatsModal .year-archive-note{
+  background:#f4edde!important;
+  color:#6e6a60!important;
+  border-top:2px solid #dfd3c2!important;
+  padding:8px 12px!important;
+}
+
+/* ==============================
+   テンキー・順位発表
+   ============================== */
+.keypad{
+  background:#0a6641!important;
+  border:3px solid #05472f!important;
+  box-shadow:0 10px 30px rgba(24,57,43,.28)!important;
+}
+.key-grid button{
+  background:#fffdf8!important;
+  color:#2f3b36!important;
+  box-shadow:0 3px 0 #d6cdc0!important;
+}
+.key-done{
+  background:#f0c640!important;
+  color:#604900!important;
+  box-shadow:0 3px 0 #b99013!important;
+}
+.overlay{
+  background:rgba(7,86,53,.94)!important;
+}
+.overlay-title{color:#fff0a8!important}
+.rank-result{
+  background:#fffdf7!important;
+  border:3px solid #e4d6bf!important;
+  box-shadow:0 5px 0 rgba(0,0,0,.10)!important;
+}
+.overlay-done{
+  background:#f1c945!important;
+  color:#5d4800!important;
+}
+
+/* iPad横 */
+@media(min-width:1000px){
+  .neo-main{
+    grid-template-columns:minmax(510px,44%) minmax(620px,56%)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -3369,7 +3911,12 @@ function renderYearArchive(){
     const ranked=calculateStats(filtered).sort((a,b)=>b.totalPts-a.totalPts);
     const titles=annualTitles(year);
 
-    html+=`<tr><th class="year-cell">${year}</th>`;
+    const yearGames=filtered.length;
+    html+=`<tr><th class="year-cell">
+      <div class="year-big">${year}</div>
+      <div class="year-games">対局数<br><strong>${yearGames}</strong>回</div>
+      <div class="year-wind-tile">東</div>
+    </th>`;
 
     for(let pos=0;pos<maxPlayers;pos++){
       const s=ranked[pos];
@@ -3758,7 +4305,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=17", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=18", {
         updateViaCache: "none"
       });
 
