@@ -370,6 +370,12 @@ button{cursor:pointer}
   .keypad{left:50%;top:auto;bottom:18px;transform:translateX(-50%)}
   .stats-card{grid-template-columns:1fr}
 }
+
+.streak-badge{display:inline-block;margin-top:6px;padding:3px 7px;border-radius:12px;background:#fff2df;font-size:12px;font-weight:900}
+.champion-card{margin-bottom:14px;padding:16px;border:2px solid var(--gold);border-radius:16px;background:linear-gradient(135deg,#fffaf0,#fff3bf);text-align:center}
+.champion-title{font-size:13px;font-weight:900;color:#8a6b00}.champion-name{font-size:28px;font-weight:900;color:var(--red);margin:4px}.champion-meta{font-size:13px;font-weight:800;color:#666}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.detail-cell{background:#f7f7f7;border-radius:8px;padding:7px;text-align:center;font-size:11px}.detail-cell strong{display:block;font-size:15px;margin-top:2px}.stats-card{cursor:pointer}.stats-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+@media(max-width:700px){.detail-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 
 <style>
@@ -974,7 +980,7 @@ function renderHistory(){
   let html=`<div class="daily"><div class="daily-title">本日集計</div>`;
   daily.forEach(s=>{
     html+=`<div class="daily-row">
-      <div class="name-chip" style="background:#${liveColor(s.id)}55">${escapeHtml(s.name)}</div>
+      <div><div class="name-chip" style="background:#${liveColor(s.id)}55">${escapeHtml(s.name)}</div>${streakHtml(calculateStats().find(x=>x.id===s.id)||s)}</div>
       <div style="font-size:11px;color:#e48a00">${s.stars?`⭐️${s.stars}`:""}</div>
       <div class="rank-seq">${s.rankSequence.map(r=>`<span style="color:${r?rankColor(r):"#ccc"}">${r||"・"}</span>`).join("")}</div>
       <div style="font-size:11px;font-weight:800;color:#777">${s.count}戦/${s.avg.toFixed(2)}位</div>
@@ -1074,31 +1080,43 @@ function applySettings(){
 function calculateStats(){
   const ids=[...new Set(state.history.flatMap(h=>h.playerIDs||[]))];
   const map=new Map();
-  ids.forEach(id=>map.set(id,{id,name:liveName(id),totalBalance:0,totalPts:0,count:0,stars:0,ranks:[0,0,0,0],rankTrend:[],scoreTrend:[]}));
+  ids.forEach(id=>map.set(id,{id,name:liveName(id),totalBalance:0,totalPts:0,count:0,stars:0,ranks:[0,0,0,0],rankTrend:[],scoreTrend:[],maxPts:-Infinity,minPts:Infinity,currentWinStreak:0,currentLastStreak:0,maxWinStreak:0}));
   [...state.history].reverse().forEach(h=>{
     for(let i=0;i<4;i++){
-      const id=h.playerIDs?.[i];
-      if(!id) continue;
-      let s=map.get(id);
-      if(!s){
-        s={id,name:liveName(id),totalBalance:0,totalPts:0,count:0,stars:0,ranks:[0,0,0,0],rankTrend:[],scoreTrend:[]};
-        map.set(id,s);
-      }
-      s.totalBalance+=Math.trunc(h.points[i]*h.rateAtTime*10);
-      s.totalPts+=h.points[i];
-      s.count++;
-      s.stars+=h.yakuman[i];
-      const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v);
-      const r=sorted.findIndex(x=>x.k===i)+1;
-      s.ranks[r-1]++;
-      s.rankTrend.push(r);
-      s.scoreTrend.push(h.scores[i]);
+      const id=h.playerIDs?.[i]; if(!id) continue;
+      let s=map.get(id); if(!s){continue}
+      const pt=h.points[i]; s.totalBalance+=Math.trunc(pt*h.rateAtTime*10); s.totalPts+=pt; s.count++; s.stars+=h.yakuman[i];
+      s.maxPts=Math.max(s.maxPts,pt); s.minPts=Math.min(s.minPts,pt);
+      const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v); const r=sorted.findIndex(x=>x.k===i)+1;
+      s.ranks[r-1]++; s.rankTrend.push(r); s.scoreTrend.push(h.scores[i]);
+      if(r===1){s.currentWinStreak++;s.maxWinStreak=Math.max(s.maxWinStreak,s.currentWinStreak)}else{s.currentWinStreak=0}
+      if(r===4)s.currentLastStreak++;else s.currentLastStreak=0;
       if(s.rankTrend.length>CONFIG.graphLimit){s.rankTrend.shift();s.scoreTrend.shift();}
     }
   });
   return [...map.values()].sort((a,b)=>b.totalPts-a.totalPts);
 }
-
+function streakHtml(s){
+  if(s.currentWinStreak>=2)return `<span class="streak-badge">🔥 ${s.currentWinStreak}連勝中</span>`;
+  if(s.currentLastStreak>=2)return `<span class="streak-badge">💀 ${s.currentLastStreak}連続ラス</span>`;
+  return "";
+}
+function yearStats(year){
+  const totals=new Map();
+  state.history.filter(h=>new Date(h.date).getFullYear()===year).forEach(h=>{
+    (h.playerIDs||[]).forEach((id,i)=>{const x=totals.get(id)||{id,pts:0,count:0,ranks:[0,0,0,0]};x.pts+=h.points[i];x.count++;const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v);const r=sorted.findIndex(z=>z.k===i)+1;x.ranks[r-1]++;totals.set(id,x)})
+  });
+  return [...totals.values()].sort((a,b)=>b.pts-a.pts);
+}
+function championHtml(){
+  const year=new Date().getFullYear(), ys=yearStats(year); if(!ys.length)return ""; const c=ys[0];
+  const avg=(c.ranks[0]+c.ranks[1]*2+c.ranks[2]*3+c.ranks[3]*4)/Math.max(1,c.count);
+  return `<div class="champion-card"><div class="champion-title">👑 ${year}年 雀王</div><div class="champion-name">${escapeHtml(liveName(c.id))}</div><div class="champion-meta">${c.pts>=0?"+":""}${c.pts} pt ・ ${c.count}戦 ・ 平均${avg.toFixed(2)}位</div></div>`;
+}
+function detailHtml(s){
+  const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count), pct=n=>(n/Math.max(1,s.count)*100).toFixed(1)+"%";
+  return `<div class="detail-grid"><div class="detail-cell">トップ率<strong>${pct(s.ranks[0])}</strong></div><div class="detail-cell">連対率<strong>${pct(s.ranks[0]+s.ranks[1])}</strong></div><div class="detail-cell">ラス回避率<strong>${pct(s.count-s.ranks[3])}</strong></div><div class="detail-cell">平均順位<strong>${avg.toFixed(2)}</strong></div><div class="detail-cell">最高pt<strong>${isFinite(s.maxPts)?(s.maxPts>=0?"+":"")+s.maxPts:"-"}</strong></div><div class="detail-cell">最低pt<strong>${isFinite(s.minPts)?(s.minPts>=0?"+":"")+s.minPts:"-"}</strong></div><div class="detail-cell">最大連勝<strong>${s.maxWinStreak}</strong></div><div class="detail-cell">役満<strong>⭐️${s.stars}</strong></div><div class="detail-cell">対局数<strong>${s.count}</strong></div></div>`;
+}
 function pieGradient(ranks){
   const total=ranks.reduce((a,b)=>a+b,0)||1;
   const colors=["#e53935","#fdd835","#43a047","#111"];
@@ -1134,7 +1152,7 @@ function renderStats(){
   const list=document.getElementById("statsList");
   const stats=calculateStats();
   if(!stats.length){list.innerHTML='<div class="empty">通算成績はまだありません。</div>';return}
-  list.innerHTML=stats.map(s=>{
+  list.innerHTML=championHtml()+stats.map(s=>{
     const avg=(s.ranks[0]+s.ranks[1]*2+s.ranks[2]*3+s.ranks[3]*4)/Math.max(1,s.count);
     return `<div class="stats-card">
       <div class="stats-left">
@@ -1143,6 +1161,7 @@ function renderStats(){
           <div><span class="stats-name" style="background:#${liveColor(s.id)}55;padding:3px 8px;border-radius:6px">${escapeHtml(s.name)}</span> ${s.stars?`<span style="color:#e48a00">⭐️${s.stars}</span>`:""}</div>
           <div class="${s.totalPts>=0?"plus":"minus"}" style="font-weight:900;margin-top:5px">${s.totalPts>=0?"+":""}${s.totalPts} pt</div>
           <div class="${s.totalBalance>=0?"plus":"minus"}" style="font-size:22px;font-weight:900">${s.totalBalance>=0?"+":""}${s.totalBalance}円</div>
+          ${streakHtml(s)}
         </div>
       </div>
       <div>
@@ -1151,7 +1170,7 @@ function renderStats(){
         </div>
         <div style="text-align:center;margin-top:8px;font-weight:900;color:${getComputedStyle(document.documentElement).getPropertyValue("--red")}">${s.count}戦 / 平均${avg.toFixed(2)}位</div>
       </div>
-      <div><div style="font-size:12px;font-weight:800;color:#777;margin-bottom:4px">直近${CONFIG.graphLimit}戦</div>${trendHtml(s)}</div>
+      <div><div style="font-size:12px;font-weight:800;color:#777;margin-bottom:4px">直近${CONFIG.graphLimit}戦</div>${trendHtml(s)}${detailHtml(s)}</div>
     </div>`;
   }).join("");
 }
