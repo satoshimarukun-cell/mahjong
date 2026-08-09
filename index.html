@@ -1311,13 +1311,272 @@ body{
 }
 </style>
 
+
+<style id="neo-future-v13">
+:root{
+  --f-bg:#050814;
+  --f-bg2:#0a1020;
+  --f-panel:rgba(12,20,39,.74);
+  --f-panel2:rgba(18,27,52,.78);
+  --f-cyan:#49e7ff;
+  --f-cyan2:#00b8d9;
+  --f-violet:#a66cff;
+  --f-pink:#ff5dc8;
+  --f-gold:#ffd36a;
+  --f-green:#67f7c3;
+  --f-text:#eefbff;
+  --f-muted:#88a4b8;
+  --f-line:rgba(88,226,255,.18);
+  --f-shadow:0 18px 55px rgba(0,0,0,.42);
+}
+
+html,body{
+  background:
+    radial-gradient(circle at 18% 10%,rgba(73,231,255,.11),transparent 24%),
+    radial-gradient(circle at 84% 18%,rgba(166,108,255,.13),transparent 26%),
+    linear-gradient(145deg,#030611 0%,#07101d 48%,#050713 100%)!important;
+  color:var(--f-text)!important;
+}
+
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background-image:
+    linear-gradient(rgba(73,231,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(73,231,255,.035) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 92%);
+}
+
+.neo-header{
+  background:rgba(4,10,24,.82)!important;
+  border-bottom:1px solid rgba(73,231,255,.24)!important;
+  box-shadow:0 12px 40px rgba(0,0,0,.35),0 1px 0 rgba(166,108,255,.20)!important;
+  backdrop-filter:blur(20px) saturate(135%);
+}
+
+.neo-brand-mark.future-logo{
+  background:linear-gradient(145deg,rgba(73,231,255,.14),rgba(166,108,255,.15))!important;
+  border:1px solid rgba(73,231,255,.38);
+  box-shadow:inset 0 0 24px rgba(73,231,255,.10),0 0 24px rgba(73,231,255,.10)!important;
+}
+.future-logo svg{
+  width:35px;height:35px;
+  fill:none;
+  stroke:var(--f-cyan);
+  stroke-width:2.4;
+  filter:drop-shadow(0 0 7px rgba(73,231,255,.45));
+}
+.neo-brand-name{color:#f4fdff!important;text-shadow:0 0 16px rgba(73,231,255,.16)}
+.neo-brand-sub{color:#6db8c8!important}
+
+.future-action{
+  display:inline-flex!important;
+  align-items:center;
+  gap:7px;
+}
+.future-action svg{
+  width:16px;height:16px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.future-action.icon-only{justify-content:center}
+.neo-header .btn,.neo-header .icon-btn{
+  background:rgba(14,31,48,.75)!important;
+  color:#bff7ff!important;
+  border:1px solid rgba(73,231,255,.18)!important;
+  box-shadow:inset 0 0 18px rgba(73,231,255,.04);
+}
+.neo-header .btn.primary{
+  background:linear-gradient(135deg,rgba(73,231,255,.18),rgba(166,108,255,.24))!important;
+  color:white!important;
+  border-color:rgba(166,108,255,.32)!important;
+}
+
+.neo-entry,.neo-dashboard{
+  background:linear-gradient(145deg,var(--f-panel),rgba(8,14,29,.84))!important;
+  border:1px solid var(--f-line)!important;
+  box-shadow:var(--f-shadow),inset 0 1px rgba(255,255,255,.035)!important;
+  backdrop-filter:blur(18px) saturate(125%);
+}
+.neo-section-heading h1,.neo-dashboard-head h2{color:#eafcff!important}
+.neo-eyebrow{color:var(--f-cyan)!important;text-shadow:0 0 10px rgba(73,231,255,.3)}
+
+.neo-date-box,.neo-help{
+  background:rgba(8,19,34,.68)!important;
+  border-color:rgba(73,231,255,.16)!important;
+  color:var(--f-muted)!important;
+}
+.neo-date-box input{color:#eafbff!important;color-scheme:dark}
+.neo-rule-strip{
+  background:linear-gradient(90deg,rgba(73,231,255,.08),rgba(166,108,255,.07))!important;
+  color:#9beaf5!important;
+  border:1px solid rgba(73,231,255,.10);
+}
+
+.neo-player-grid .player-row{
+  background:linear-gradient(145deg,rgba(16,28,48,.88),rgba(8,16,31,.90))!important;
+  border:1px solid rgba(73,231,255,.11)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.neo-player-grid .player-row.current-input{
+  border:2px solid var(--f-cyan)!important;
+  background:linear-gradient(145deg,rgba(14,39,58,.96),rgba(19,20,55,.94))!important;
+  box-shadow:0 0 0 3px rgba(73,231,255,.10),0 0 28px rgba(73,231,255,.18),inset 0 0 28px rgba(166,108,255,.07)!important;
+}
+.neo-player-grid .player-row.current-input::after{
+  background:linear-gradient(90deg,var(--f-cyan),#7fdbff)!important;
+  color:#021017!important;
+  box-shadow:0 0 14px rgba(73,231,255,.32);
+}
+.player-select-wrap,.score-btn,.pt{
+  background:rgba(5,13,26,.74)!important;
+  color:#effcff!important;
+  border-color:rgba(73,231,255,.12)!important;
+}
+.player-select{color:#effcff!important;background:#081327!important}
+.player-select option{background:#081327;color:#fff}
+.score-btn small{color:#668798!important}
+.rank-badge{border-color:rgba(73,231,255,.42)!important}
+.yaku-btn{background:rgba(255,211,106,.08)!important;color:#ffd978!important}
+
+.neo-save-panel{
+  background:linear-gradient(135deg,rgba(8,22,37,.95),rgba(19,15,48,.92))!important;
+  border:1px solid rgba(73,231,255,.14);
+}
+.neo-save-panel .save-btn{
+  background:linear-gradient(90deg,var(--f-cyan2),#6f8cff,var(--f-violet))!important;
+  color:white!important;
+  box-shadow:0 0 25px rgba(73,231,255,.18)!important;
+}
+
+.date-tabs,.daily,.history-wrap{background:transparent!important}
+.date-tabs{border-color:rgba(73,231,255,.10)!important}
+.date-tab{background:rgba(10,23,39,.76)!important;color:#7199ac!important;border:1px solid rgba(73,231,255,.08)!important}
+.date-tab.active{
+  background:linear-gradient(90deg,rgba(73,231,255,.20),rgba(166,108,255,.18))!important;
+  color:#dffcff!important;
+  border-color:rgba(73,231,255,.28)!important;
+}
+.daily-row{
+  background:rgba(9,17,34,.72)!important;
+  border-color:rgba(73,231,255,.08)!important;
+}
+.history-table thead th{background:rgba(11,31,45,.94)!important;color:#b7f6ff!important}
+.history-table th,.history-table td{
+  color:#dbeff5!important;
+  border-color:rgba(73,231,255,.08)!important;
+}
+.history-table tbody tr:nth-child(even){background:rgba(73,231,255,.025)!important}
+
+.modal{
+  background:rgba(1,4,12,.74)!important;
+  backdrop-filter:blur(15px);
+}
+.modal-card{
+  background:linear-gradient(145deg,rgba(10,18,37,.98),rgba(6,10,24,.98))!important;
+  color:var(--f-text)!important;
+  border:1px solid rgba(73,231,255,.22)!important;
+  box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 55px rgba(73,231,255,.08)!important;
+}
+.modal-head{
+  background:rgba(8,18,35,.94)!important;
+  border-color:rgba(73,231,255,.12)!important;
+}
+.modal-head h3{color:#eafdff!important}
+.stats-card,.champion-card{
+  background:linear-gradient(135deg,rgba(14,26,48,.92),rgba(10,15,34,.92))!important;
+  border-color:rgba(73,231,255,.10)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.025)!important;
+}
+.champion-card{
+  background:linear-gradient(110deg,rgba(255,211,106,.14),rgba(166,108,255,.15),rgba(73,231,255,.10))!important;
+  border-color:rgba(255,211,106,.24)!important;
+}
+.champion-title{color:#ffd978!important}
+.champion-name{color:#f4fbff!important}
+.champion-meta{color:#8cb0bd!important}
+.stats-name{color:#f4fbff!important}
+.detail-cell{
+  background:rgba(5,13,28,.70)!important;
+  color:#7695a5!important;
+  border-color:rgba(73,231,255,.06)!important;
+}
+.detail-cell strong{color:#dffaff!important}
+#statsModal .detail-cell strong.best-stat{color:#ff5d73!important;text-shadow:0 0 10px rgba(255,93,115,.22)}
+
+.year-archive-wrap{
+  background:rgba(7,13,28,.78)!important;
+  border-color:rgba(73,231,255,.12)!important;
+}
+.year-archive-table thead th{
+  background:rgba(8,25,41,.97)!important;
+  color:#bff7ff!important;
+  border-color:rgba(73,231,255,.10)!important;
+}
+.year-archive-table tbody th{
+  background:rgba(10,22,39,.96)!important;
+  color:#7ceeff!important;
+}
+.year-archive-table td{
+  background:rgba(6,13,27,.78)!important;
+  color:#e3f5fa!important;
+  border-color:rgba(73,231,255,.07)!important;
+}
+.year-archive-table tbody tr:nth-child(even) td{background:rgba(10,18,36,.82)!important}
+.year-title-cell{background:rgba(24,15,43,.72)!important}
+.title-chip{
+  background:rgba(21,16,43,.82)!important;
+  border-color:rgba(166,108,255,.14)!important;
+}
+.title-chip.crown{
+  background:linear-gradient(90deg,rgba(255,211,106,.17),rgba(166,108,255,.15))!important;
+  border-color:rgba(255,211,106,.24)!important;
+}
+.title-label{color:#c8aaff!important}
+.title-winner{color:#effbff!important}
+.title-value{color:#4ee7ff!important}
+.year-archive-note{background:rgba(6,14,28,.88)!important;color:#7f9eaa!important;border-color:rgba(73,231,255,.08)!important}
+
+.keypad{
+  background:linear-gradient(145deg,rgba(9,24,39,.98),rgba(20,15,48,.98))!important;
+  border:1px solid rgba(73,231,255,.24)!important;
+  box-shadow:0 25px 65px rgba(0,0,0,.58),0 0 34px rgba(73,231,255,.10)!important;
+}
+.key-grid button{
+  background:rgba(9,19,35,.94)!important;
+  color:#e9fbff!important;
+  border:1px solid rgba(73,231,255,.11)!important;
+}
+.key-done{
+  background:linear-gradient(90deg,var(--f-cyan2),var(--f-violet))!important;
+  color:white!important;
+}
+
+.overlay{
+  background:radial-gradient(circle at 50% 25%,rgba(73,231,255,.12),transparent 30%),rgba(1,4,13,.94)!important;
+}
+.overlay-title{color:#8cf1ff!important;text-shadow:0 0 24px rgba(73,231,255,.30)!important}
+.rank-result{
+  background:linear-gradient(90deg,rgba(73,231,255,.08),rgba(166,108,255,.08))!important;
+  border-color:rgba(73,231,255,.12)!important;
+}
+.overlay-done{
+  background:linear-gradient(90deg,var(--f-cyan2),var(--f-violet))!important;
+  color:white!important;
+}
+</style>
+
 </head>
 <body>
 
 <div class="neo-shell">
   <header class="neo-header">
     <div class="neo-brand">
-      <div class="neo-brand-mark">🀄️</div>
+      <div class="neo-brand-mark future-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="5" width="48" height="54" rx="10"/><path d="M22 21h20M32 13v38M18 41h28"/><circle cx="32" cy="31" r="5"/></svg></div>
       <div>
         <div class="neo-brand-name">雀譜</div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
@@ -1327,10 +1586,10 @@ body{
     <div id="championBanner" class="neo-champion"></div>
 
     <div class="neo-header-actions">
-      <button class="btn" id="adminLoginBtn">🔐 管理者</button>
-      <button class="btn" id="yearStatsBtn">📅 年度別成績</button>
-      <button class="btn primary" id="totalStatsBtn">📊 通算成績</button>
-      <button class="icon-btn" id="settingsBtn" title="設定">⚙️</button>
+      <button class="btn future-action" id="adminLoginBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v2"/></svg><span>管理者</span></button>
+      <button class="btn future-action" id="yearStatsBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h3M14 14h3M7 18h3"/></svg><span>年度別成績</span></button>
+      <button class="btn primary future-action" id="totalStatsBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>通算成績</span></button>
+      <button class="icon-btn future-action icon-only" id="settingsBtn" title="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.8-1L14.5 3h-5l-.3 3a8 8 0 0 0-1.8 1L5 6 3 9.5 5 11a7 7 0 0 0 0 2l-2 1.5L5 18l2.4-1a8 8 0 0 0 1.8 1l.3 3h5l.3-3a8 8 0 0 0 1.8-1l2.4 1 2-3.5-2-1.5a7 7 0 0 0 .1-1z"/></svg></button>
     </div>
   </header>
 
@@ -1641,7 +1900,7 @@ function applyAdminUI(){
 
   const alb=document.getElementById("adminLoginBtn");
   if(alb){
-    alb.textContent=isAdmin?"🔓 ログアウト":"🔐 管理者";
+    alb.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v2"/></svg><span>${isAdmin?"ログアウト":"管理者"}</span>`;
     alb.title=isAdmin?"管理者としてログイン中":"管理者ログイン";
   }
 }
@@ -1654,7 +1913,7 @@ async function adminLogin(){
 
   const btn=document.getElementById("adminLoginBtn");
   const oldText=btn?.textContent;
-  if(btn){ btn.disabled=true; btn.textContent="確認中…"; }
+  if(btn){ btn.disabled=true; const s=btn.querySelector("span"); if(s)s.textContent="確認中…"; }
 
   try{
     const {data,error}=await sb.auth.signInWithPassword({
@@ -2038,6 +2297,36 @@ function applySettings(){
   renderAll();
 }
 
+
+function yakumanBonusAtGame(h){
+  // ruleSummary の末尾に保存されている役満賞を優先
+  // 例: "R:5.0 10-5 20 150"
+  const txt=String(h?.ruleSummary||"").trim();
+  const nums=txt.match(/-?\d+(?:\.\d+)?/g);
+  if(nums && nums.length){
+    const last=Number(nums[nums.length-1]);
+    if(Number.isFinite(last) && last>=0) return last;
+  }
+  return Number(state?.rules?.yakumanBonus ?? CONFIG.yakumanBonus ?? 150);
+}
+function purePointsForGame(h){
+  const pts=[...(h?.points||[])].map(v=>Number(v)||0);
+  if(pts.length!==4) return pts;
+  const bonus=yakumanBonusAtGame(h);
+  const yak=[...(h?.yakuman||[0,0,0,0])].map(v=>Number(v)||0);
+
+  // 保存時に加えた役満賞を逆操作する
+  for(let i=0;i<4;i++){
+    if(yak[i]<=0) continue;
+    const b=yak[i]*bonus;
+    pts[i]-=b;
+    for(let j=0;j<4;j++){
+      if(i!==j) pts[j]+=b/3;
+    }
+  }
+  return pts.map(v=>Math.round(v));
+}
+
 function calculateStats(sourceHistory=state.history){
   const ids=[...new Set(sourceHistory.flatMap(h=>h.playerIDs||[]))];
   const map=new Map();
@@ -2047,12 +2336,15 @@ function calculateStats(sourceHistory=state.history){
       const id=h.playerIDs?.[i]; if(!id) continue;
       let s=map.get(id); if(!s){continue}
       const pt=h.points[i];
+      const purePts=purePointsForGame(h);
+      const purePt=purePts[i] ?? pt;
       s.totalBalance+=Math.trunc(pt*h.rateAtTime*10);
       s.totalPts+=pt;
       s.count++;
       s.stars+=h.yakuman[i];
-      s.maxPts=Math.max(s.maxPts,pt);
-      s.minPts=Math.min(s.minPts,pt);
+      // 最高pt / 最低pt は役満賞を除いた純粋ポイントで記録
+      s.maxPts=Math.max(s.maxPts,purePt);
+      s.minPts=Math.min(s.minPts,purePt);
       const sorted=h.scores.map((v,k)=>({v,k})).sort((a,b)=>b.v-a.v);
       const r=sorted.findIndex(x=>x.k===i)+1;
       s.ranks[r-1]++;
@@ -2681,7 +2973,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=12", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=13", {
         updateViaCache: "none"
       });
 
