@@ -3179,6 +3179,19 @@ body::before{
 }
 </style>
 
+
+<style id="passkey-v25">
+#passkeySection{
+  background:#fff8e8;
+  border:2px solid #e7d8b6;
+  border-radius:12px;
+  padding:12px;
+}
+#passkeyStatus{
+  min-height:18px;
+}
+</style>
+
 </head>
 <body>
 
@@ -3302,6 +3315,17 @@ body::before{
         </div>
         <div id="playerEditor"></div>
       </div>
+      <div class="section" id="passkeySection">
+        <h4>管理者Passkey</h4>
+        <div style="font-size:12px;color:#6f776f;line-height:1.6;margin-bottom:8px">
+          管理者ログイン済みのアカウントに、Face ID・Touch ID・端末パスコードで使えるPasskeyを登録します。
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn active" id="registerPasskeyBtn">🔐 Passkeyを登録</button>
+          <button class="btn" id="listPasskeyBtn">登録状況</button>
+        </div>
+        <div id="passkeyStatus" style="font-size:12px;color:#777;margin-top:7px"></div>
+      </div>
       <div class="section">
         <h4>データ管理</h4>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -3363,11 +3387,15 @@ body::before{
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0"></script>
 <script>
 const SUPABASE_URL = "https://tiubhufsejuqyrhcarap.supabase.co";
 const SUPABASE_KEY = "sb_publishable_C1Afhzegu9YL-w1JbA7s8w_LUA_gEWK";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    experimental: { passkey: true }
+  }
+});
 let isAdmin = false;
 let cloudReady = false;
 
@@ -3550,6 +3578,142 @@ function applyAdminUI(){
     alb.title=isAdmin?"管理者としてログイン中":"管理者ログイン";
   }
 }
+
+function passkeySupported(){
+  return !!(window.PublicKeyCredential && navigator.credentials);
+}
+
+function passkeyErrorMessage(error){
+  const code=error?.code||"";
+  const msg=error?.message||String(error||"");
+  if(code==="passkey_disabled" || /passkey.*disabled/i.test(msg)){
+    return "Supabase側でPasskeyがまだ有効になっていません。";
+  }
+  if(code==="webauthn_credential_not_found"){
+    return "この端末／パスワードマネージャーには登録済みPasskeyがありません。";
+  }
+  if(error?.name==="NotAllowedError" || /notallowed/i.test(msg)){
+    return "Passkey認証がキャンセルされました。";
+  }
+  return msg;
+}
+
+async function registerAdminPasskey({silent=false}={}){
+  if(!isAdmin){
+    if(!silent) alert("管理者としてログインしてからPasskeyを登録してください。");
+    return false;
+  }
+  if(!passkeySupported()){
+    if(!silent) alert("このブラウザはPasskeyに対応していません。");
+    return false;
+  }
+
+  const status=document.getElementById("passkeyStatus");
+  const btn=document.getElementById("registerPasskeyBtn");
+  try{
+    if(btn) btn.disabled=true;
+    if(status) status.textContent="Passkey登録を開始しています…";
+
+    const {data,error}=await sb.auth.registerPasskey();
+    if(error) throw error;
+
+    if(status){
+      status.textContent="✅ Passkeyを登録しました"
+        +(data?.friendly_name?`（${data.friendly_name}）`:"");
+    }
+    if(!silent) alert("Passkeyを登録しました。\n次回からFace ID / Touch ID / 端末パスコードで管理者ログインできます。");
+    return true;
+  }catch(e){
+    console.error("registerPasskey:",e);
+    if(status) status.textContent="登録できませんでした："+passkeyErrorMessage(e);
+    if(!silent) alert("Passkeyを登録できませんでした。\n"+passkeyErrorMessage(e));
+    return false;
+  }finally{
+    if(btn) btn.disabled=false;
+  }
+}
+
+async function showPasskeyStatus(){
+  const status=document.getElementById("passkeyStatus");
+  if(!isAdmin){
+    if(status) status.textContent="管理者ログインが必要です。";
+    return;
+  }
+  try{
+    if(status) status.textContent="確認中…";
+    const {data,error}=await sb.auth.passkey.list();
+    if(error) throw error;
+    const rows=Array.isArray(data)?data:(data?.passkeys||[]);
+    if(!rows.length){
+      if(status) status.textContent="Passkeyはまだ登録されていません。";
+      return;
+    }
+    if(status){
+      status.textContent=`登録済みPasskey：${rows.length}件`
+        + rows.map(x=>` / ${x.friendly_name||"Passkey"}`).join("");
+    }
+  }catch(e){
+    console.error("listPasskeys:",e);
+    if(status) status.textContent="確認できませんでした："+passkeyErrorMessage(e);
+  }
+}
+
+async function passkeyAdminLogin(){
+  if(!passkeySupported()) return {ok:false, fallback:true};
+
+  const btn=document.getElementById("adminLoginBtn");
+  try{
+    if(btn){
+      btn.disabled=true;
+      const s=btn.querySelector("span");
+      if(s) s.textContent="認証中…";
+    }
+
+    const {data,error}=await sb.auth.signInWithPasskey();
+    if(error) throw error;
+    if(!data?.user) throw new Error("Passkey認証後のユーザー情報を取得できませんでした。");
+
+    const ok=await refreshAdmin(true);
+    if(!ok){
+      // Passkey自体は正しくても管理者テーブルに無いユーザーは弾く
+      await sb.auth.signOut();
+      isAdmin=false;
+      applyAdminUI();
+      renderAll();
+      return {ok:false, fallback:false};
+    }
+
+    await loadCloudState();
+    renderAll();
+    return {ok:true, fallback:false};
+  }catch(e){
+    console.info("Passkey login unavailable/fallback:",e);
+    // 未登録・キャンセル・Passkey無効などはメールログインに回せる
+    try{ await sb.auth.signOut(); }catch(_){}
+    isAdmin=false;
+    applyAdminUI();
+    return {ok:false, fallback:true, error:e};
+  }finally{
+    if(btn) btn.disabled=false;
+  }
+}
+
+async function offerPasskeyAfterPasswordLogin(){
+  if(!isAdmin || !passkeySupported()) return;
+  try{
+    const {data,error}=await sb.auth.passkey.list();
+    if(error) return;
+    const rows=Array.isArray(data)?data:(data?.passkeys||[]);
+    if(rows.length) return;
+
+    if(confirm("管理者ログインに成功しました。\n\n次回からFace ID / Touch ID / 端末パスコードで入れるようにPasskeyを登録しますか？")){
+      await registerAdminPasskey({silent:false});
+    }
+  }catch(e){
+    console.info("Passkey offer skipped:",e);
+  }
+}
+
 async function adminLogin(){
   const email=prompt("管理者メールアドレス");
   if(!email)return;
@@ -3583,6 +3747,7 @@ async function adminLogin(){
       alert("管理者としてログインしました。");
       await loadCloudState();
       renderAll();
+      await offerPasskeyAfterPasswordLogin();
     }else{
       renderAll();
     }
@@ -4500,8 +4665,26 @@ function renderAll(){
 document.getElementById("gameDate").onchange=e=>form.gameDate=e.target.value;
 document.getElementById("adminLoginBtn").onclick=async()=>{
   const {data:{user}}=await sb.auth.getUser();
-  if(user){ await sb.auth.signOut(); isAdmin=false; applyAdminUI(); renderAll(); return; }
-  await adminLogin();
+  if(user){
+    await sb.auth.signOut();
+    isAdmin=false;
+    applyAdminUI();
+    renderAll();
+    return;
+  }
+
+  // まずPasskey。未登録／キャンセル／未有効なら従来ログインへ。
+  const result=await passkeyAdminLogin();
+  if(result.ok) return;
+
+  if(result.fallback){
+    const reason=result.error ? "\n\n"+passkeyErrorMessage(result.error) : "";
+    if(confirm("Passkeyでログインできませんでした。"+reason+"\n\nメール＋パスワードでログインしますか？")){
+      await adminLogin();
+    }else{
+      renderAll();
+    }
+  }
 };
 document.getElementById("saveBtn").onclick=()=>{
   try{ getSfxContext(); }catch(e){}
@@ -4529,8 +4712,12 @@ document.getElementById("yearStatsBtn").onclick=()=>{
 document.getElementById("yearStatsDone").onclick=()=>document.getElementById("yearStatsModal").classList.remove("show");
 
 document.getElementById("settingsBtn").onclick=()=>{
-  renderSettings();document.getElementById("settingsModal").classList.add("show");
+  renderSettings();
+  document.getElementById("settingsModal").classList.add("show");
+  showPasskeyStatus();
 };
+document.getElementById("registerPasskeyBtn").onclick=()=>registerAdminPasskey();
+document.getElementById("listPasskeyBtn").onclick=()=>showPasskeyStatus();
 document.getElementById("settingsDone").onclick=()=>{
   applySettings();document.getElementById("settingsModal").classList.remove("show");
 };
@@ -4656,7 +4843,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=24", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=25", {
         updateViaCache: "none"
       });
 
