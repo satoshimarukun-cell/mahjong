@@ -2965,6 +2965,18 @@ body::before{
 }
 </style>
 
+
+<style id="admin-visibility-v23">
+/*
+  管理者専用UI。
+  旧テーマの .neo-header .btn { display:flex!important } より後に置き、
+  !important 同士でもこちらを確実に勝たせる。
+*/
+.admin-only:not(.admin-visible){
+  display:none!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -2988,13 +3000,13 @@ body::before{
       <button class="btn pop-nav-btn" id="adminLoginBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/aka1-66-90-s.png" alt=""><span>管理者</span>
     </button>
-      <button class="btn pop-nav-btn" id="yearStatsBtn">
+      <button class="btn pop-nav-btn admin-only" id="yearStatsBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/sou1-66-90-s.png" alt=""><span>年度別成績</span>
     </button>
-      <button class="btn primary pop-nav-btn" id="totalStatsBtn">
+      <button class="btn primary pop-nav-btn admin-only" id="totalStatsBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/pin1-66-90-s.png" alt=""><span>通算成績</span>
     </button>
-      <button class="icon-btn pop-nav-btn icon-only" id="settingsBtn" title="設定">
+      <button class="icon-btn pop-nav-btn icon-only admin-only" id="settingsBtn" title="設定">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/man1-66-90-s.png" alt="設定">
     </button>
     </div>
@@ -3051,7 +3063,7 @@ body::before{
           <div class="neo-eyebrow">🎲 今日の卓</div>
           <h2>成績ダッシュボード</h2>
         </div>
-        <button class="btn" id="editHistoryBtn">編集</button>
+        <button class="btn admin-only" id="editHistoryBtn">編集</button>
       </div>
 
       <div class="date-tabs" id="dateTabs"></div>
@@ -3309,7 +3321,12 @@ function applyAdminUI(){
   // 管理者専用UI。未ログイン時はボタン自体を表示しない。
   ["settingsBtn","editHistoryBtn","yearStatsBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
-    if(el) el.style.display=isAdmin?"":"none";
+    if(el){
+      el.classList.add("admin-only");
+      el.classList.toggle("admin-visible", !!isAdmin);
+      // 旧バージョンの inline display が残っていても無効化
+      el.style.removeProperty("display");
+    }
   });
   const input=document.querySelector(".left");
   if(input) input.style.opacity=isAdmin?"1":".72";
@@ -4413,7 +4430,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=22", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=23", {
         updateViaCache: "none"
       });
 
