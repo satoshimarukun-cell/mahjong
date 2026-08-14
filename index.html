@@ -3192,6 +3192,199 @@ body::before{
 }
 </style>
 
+
+<style id="top-auto-mobile-dashboard-v26">
+/* トップ自動計算 */
+.neo-player-grid .player-row{
+  position:relative;
+}
+.top-check{
+  grid-area:top;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  min-height:30px;
+  padding:4px 8px;
+  border:1px solid #dfd2b8;
+  border-radius:999px;
+  background:#fffaf0;
+  color:#84744f;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+  user-select:none;
+}
+.top-check input{
+  width:15px;
+  height:15px;
+  margin:0;
+  accent-color:#d7a91f;
+}
+.top-check.checked{
+  background:#ffe98f;
+  border-color:#d9b438;
+  color:#604a08;
+  box-shadow:0 2px 0 #d2b052;
+}
+.player-row.auto-top{
+  background:#fffbed!important;
+}
+.score-btn.auto-score{
+  position:relative;
+  cursor:default!important;
+  background:#fff7cc!important;
+  border-color:#dfc35c!important;
+  color:#574817!important;
+  opacity:1!important;
+}
+.score-btn.auto-score em{
+  position:absolute;
+  right:7px;
+  top:5px;
+  font-style:normal;
+  font-size:8px;
+  padding:2px 4px;
+  border-radius:5px;
+  background:#ddbd42;
+  color:#fff;
+}
+.neo-player-grid .player-row{
+  grid-template-areas:
+    "rank select"
+    "top top"
+    "yaku score"
+    "pt pt"!important;
+}
+.top-check{justify-self:start}
+
+/* 閲覧者にも当日履歴は表示 */
+.viewer-mode .history-wrap{
+  display:block!important;
+}
+
+/* スマホ縦ダッシュボード */
+@media (max-width:700px) and (orientation:portrait){
+  .public-dashboard{
+    overflow:hidden!important;
+  }
+  .daily{
+    padding:7px!important;
+  }
+  .daily-row{
+    display:grid!important;
+    grid-template-columns:minmax(72px,88px) minmax(0,1fr) auto!important;
+    grid-template-areas:
+      "name seq pt"
+      "name meta yen"!important;
+    gap:3px 7px!important;
+    padding:8px 9px!important;
+    min-height:58px!important;
+    align-items:center!important;
+  }
+  .daily-name{grid-area:name!important;min-width:0}
+  .daily-stars{display:none!important}
+  .daily-seq{
+    grid-area:seq!important;
+    min-width:0!important;
+    overflow:hidden!important;
+    white-space:nowrap!important;
+    font-size:11px!important;
+    letter-spacing:0!important;
+  }
+  .daily-meta{
+    grid-area:meta!important;
+    color:#7c776f!important;
+    font-size:9px!important;
+    font-weight:800!important;
+    white-space:nowrap!important;
+  }
+  .daily-pt{
+    grid-area:pt!important;
+    text-align:right!important;
+    font-size:14px!important;
+    font-weight:950!important;
+    white-space:nowrap!important;
+  }
+  .daily-pt small{
+    font-size:8px!important;
+    font-weight:800!important;
+  }
+  .daily-yen{
+    grid-area:yen!important;
+    text-align:right!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    white-space:nowrap!important;
+  }
+  .daily-name .name-chip{
+    max-width:84px!important;
+    padding:4px 6px!important;
+    font-size:11px!important;
+  }
+  .daily-name .streak{
+    font-size:8px!important;
+    margin-top:3px!important;
+    white-space:nowrap!important;
+  }
+
+  /* 当日履歴は縦画面でも可能な限り収め、必要時のみ左右スクロール */
+  .history-wrap{
+    display:block!important;
+    width:100%!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+    border-top:2px solid #e6ddce!important;
+  }
+  .history-table{
+    width:100%!important;
+    min-width:510px!important;
+    table-layout:fixed!important;
+    font-size:9px!important;
+  }
+  .history-table th,
+  .history-table td{
+    padding:5px 3px!important;
+    white-space:nowrap!important;
+  }
+  .history-table th:first-child,
+  .history-table td:first-child{
+    position:sticky!important;
+    left:0!important;
+    z-index:4!important;
+    width:38px!important;
+    background:#fffaf0!important;
+  }
+  .history-table thead th:first-child{
+    background:#075d39!important;
+    color:#fff!important;
+    z-index:8!important;
+  }
+  .history-table .player-head{
+    font-size:9px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .history-table .rmini{
+    font-size:8px!important;
+    padding:2px 3px!important;
+  }
+  .history-table td b{
+    font-size:9px!important;
+  }
+
+  /* 入力カードはトップ選択を横に置いて高さを抑える */
+  .admin-mode .neo-player-grid .player-row{
+    grid-template-columns:44px 1fr!important;
+    grid-template-areas:
+      "rank select"
+      "top top"
+      "yaku score"
+      "pt pt"!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -3449,7 +3642,9 @@ let form = {
   yakuman:[0,0,0,0],
   gameDate:defaultGameDate(),
   editingID:null,
-  editingIndex:null
+  editingIndex:null,
+  // トップの持ち点は「100,000 - 他3人」で自動計算
+  topIndex:null
 };
 let historyEditing=false;
 let selectedDate=fmtDate(new Date());
@@ -3809,11 +4004,56 @@ function contrastText(hex){
   return (r*299+g*587+b*114)/1000>155?"#17231f":"#ffffff";
 }
 
-function parseScores(){
-  return form.scoresText.map(v=>(parseInt(v)||0)*100);
+function hasScoreInput(v){
+  const t=String(v??"").trim();
+  return t!=="" && t!=="-" && Number.isFinite(parseInt(t,10));
 }
-function totalScore(){return parseScores().reduce((a,b)=>a+b,0)}
-function isComplete(){return totalScore()===CONFIG.totalScorePool}
+function parseScores(){
+  return form.scoresText.map(v=>(parseInt(v,10)||0)*100);
+}
+function updateAutoTopScore(){
+  const top=form.topIndex;
+  if(top===null || top<0 || top>3) return;
+  let otherTotal=0;
+  for(let i=0;i<4;i++){
+    if(i===top) continue;
+    otherTotal+=(parseInt(form.scoresText[i],10)||0)*100;
+  }
+  const autoScore=CONFIG.totalScorePool-otherTotal;
+  form.scoresText[top]=String(Math.trunc(autoScore/100));
+}
+function setTopIndex(index){
+  const next=Number(index);
+  if(!Number.isInteger(next) || next<0 || next>3) return;
+  const old=form.topIndex;
+  if(old!==next && old!==null){
+    // 以前トップだった席は、今度は手入力対象になるので空欄へ戻す
+    form.scoresText[old]="";
+  }
+  form.topIndex=next;
+  form.editingIndex=null;
+  updateAutoTopScore();
+}
+function totalScore(){
+  updateAutoTopScore();
+  return parseScores().reduce((a,b)=>a+b,0);
+}
+function isComplete(){
+  const top=form.topIndex;
+  if(top===null || top<0 || top>3) return false;
+
+  // トップ以外3人は必ず手入力済みであること
+  for(let i=0;i<4;i++){
+    if(i!==top && !hasScoreInput(form.scoresText[i])) return false;
+  }
+  updateAutoTopScore();
+  const scores=parseScores();
+  if(scores.reduce((a,b)=>a+b,0)!==CONFIG.totalScorePool) return false;
+
+  // 指定したトップが実際に最高持ち点でなければ保存不可
+  const topScore=scores[top];
+  return scores.every((v,i)=>i===top || topScore>=v);
+}
 function rankOf(index){
   const vals=parseScores().map((v,i)=>({v,i}));
   vals.sort((a,b)=>b.v-a.v);
@@ -3850,6 +4090,7 @@ function calculatePoints(scoresText,yakuman){
 }
 
 function renderInput(){
+  updateAutoTopScore();
   document.getElementById("gameDate").value=form.gameDate;
   const inputCard=document.getElementById("inputCard");
   const pts=calculatePoints(form.scoresText,form.yakuman);
@@ -3862,14 +4103,21 @@ function renderInput(){
     row.className="player-row"+(form.editingIndex===i?" current-input":"")+(historyEditing && !form.editingID?" locked":"");
     row.style.setProperty("--player-color",`#${liveColor(id)}`);
     row.style.borderColor=`#${liveColor(id)}`;
+    const isTop=form.topIndex===i;
+    row.classList.toggle("auto-top",isTop);
     row.innerHTML=`
       <div class="rank-badge" style="background:${rank?rankColor(rank):"transparent"};color:${rank?rankText(rank):"#222"}">${rank?rank+"位":"-"}</div>
       <div class="player-select-wrap" style="--player-color:#${liveColor(id)};background:#${liveColor(id)}22">
         <select class="player-select" data-sel="${i}"></select>
       </div>
+      <label class="top-check ${isTop?"checked":""}" title="この人をトップにして持ち点を自動計算">
+        <input type="checkbox" data-top="${i}" ${isTop?"checked":""}>
+        <span>トップ</span>
+      </label>
       <button class="yaku-btn" data-yaku="${i}">${form.yakuman[i]? "⭐️".repeat(form.yakuman[i]) : '<span style="color:#aaa">役満</span>'}</button>
-      <button class="score-btn ${form.editingIndex===i?"focused":""}" data-score="${i}">
+      <button class="score-btn ${form.editingIndex===i?"focused":""} ${isTop?"auto-score":""}" data-score="${i}" ${isTop?"disabled":""}>
         ${form.scoresText[i]||"0"}<small>00</small>
+        ${isTop?'<em>自動</em>':""}
       </button>
       <div class="pt ${pts[i]>=0?"plus":"minus"}">${pts[i]>0?"+":""}${pts[i]}</div>
     `;
@@ -3899,13 +4147,25 @@ function renderInput(){
     state.selectedIDs[seat]=newID;
     saveState();renderAll();
   }));
+  inputCard.querySelectorAll("[data-top]").forEach(el=>el.addEventListener("change",e=>{
+    const i=+e.currentTarget.dataset.top;
+    // 必ず1人だけ。チェックを外そうとしても現在のトップを維持。
+    if(e.currentTarget.checked){
+      setTopIndex(i);
+    }else if(form.topIndex===i){
+      e.currentTarget.checked=true;
+    }
+    renderInput();
+  }));
   inputCard.querySelectorAll("[data-yaku]").forEach(el=>el.addEventListener("click",e=>{
     const i=+e.currentTarget.dataset.yaku;
     form.yakuman[i]=(form.yakuman[i]+1)%4;
     renderInput();
   }));
   inputCard.querySelectorAll("[data-score]").forEach(el=>el.addEventListener("click",e=>{
-    form.editingIndex=+e.currentTarget.dataset.score;
+    const i=+e.currentTarget.dataset.score;
+    if(form.topIndex===i) return;
+    form.editingIndex=i;
     renderInput();
     openKeypad();
   }));
@@ -3913,7 +4173,9 @@ function renderInput(){
   const totalEl=document.getElementById("totalScore");
   totalEl.textContent=total.toLocaleString("ja-JP");
   totalEl.className="value "+(isComplete()?"total-ok":"total-ng");
-  document.getElementById("totalCaption").textContent=form.editingID?"修正中":"合計点";
+  document.getElementById("totalCaption").textContent=
+    form.editingID?"修正中":
+    (form.topIndex===null?"トップを選択":"合計点（トップ自動）");
   document.getElementById("cancelEditBtn").style.display=form.editingID?"inline-block":"none";
   const saveBtn=document.getElementById("saveBtn");
   const locked=historyEditing && !form.editingID;
@@ -3928,6 +4190,7 @@ function resetForm(){
   form.yakuman=[0,0,0,0];
   form.editingID=null;
   form.editingIndex=null;
+  form.topIndex=null;
   form.gameDate=defaultGameDate();
   closeKeypad();
   renderAll();
@@ -4031,20 +4294,16 @@ function renderHistory(){
   let html=`<div class="daily"><div class="daily-title">本日集計</div>`;
   daily.forEach(s=>{
     html+=`<div class="daily-row">
-      <div><div class="name-chip" style="background:#${liveColor(s.id)};color:${contrastText(liveColor(s.id))}">${escapeHtml(s.name)}</div>${streakHtml(calculateStats().find(x=>x.id===s.id)||s)}</div>
-      <div style="font-size:11px;color:#e48a00">${s.stars?`⭐️${s.stars}`:""}</div>
-      <div class="rank-seq">${s.rankSequence.map(r=>`<span style="color:${r?rankColor(r):"#ccc"}">${r||"・"}</span>`).join("")}</div>
-      <div style="font-size:11px;font-weight:800;color:#777">${s.count}戦/${s.avg.toFixed(2)}位</div>
-      <div class="${s.pts>=0?"plus":"minus"}" style="text-align:right;font-weight:900">${s.pts>=0?"+":""}${s.pts}</div>
-      <div class="${s.yen>=0?"plus":"minus"}" style="text-align:right;font-weight:900">${s.yen>=0?"+":""}${s.yen}円</div>
+      <div class="daily-name"><div class="name-chip" style="background:#${liveColor(s.id)};color:${contrastText(liveColor(s.id))}">${escapeHtml(s.name)}</div>${streakHtml(calculateStats().find(x=>x.id===s.id)||s)}</div>
+      <div class="daily-stars">${s.stars?`⭐️${s.stars}`:""}</div>
+      <div class="rank-seq daily-seq">${s.rankSequence.map(r=>`<span style="color:${r?rankColor(r):"#ccc"}">${r||"・"}</span>`).join("")}</div>
+      <div class="daily-meta">${s.count}戦 / 平均${s.avg.toFixed(2)}位</div>
+      <div class="daily-pt ${s.pts>=0?"plus":"minus"}">${s.pts>=0?"+":""}${s.pts}<small> pt</small></div>
+      <div class="daily-yen ${s.yen>=0?"plus":"minus"}">${s.yen>=0?"+":""}${s.yen}円</div>
     </div>`;
   });
   html+=`</div>`;
-  // 非管理者は本日の集計まで。局別履歴は一切出さない。
-  if(!isAdmin){
-    content.innerHTML=html;
-    return;
-  }
+  // 閲覧者にも「当日分だけ」の対局履歴は表示する。過去日への移動は管理者だけ。
   html+=`<div class="history-wrap"><table class="history-table"><thead><tr><th>回</th>`;
   if(historyEditing) html+=`<th class="op">操作</th>`;
   daily.forEach(p=>html+=`<th class="player-head" style="--player-color:#${liveColor(p.id)};--player-text:${contrastText(liveColor(p.id))};background:#${liveColor(p.id)}!important;color:${contrastText(liveColor(p.id))}!important"><span class="h-player" style="background:transparent;color:inherit">${escapeHtml(p.name)}</span></th>`);
@@ -4081,6 +4340,9 @@ function loadForEdit(id){
   form.gameDate=toDateInput(new Date(h.date));
   form.yakuman=[...h.yakuman];
   form.scoresText=h.scores.map(s=>String(Math.trunc(s/100)));
+  // 修正時は保存済み持ち点の最高者をトップとして自動指定
+  form.topIndex=h.scores.reduce((best,v,i,arr)=>v>arr[best]?i:best,0);
+  updateAutoTopScore();
   if(h.playerIDs?.length===4) state.selectedIDs=[...h.playerIDs];
   window.scrollTo({top:0,behavior:"smooth"});
   renderAll();
@@ -4563,7 +4825,7 @@ function openKeypad(){document.getElementById("keypad").classList.add("show")}
 function closeKeypad(){document.getElementById("keypad").classList.remove("show")}
 function keyPress(k){
   const i=form.editingIndex;
-  if(i===null)return;
+  if(i===null || form.topIndex===i)return;
   let t=form.scoresText[i];
   if(k==="C")t="";
   else if(k==="⌫")t=t.slice(0,-1);
@@ -4843,7 +5105,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=25", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=26", {
         updateViaCache: "none"
       });
 
