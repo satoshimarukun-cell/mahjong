@@ -4076,6 +4076,100 @@ body::before{
 }
 </style>
 
+
+<style id="ipad-pt-clean-v31">
+.app-version{
+  display:inline-block;
+  margin-left:7px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#f1d66c;
+  color:#4f430f;
+  font-size:9px;
+  line-height:1;
+  font-weight:950;
+  vertical-align:middle;
+  letter-spacing:0;
+  text-shadow:none;
+  box-shadow:0 1px 0 rgba(0,0,0,.12);
+}
+
+/* pt欄は全端末で「数値のみ」。過去テーマの白枠を完全解除 */
+.neo-player-grid .pt,
+.neo-player-grid .player-scoreline .pt{
+  background:transparent!important;
+  border:0!important;
+  border-color:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  padding:0!important;
+}
+
+/* iPad横 */
+@media (min-width:701px) and (max-width:1180px){
+  .neo-player-grid .player-row,
+  .admin-mode .neo-player-grid .player-row{
+    min-height:136px!important;
+    padding:9px!important;
+    overflow:hidden!important;
+  }
+
+  .neo-player-grid .player-scoreline{
+    display:grid!important;
+    grid-template-columns:50px minmax(0,1fr)!important;
+    gap:6px!important;
+    padding-right:46px!important;
+    position:relative!important;
+    min-width:0!important;
+    overflow:visible!important;
+  }
+
+  .neo-player-grid .yaku-btn{
+    width:50px!important;
+    min-width:50px!important;
+  }
+
+  .neo-player-grid .score-btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  .neo-player-grid .pt,
+  .neo-player-grid .player-scoreline .pt{
+    position:absolute!important;
+    right:0!important;
+    bottom:0!important;
+    width:42px!important;
+    min-width:42px!important;
+    max-width:42px!important;
+    height:46px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    color:inherit;
+    font-size:13px!important;
+    font-weight:950!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+  }
+}
+
+/* スマホでもバージョン表示が潰れない */
+@media (max-width:700px) and (orientation:portrait){
+  .app-version{
+    font-size:8px!important;
+    padding:2px 5px!important;
+    margin-left:4px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -4088,7 +4182,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜</div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v31</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5802,7 +5896,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=30", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=31", {
         updateViaCache: "none"
       });
 
