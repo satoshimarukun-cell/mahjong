@@ -2947,6 +2947,24 @@ body::before{
 }
 </style>
 
+
+<style id="admin-dashboard-v22">
+/* 管理者専用ナビが消えてもヘッダーが不自然に空かない */
+.neo-header-actions{
+  justify-content:flex-end!important;
+}
+/* 当日成績が無い場合の表示 */
+#historyContent .empty{
+  min-height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#7c776d;
+  font-weight:800;
+  background:rgba(255,253,247,.72);
+}
+</style>
+
 </head>
 <body>
 
@@ -3192,7 +3210,7 @@ let form = {
   editingIndex:null
 };
 let historyEditing=false;
-let selectedDate="";
+let selectedDate=fmtDate(new Date());
 
 function loadState(){
   try{
@@ -3288,7 +3306,8 @@ async function refreshAdmin(showError=false){
   }
 }
 function applyAdminUI(){
-  ["settingsBtn","editHistoryBtn"].forEach(id=>{
+  // 管理者専用UI。未ログイン時はボタン自体を表示しない。
+  ["settingsBtn","editHistoryBtn","yearStatsBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.style.display=isAdmin?"":"none";
   });
@@ -3550,7 +3569,9 @@ function saveGame(){
 }
 
 function dates(){
-  return [...new Set(state.history.map(h=>fmtDate(h.date)))].sort().reverse();
+  // 成績が無い日でも「今日」をダッシュボードの先頭に表示する。
+  const today=fmtDate(new Date());
+  return [...new Set([today,...state.history.map(h=>fmtDate(h.date))])].sort().reverse();
 }
 function filteredHistory(){
   return state.history.filter(h=>fmtDate(h.date)===selectedDate);
@@ -3584,7 +3605,9 @@ function calcDaily(filtered){
 
 function renderHistory(){
   const ds=dates();
-  if(!selectedDate || !ds.includes(selectedDate)) selectedDate=ds[0]||"";
+  const today=fmtDate(new Date());
+  if(!selectedDate) selectedDate=today;
+  if(!ds.includes(selectedDate)) selectedDate=today;
   const tabs=document.getElementById("dateTabs");
   tabs.innerHTML="";
   ds.forEach(d=>{
@@ -3598,7 +3621,8 @@ function renderHistory(){
   const content=document.getElementById("historyContent");
   const filtered=filteredHistory();
   if(!filtered.length){
-    content.innerHTML='<div class="empty">まだ成績がありませんわ 🀄️</div>';
+    const today=fmtDate(new Date());
+    content.innerHTML=`<div class="empty">${selectedDate===today?"本日の成績はまだありません 🀄️":escapeHtml(selectedDate)+" の成績はありません"}</div>`;
     return;
   }
   const daily=calcDaily(filtered);
@@ -4248,14 +4272,14 @@ document.getElementById("editHistoryBtn").onclick=()=>{
   renderAll();
 };
 document.getElementById("totalStatsBtn").onclick=()=>{
-  if(historyEditing)return;
+  if(!isAdmin || historyEditing)return;
   renderStats();
   document.getElementById("statsModal").classList.add("show");
 };
 document.getElementById("statsDone").onclick=()=>document.getElementById("statsModal").classList.remove("show");
 
 document.getElementById("yearStatsBtn").onclick=()=>{
-  if(historyEditing)return;
+  if(!isAdmin || historyEditing)return;
   renderYearArchive();
   document.getElementById("yearStatsModal").classList.add("show");
 };
@@ -4389,7 +4413,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=21", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=22", {
         updateViaCache: "none"
       });
 
