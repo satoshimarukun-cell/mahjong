@@ -3983,6 +3983,99 @@ body::before{
 }
 </style>
 
+
+<style id="ipad-input-final-v30">
+@media (min-width:701px) and (max-width:1180px){
+
+  .neo-player-grid .player-row,
+  .admin-mode .neo-player-grid .player-row{
+    position:relative!important;
+    grid-template-columns:42px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    grid-template-areas:
+      "rank top"
+      "rank score"!important;
+    padding:9px 9px 12px!important;
+    min-height:140px!important;
+    overflow:hidden!important;
+  }
+
+  .neo-player-grid .player-topline{
+    grid-area:top!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 58px!important;
+    gap:6px!important;
+    align-items:center!important;
+    min-width:0!important;
+  }
+
+  .neo-player-grid .player-scoreline{
+    grid-area:score!important;
+    display:grid!important;
+    grid-template-columns:52px minmax(0,1fr)!important;
+    gap:6px!important;
+    align-items:center!important;
+    min-width:0!important;
+    padding-right:54px!important;
+    position:relative!important;
+  }
+
+  .neo-player-grid .yaku-btn{
+    width:52px!important;
+    min-width:52px!important;
+    height:44px!important;
+  }
+
+  .neo-player-grid .score-btn{
+    width:100%!important;
+    min-width:0!important;
+    height:46px!important;
+    padding:0 7px!important;
+    font-size:24px!important;
+  }
+
+  .neo-player-grid .score-btn small{
+    font-size:13px!important;
+  }
+
+  .neo-player-grid .pt{
+    position:absolute!important;
+    right:0!important;
+    bottom:0!important;
+    width:48px!important;
+    min-width:48px!important;
+    max-width:48px!important;
+    height:46px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    padding-right:2px!important;
+    font-size:14px!important;
+    text-align:right!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+  }
+
+  .neo-player-grid .top-check{
+    width:58px!important;
+    min-width:58px!important;
+    height:33px!important;
+    padding:3px 5px!important;
+    font-size:9px!important;
+  }
+
+  .neo-player-grid .player-select{
+    font-size:13px!important;
+    padding-left:8px!important;
+    padding-right:22px!important;
+  }
+
+  .neo-player-grid .score-btn.auto-score{
+    padding-right:32px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5709,7 +5802,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=29", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=30", {
         updateViaCache: "none"
       });
 
