@@ -2977,6 +2977,208 @@ body::before{
 }
 </style>
 
+
+<style id="viewer-mobile-v24">
+/* ==============================
+   閲覧者モード
+   今日のダッシュボードだけ表示
+   ============================== */
+.viewer-mode .admin-workspace{
+  display:none!important;
+}
+.viewer-mode .neo-main{
+  grid-template-columns:minmax(0,1fr)!important;
+  max-width:1200px!important;
+}
+.viewer-mode .public-dashboard{
+  grid-column:1/-1!important;
+  width:100%!important;
+}
+.viewer-mode #dateTabs,
+.viewer-mode .history-wrap{
+  display:none!important;
+}
+.viewer-mode .public-dashboard .neo-dashboard-head{
+  margin-bottom:0!important;
+}
+.viewer-mode #historyContent{
+  min-height:360px;
+}
+
+/* ==============================
+   スマホ縦
+   ============================== */
+@media (max-width:700px) and (orientation:portrait){
+  body{
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+
+  .neo-header{
+    position:relative!important;
+    top:auto!important;
+    min-height:auto!important;
+    grid-template-columns:1fr!important;
+    padding:8px!important;
+    border-radius:0 0 14px 14px!important;
+  }
+  .neo-brand{
+    margin:0!important;
+    min-width:0!important;
+    width:100%!important;
+    border-radius:12px!important;
+    padding:7px 10px!important;
+  }
+  .neo-brand-mark.pop-brand-tile{
+    width:45px!important;
+    height:53px!important;
+  }
+  .neo-brand-name{
+    font-size:24px!important;
+  }
+  .neo-brand-sub{
+    font-size:7px!important;
+  }
+  .neo-champion{
+    width:100%!important;
+    height:62px!important;
+    padding:0!important;
+  }
+  .neo-champion .champion-card{
+    padding:7px 10px!important;
+  }
+  .neo-header-actions{
+    width:100%!important;
+    height:62px!important;
+    overflow-x:auto!important;
+    justify-content:flex-start!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .neo-header .btn,
+  .neo-header .icon-btn{
+    min-width:78px!important;
+    flex:0 0 78px!important;
+    font-size:10px!important;
+  }
+  .pop-nav-btn img{
+    width:22px!important;
+    height:29px!important;
+  }
+
+  .neo-main{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:8px 0 0!important;
+    padding:0 8px 12px!important;
+    gap:10px!important;
+  }
+
+  /* 管理者は入力→ダッシュボードの縦並び */
+  .admin-mode .admin-workspace,
+  .admin-mode .public-dashboard{
+    width:100%!important;
+  }
+
+  /* 閲覧者はダッシュボードのみ */
+  .viewer-mode .public-dashboard{
+    order:1!important;
+  }
+
+  .neo-entry,
+  .neo-dashboard{
+    border-radius:14px!important;
+    border-width:2px!important;
+  }
+
+  .neo-dashboard-head{
+    padding:10px 12px!important;
+  }
+  .neo-dashboard-head h2{
+    font-size:21px!important;
+  }
+
+  /* 本日集計は1人1カードで縦に読みやすく */
+  .daily{
+    padding:8px!important;
+  }
+  .daily-title{
+    font-size:12px!important;
+    margin-bottom:6px!important;
+  }
+  .daily-row{
+    display:grid!important;
+    grid-template-columns:minmax(72px,auto) 1fr auto!important;
+    grid-template-areas:
+      "name seq pt"
+      "name meta yen";
+    gap:3px 7px!important;
+    padding:8px!important;
+    margin-bottom:6px!important;
+    align-items:center!important;
+  }
+  .daily-row > div:nth-child(1){grid-area:name!important}
+  .daily-row > div:nth-child(2){display:none!important}
+  .daily-row > div:nth-child(3){
+    grid-area:seq!important;
+    min-width:0!important;
+    white-space:nowrap!important;
+    overflow-x:auto!important;
+    font-size:12px!important;
+  }
+  .daily-row > div:nth-child(4){
+    grid-area:meta!important;
+    text-align:left!important;
+    font-size:10px!important;
+  }
+  .daily-row > div:nth-child(5){
+    grid-area:pt!important;
+    font-size:14px!important;
+  }
+  .daily-row > div:nth-child(6){
+    grid-area:yen!important;
+    font-size:13px!important;
+  }
+  .name-chip{
+    max-width:92px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  /* 管理者の過去履歴は横スクロール可能にする */
+  .history-wrap{
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .history-table{
+    min-width:640px!important;
+  }
+
+  /* 入力画面も縦1列に */
+  .neo-player-grid{
+    grid-template-columns:1fr!important;
+  }
+  .neo-player-grid .player-row{
+    min-height:132px!important;
+  }
+  .neo-save-panel{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .neo-save-panel .save-btn{
+    min-height:52px!important;
+  }
+
+  #historyContent .empty{
+    min-height:240px!important;
+    padding:20px!important;
+    text-align:center!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -3022,7 +3224,7 @@ body::before{
 
 
   <main class="neo-main">
-    <section class="neo-entry">
+    <section class="neo-entry admin-workspace">
       <div class="neo-section-heading">
         <div>
           <div class="neo-eyebrow">🀄 新しい半荘</div>
@@ -3057,7 +3259,7 @@ body::before{
       </details>
     </section>
 
-    <section class="neo-dashboard">
+    <section class="neo-dashboard public-dashboard">
       <div class="neo-dashboard-head">
         <div>
           <div class="neo-eyebrow">🎲 今日の卓</div>
@@ -3318,18 +3520,28 @@ async function refreshAdmin(showError=false){
   }
 }
 function applyAdminUI(){
-  // 管理者専用UI。未ログイン時はボタン自体を表示しない。
+  // 管理者専用UI。閲覧者には本日のダッシュボードだけ見せる。
   ["settingsBtn","editHistoryBtn","yearStatsBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
     if(el){
       el.classList.add("admin-only");
       el.classList.toggle("admin-visible", !!isAdmin);
-      // 旧バージョンの inline display が残っていても無効化
       el.style.removeProperty("display");
     }
   });
-  const input=document.querySelector(".left");
-  if(input) input.style.opacity=isAdmin?"1":".72";
+
+  document.body.classList.toggle("viewer-mode", !isAdmin);
+  document.body.classList.toggle("admin-mode", !!isAdmin);
+
+  const workspace=document.querySelector(".admin-workspace");
+  if(workspace) workspace.classList.toggle("admin-visible", !!isAdmin);
+
+  // 閲覧者は必ず今日の成績だけ。
+  if(!isAdmin){
+    selectedDate=fmtDate(new Date());
+    historyEditing=false;
+  }
+
   document.querySelectorAll("#inputCard select,#inputCard button,#gameDate,#saveBtn").forEach(el=>el.disabled=!isAdmin);
 
   const alb=document.getElementById("adminLoginBtn");
@@ -3621,22 +3833,30 @@ function calcDaily(filtered){
 }
 
 function renderHistory(){
-  const ds=dates();
   const today=fmtDate(new Date());
-  if(!selectedDate) selectedDate=today;
-  if(!ds.includes(selectedDate)) selectedDate=today;
+  const ds=isAdmin?dates():[today];
+
+  if(!isAdmin){
+    selectedDate=today;
+  }else{
+    if(!selectedDate) selectedDate=today;
+    if(!ds.includes(selectedDate)) selectedDate=today;
+  }
+
   const tabs=document.getElementById("dateTabs");
   tabs.innerHTML="";
-  ds.forEach(d=>{
-    const b=document.createElement("button");
-    b.className="date-tab"+(d===selectedDate?" active":"");
-    b.textContent=d;
-    b.onclick=()=>{selectedDate=d;renderAll()};
-    tabs.appendChild(b);
-  });
+  if(isAdmin){
+    ds.forEach(d=>{
+      const b=document.createElement("button");
+      b.className="date-tab"+(d===selectedDate?" active":"");
+      b.textContent=d;
+      b.onclick=()=>{selectedDate=d;renderAll()};
+      tabs.appendChild(b);
+    });
+  }
 
   const content=document.getElementById("historyContent");
-  const filtered=filteredHistory();
+  const filtered=state.history.filter(h=>fmtDate(h.date)===selectedDate);
   if(!filtered.length){
     const today=fmtDate(new Date());
     content.innerHTML=`<div class="empty">${selectedDate===today?"本日の成績はまだありません 🀄️":escapeHtml(selectedDate)+" の成績はありません"}</div>`;
@@ -3654,7 +3874,13 @@ function renderHistory(){
       <div class="${s.yen>=0?"plus":"minus"}" style="text-align:right;font-weight:900">${s.yen>=0?"+":""}${s.yen}円</div>
     </div>`;
   });
-  html+=`</div><div class="history-wrap"><table class="history-table"><thead><tr><th>回</th>`;
+  html+=`</div>`;
+  // 非管理者は本日の集計まで。局別履歴は一切出さない。
+  if(!isAdmin){
+    content.innerHTML=html;
+    return;
+  }
+  html+=`<div class="history-wrap"><table class="history-table"><thead><tr><th>回</th>`;
   if(historyEditing) html+=`<th class="op">操作</th>`;
   daily.forEach(p=>html+=`<th class="player-head" style="--player-color:#${liveColor(p.id)};--player-text:${contrastText(liveColor(p.id))};background:#${liveColor(p.id)}!important;color:${contrastText(liveColor(p.id))}!important"><span class="h-player" style="background:transparent;color:inherit">${escapeHtml(p.name)}</span></th>`);
   html+=`</tr></thead><tbody>`;
@@ -4257,7 +4483,8 @@ function escapeHtml(s){
 function escapeAttr(s){return escapeHtml(s)}
 
 function renderAll(){
-  renderInput();
+  applyAdminUI();
+  if(isAdmin) renderInput();
   renderHistory();
   const championBanner=document.getElementById("championBanner");
   if(championBanner) championBanner.innerHTML=championHtml(selectedStatsYear());
@@ -4267,8 +4494,7 @@ function renderAll(){
   document.getElementById("totalStatsBtn").style.opacity=historyEditing?".5":"1";
   document.getElementById("yearStatsBtn").disabled=historyEditing;
   document.getElementById("yearStatsBtn").style.opacity=historyEditing?".5":"1";
-  const alb=document.getElementById("adminLoginBtn"); if(alb) alb.textContent=isAdmin?"🔓 ログアウト":"🔐 管理者";
-  applyAdminUI();
+  // 管理者表示は renderAll 冒頭で反映済み
 }
 
 document.getElementById("gameDate").onchange=e=>form.gameDate=e.target.value;
@@ -4430,7 +4656,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=23", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=24", {
         updateViaCache: "none"
       });
 
