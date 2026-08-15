@@ -4511,6 +4511,279 @@ body::before{
 }
 </style>
 
+
+<style id="v2_6-seat-layout-fix">
+/* v2.6: 風牌の並びを修正し、菱形入力カードを広くして入力欄を収める */
+@media (min-width:701px){
+  #inputCard.neo-player-grid.seat-diamond{
+    grid-template-columns:minmax(190px,1fr) minmax(280px,1.25fr) minmax(190px,1fr)!important;
+    grid-template-areas:
+      ". north ."
+      "west . east"
+      ". south ."!important;
+    column-gap:16px!important;
+    row-gap:16px!important;
+    align-items:stretch!important;
+  }
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    min-height:176px!important;
+    padding:12px!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    grid-template-areas:
+      "wind top"
+      "score score"
+      "footer footer"!important;
+    gap:10px 10px!important;
+    overflow:hidden!important;
+  }
+  #inputCard .wind-badge{
+    width:56px!important;
+    height:56px!important;
+    font-size:30px!important;
+    border-radius:16px!important;
+    align-self:start!important;
+  }
+  #inputCard .player-topline{
+    grid-area:top!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    gap:8px!important;
+    align-items:start!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select-wrap,
+  #inputCard .player-select{
+    width:100%!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select{
+    height:46px!important;
+    font-size:19px!important;
+    padding-left:10px!important;
+    padding-right:26px!important;
+  }
+  #inputCard .top-check{
+    width:auto!important;
+    min-width:0!important;
+    max-width:86px!important;
+    height:30px!important;
+    padding:4px 10px!important;
+    justify-self:end!important;
+    border-radius:999px!important;
+    font-size:11px!important;
+  }
+  #inputCard .top-check input{width:14px!important;height:14px!important;}
+  #inputCard .player-scoreline{
+    grid-area:score!important;
+    display:grid!important;
+    grid-template-columns:58px minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:center!important;
+  }
+  #inputCard .yaku-btn{
+    width:58px!important;
+    min-width:58px!important;
+    height:48px!important;
+  }
+  #inputCard .score-btn{
+    height:54px!important;
+    font-size:34px!important;
+    padding:0 14px!important;
+  }
+  #inputCard .score-btn small{font-size:.55em!important;}
+  #inputCard .player-footer{
+    grid-area:footer!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+  }
+  #inputCard .player-footer .pt{
+    font-size:28px!important;
+    line-height:1!important;
+  }
+  #inputCard .player-footer .live-rank{
+    font-size:12px!important;
+    padding:4px 10px!important;
+  }
+}
+</style>
+
+<style id="v2_7-overlap-diamond-layout">
+/* v2.7: 4枚を同じ横幅にし、上下と左右を少し重ねる卓型レイアウト */
+@media (min-width:701px){
+  #inputCard.neo-player-grid.seat-diamond{
+    position:relative!important;
+    display:block!important;
+    height:500px!important;
+    min-height:500px!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow:visible!important;
+    margin:0 auto!important;
+  }
+
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    position:absolute!important;
+    width:min(46%,280px)!important;
+    min-width:225px!important;
+    max-width:280px!important;
+    height:174px!important;
+    min-height:174px!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:11px!important;
+    display:grid!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    grid-template-areas:
+      "wind top"
+      "score score"
+      "footer footer"!important;
+    grid-template-rows:auto auto auto!important;
+    gap:8px 10px!important;
+    overflow:hidden!important;
+    background:#fffdf8!important;
+    box-shadow:0 5px 12px rgba(58,48,26,.08)!important;
+  }
+
+  /* 上下を中央、左右を中央へ少し食い込ませる */
+  #inputCard .player-row.pos-north{
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    z-index:3!important;
+  }
+  #inputCard .player-row.pos-south{
+    bottom:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    z-index:3!important;
+  }
+  #inputCard .player-row.pos-west{
+    top:163px!important;
+    left:0!important;
+    transform:none!important;
+    z-index:2!important;
+  }
+  #inputCard .player-row.pos-east{
+    top:163px!important;
+    right:0!important;
+    left:auto!important;
+    transform:none!important;
+    z-index:2!important;
+  }
+
+  #inputCard .wind-badge{
+    width:54px!important;
+    height:54px!important;
+    font-size:28px!important;
+    align-self:start!important;
+  }
+  #inputCard .player-topline{
+    grid-area:top!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 62px!important;
+    grid-template-rows:auto!important;
+    gap:6px!important;
+    min-width:0!important;
+    align-items:center!important;
+  }
+  #inputCard .player-select-wrap,
+  #inputCard .player-select{
+    width:100%!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select{
+    height:44px!important;
+    font-size:17px!important;
+    padding:0 26px 0 10px!important;
+  }
+  #inputCard .top-check{
+    width:62px!important;
+    min-width:62px!important;
+    max-width:62px!important;
+    height:32px!important;
+    padding:3px 5px!important;
+    font-size:9px!important;
+    justify-self:end!important;
+  }
+  #inputCard .top-check input{
+    width:13px!important;
+    height:13px!important;
+  }
+  #inputCard .player-scoreline{
+    grid-area:score!important;
+    display:grid!important;
+    grid-template-columns:58px minmax(0,1fr)!important;
+    gap:7px!important;
+    padding-right:0!important;
+    min-width:0!important;
+    align-items:center!important;
+  }
+  #inputCard .yaku-btn{
+    width:58px!important;
+    min-width:58px!important;
+    height:46px!important;
+  }
+  #inputCard .score-btn{
+    width:100%!important;
+    min-width:0!important;
+    height:49px!important;
+    font-size:29px!important;
+    padding:0 10px!important;
+  }
+  #inputCard .player-footer{
+    grid-area:footer!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+  }
+  #inputCard .player-footer .pt{
+    position:static!important;
+    display:block!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    font-size:21px!important;
+    line-height:1!important;
+    overflow:visible!important;
+    white-space:nowrap!important;
+  }
+  #inputCard .player-footer .live-rank{
+    font-size:10px!important;
+    padding:3px 8px!important;
+  }
+}
+
+/* 狭めのiPad横では少しだけ小さくして重なり量を保つ */
+@media (min-width:701px) and (max-width:980px){
+  #inputCard.neo-player-grid.seat-diamond{
+    height:470px!important;
+    min-height:470px!important;
+  }
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    width:min(45%,250px)!important;
+    min-width:205px!important;
+    max-width:250px!important;
+    height:164px!important;
+    min-height:164px!important;
+    padding:9px!important;
+  }
+  #inputCard .player-row.pos-west,
+  #inputCard .player-row.pos-east{
+    top:153px!important;
+  }
+  #inputCard .player-select{font-size:15px!important}
+  #inputCard .player-footer .pt{font-size:18px!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -4523,7 +4796,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v2.5</span></div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v2.7</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5226,7 +5499,7 @@ function windForSeat(seat){
   const east=(Number.isInteger(form.eastIndex)?form.eastIndex:0);
   const seatRing=FIXED_SEAT_RING_INDEX[seat] ?? 0;
   const eastRing=FIXED_SEAT_RING_INDEX[east] ?? 0;
-  return WIND_RING_CCW[(seatRing-eastRing+4)%4];
+  return WIND_RING_CCW[(eastRing-seatRing+4)%4];
 }
 function seatPosClassForSeat(seat){
   return FIXED_SEAT_POS_CLASS[seat] || "east";
@@ -6270,7 +6543,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=204", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=207", {
         updateViaCache: "none"
       });
 
