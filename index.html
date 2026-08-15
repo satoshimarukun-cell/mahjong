@@ -4384,6 +4384,131 @@ body::before{
   #inputCard .player-footer .pt{font-size:16px!important}
   #inputCard .player-footer .live-rank{font-size:10px!important;padding:3px 8px!important}
 }
+
+.neo-seat-hint{
+  margin:6px 2px 10px;
+  font-size:12px;
+  color:#7d6d4d;
+  font-weight:700;
+}
+#inputCard .wind-badge{
+  cursor:pointer!important;
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease!important;
+}
+#inputCard .wind-badge:hover,
+#inputCard .wind-badge:active{
+  transform:translateY(-1px) scale(1.03)!important;
+  box-shadow:0 5px 12px rgba(0,0,0,.12)!important;
+  filter:brightness(1.02)!important;
+}
+#inputCard .wind-badge::after{
+  content:"親";
+  position:absolute;
+  right:-8px;
+  top:-6px;
+  min-width:20px;
+  height:20px;
+  padding:0 4px;
+  border-radius:999px;
+  background:#f7f0d0;
+  border:1px solid #d5c38f;
+  color:#8a6c17;
+  font-size:10px;
+  font-weight:900;
+  line-height:18px;
+  opacity:.55;
+}
+#inputCard .wind-badge.dealer::after{
+  content:"東家";
+  background:#f3ce45;
+  border-color:#d1a722;
+  color:#5b4200;
+  opacity:1;
+}
+@media (max-width:700px){
+  .neo-seat-hint{font-size:11px;margin-bottom:8px;}
+  #inputCard .wind-badge::after{right:-6px; top:-5px; min-width:18px; height:18px; line-height:16px; font-size:9px;}
+}
+
+</style>
+
+
+<style id="diamond-width-fix-v24">
+/* v2.4 菱形は維持しつつ、上下・左右とも名前が読めるカード幅を確保 */
+@media (min-width:701px){
+  #inputCard.neo-player-grid.seat-diamond{
+    grid-template-columns:minmax(150px,1fr) minmax(210px,1.35fr) minmax(150px,1fr)!important;
+    grid-template-areas:
+      ". north ."
+      "west . east"
+      ". south ."!important;
+    column-gap:10px!important;
+    row-gap:12px!important;
+  }
+
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    width:100%!important;
+    min-width:0!important;
+    min-height:152px!important;
+    padding:9px!important;
+    grid-template-columns:44px minmax(0,1fr)!important;
+    gap:7px 8px!important;
+  }
+
+  /* 左右カードも名前欄を優先。トップは小さなピルへ */
+  #inputCard .player-topline{
+    grid-template-columns:minmax(0,1fr) 52px!important;
+    gap:5px!important;
+  }
+  #inputCard .top-check{
+    width:52px!important;
+    min-width:52px!important;
+    height:32px!important;
+    padding:3px 4px!important;
+    font-size:8.5px!important;
+  }
+  #inputCard .top-check input{
+    width:12px!important;
+    height:12px!important;
+  }
+
+  #inputCard .player-select-wrap,
+  #inputCard .player-select{
+    width:100%!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select{
+    font-size:14px!important;
+    padding-left:7px!important;
+    padding-right:21px!important;
+    text-overflow:ellipsis!important;
+  }
+
+  #inputCard .player-scoreline{
+    grid-template-columns:52px minmax(0,1fr)!important;
+    gap:6px!important;
+  }
+  #inputCard .yaku-btn{
+    width:52px!important;
+    min-width:52px!important;
+  }
+
+  #inputCard .player-footer .pt{
+    font-size:18px!important;
+  }
+  #inputCard .player-footer .live-rank{
+    font-size:10px!important;
+    padding:3px 7px!important;
+  }
+}
+
+/* iPad横で上下カードをさらに広げる */
+@media (min-width:900px) and (max-width:1180px){
+  #inputCard.neo-player-grid.seat-diamond{
+    grid-template-columns:minmax(155px,.92fr) minmax(225px,1.42fr) minmax(155px,.92fr)!important;
+  }
+}
 </style>
 
 </head>
@@ -4398,7 +4523,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v2.2</span></div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v2.4</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5127,7 +5252,7 @@ function renderInput(){
     const isTop=form.topIndex===i;
     row.classList.toggle("auto-top",isTop);
     row.innerHTML=`
-      <button type="button" class="wind-badge ${wind==='東'?'dealer':''}" data-east="${i}" title="この人を東にする">${wind}</button>
+      <button type="button" class="wind-badge ${wind==='東'?'dealer':''}" data-east="${i}" title="押すとこの人を東家にします">${wind}</button>
 
       <div class="player-topline">
         <div class="player-select-wrap" style="--player-color:#${liveColor(id)};background:#${liveColor(id)}22">
@@ -6141,7 +6266,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=202", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=204", {
         updateViaCache: "none"
       });
 
