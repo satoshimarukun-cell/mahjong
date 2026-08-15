@@ -5055,8 +5055,8 @@ body::before{
 </style>
 
 
-<style id="mobile-history-delete-v211">
-/* v2.11: スマホの履歴編集で修正・削除を縦2段にして確実に押せるようにする */
+<style id="mobile-history-delete-v212">
+/* v2.12: スマホの履歴編集で修正・削除を縦2段にして確実に押せるようにする */
 @media (max-width:700px) and (orientation:portrait){
   .history-table th.op,
   .history-table td.op{
@@ -5106,6 +5106,33 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-seat-ccw-v212">
+/* v2.12: スマホ版2x2席配置を反時計回りに見える並びへ調整
+   上段: 東 / 北
+   下段: 南 / 西  （下段左右を入れ替え） */
+@media (max-width:700px) and (orientation:portrait){
+  #inputCard.neo-player-grid.seat-diamond{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    grid-template-areas:
+      "east north"
+      "south west"!important;
+    gap:12px!important;
+    align-items:stretch!important;
+  }
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    min-width:0!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+  #inputCard .player-row.pos-east{grid-area:east!important;}
+  #inputCard .player-row.pos-north{grid-area:north!important;}
+  #inputCard .player-row.pos-south{grid-area:south!important;}
+  #inputCard .player-row.pos-west{grid-area:west!important;}
+}
+</style>
 </head>
 <body>
 
@@ -5118,7 +5145,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.11</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.12</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
