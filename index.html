@@ -4434,7 +4434,7 @@ body::before{
 
 
 <style id="diamond-width-fix-v24">
-/* v2.4 菱形は維持しつつ、上下・左右とも名前が読めるカード幅を確保 */
+/* v2.5 東家を可変にして他席の風牌を逆時計回りで自動表示 */
 @media (min-width:701px){
   #inputCard.neo-player-grid.seat-diamond{
     grid-template-columns:minmax(150px,1fr) minmax(210px,1.35fr) minmax(150px,1fr)!important;
@@ -4523,7 +4523,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v2.4</span></div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v2.5</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -4569,6 +4569,7 @@ body::before{
       </div>
 
       <div class="neo-rule-strip" id="ruleText"></div>
+      <div class="neo-seat-hint">風牌を押すとその席が東家になり、他の席は逆時計回りで自動表示されます。</div>
 
       <div id="inputCard" class="neo-player-grid"></div>
 
@@ -5218,14 +5219,17 @@ function calculatePoints(scoresText,yakuman){
 }
 
 
-const WIND_ORDER=["東","南","西","北"];
-const WIND_POS_CLASS={"東":"east","南":"south","西":"west","北":"north"};
+const FIXED_SEAT_POS_CLASS=["east","south","west","north"];
+const FIXED_SEAT_RING_INDEX=[0,3,2,1];
+const WIND_RING_CCW=["東","北","西","南"];
 function windForSeat(seat){
   const east=(Number.isInteger(form.eastIndex)?form.eastIndex:0);
-  return WIND_ORDER[(seat-east+4)%4];
+  const seatRing=FIXED_SEAT_RING_INDEX[seat] ?? 0;
+  const eastRing=FIXED_SEAT_RING_INDEX[east] ?? 0;
+  return WIND_RING_CCW[(seatRing-eastRing+4)%4];
 }
-function windPosClassForSeat(seat){
-  return WIND_POS_CLASS[windForSeat(seat)] || 'east';
+function seatPosClassForSeat(seat){
+  return FIXED_SEAT_POS_CLASS[seat] || "east";
 }
 function setEastSeat(seat){
   form.eastIndex=seat;
@@ -5244,7 +5248,7 @@ function renderInput(){
     const p=getPlayer(id);
     const rank=isComplete()?rankOf(i):0;
     const wind=windForSeat(i);
-    const posClass=windPosClassForSeat(i);
+    const posClass=seatPosClassForSeat(i);
     const row=document.createElement("div");
     row.className="player-row pos-"+posClass+(form.editingIndex===i?" current-input":"")+(historyEditing && !form.editingID?" locked":"");
     row.style.setProperty("--player-color",`#${liveColor(id)}`);
@@ -5252,7 +5256,7 @@ function renderInput(){
     const isTop=form.topIndex===i;
     row.classList.toggle("auto-top",isTop);
     row.innerHTML=`
-      <button type="button" class="wind-badge ${wind==='東'?'dealer':''}" data-east="${i}" title="押すとこの人を東家にします">${wind}</button>
+      <button type="button" class="wind-badge ${wind==='東'?'dealer':''}" data-east="${i}" title="押すとこの席を東家にします">${wind}</button>
 
       <div class="player-topline">
         <div class="player-select-wrap" style="--player-color:#${liveColor(id)};background:#${liveColor(id)}22">
