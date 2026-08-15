@@ -5054,6 +5054,58 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-history-delete-v211">
+/* v2.11: スマホの履歴編集で修正・削除を縦2段にして確実に押せるようにする */
+@media (max-width:700px) and (orientation:portrait){
+  .history-table th.op,
+  .history-table td.op{
+    width:13%!important;
+    min-width:44px!important;
+    max-width:58px!important;
+    padding:3px 2px!important;
+    overflow:visible!important;
+    white-space:normal!important;
+  }
+  .history-table td.op{
+    vertical-align:middle!important;
+  }
+  .history-table td.op .small-btn{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:27px!important;
+    margin:2px 0!important;
+    padding:2px 1px!important;
+    border-radius:5px!important;
+    font-size:9px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    touch-action:manipulation!important;
+  }
+  .history-table td.op .small-btn.edit{
+    background:#e8f1ff!important;
+    color:#1267cf!important;
+  }
+  .history-table td.op .small-btn.del{
+    background:#ffe8e8!important;
+    color:#c22!important;
+  }
+  /* 操作列以外は残り幅を均等に使う。横スクロールは出さない */
+  .history-wrap{
+    overflow-x:hidden!important;
+  }
+  .history-table{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    table-layout:fixed!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5066,7 +5118,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.10</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.11</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -6813,7 +6865,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=210", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=211", {
         updateViaCache: "none"
       });
 
