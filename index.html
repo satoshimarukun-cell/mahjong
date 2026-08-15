@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>雀譜 — 麻雀成績管理</title>
+<title>勝中麻雀 — 麻雀成績管理</title>
 
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="theme-color" content="#a01414">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="雀譜">
+<meta name="apple-mobile-web-app-title" content="勝中麻雀">
 <link rel="apple-touch-icon" href="./icon-180.png">
 
 <style>
@@ -5043,6 +5043,17 @@ body::before{
 }
 </style>
 
+
+<style id="v2_10-brand-title">
+.neo-brand-name{white-space:nowrap!important;}
+@media (min-width:701px) and (max-width:1180px){
+  .neo-brand-name{font-size:27px!important;letter-spacing:.04em!important;}
+}
+@media (max-width:700px) and (orientation:portrait){
+  .neo-brand-name{font-size:22px!important;letter-spacing:.04em!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -5055,7 +5066,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v2.9</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.10</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -6802,7 +6813,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=209", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=210", {
         updateViaCache: "none"
       });
 

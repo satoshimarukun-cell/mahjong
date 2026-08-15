@@ -1,4 +1,4 @@
-const CACHE_NAME = "mahjong-pwa-v209";
+const CACHE_NAME = "mahjong-pwa-v210";
 const STATIC_ASSETS = [
   "./index.html",
   "./manifest.webmanifest",
@@ -39,7 +39,7 @@ self.addEventListener("fetch", event => {
           return response;
         })
         .catch(async () => (await caches.match("./index.html")) ||
-          new Response("<h1>オフラインです</h1><p>一度オンラインで雀譜を開いてください。</p>", {
+          new Response("<h1>オフラインです</h1><p>一度オンラインで勝中麻雀を開いてください。</p>", {
             headers: { "Content-Type": "text/html; charset=utf-8" }
           })
         )
