@@ -4170,6 +4170,81 @@ body::before{
 }
 </style>
 
+
+<style id="ipad-pt-visible-v21">
+/* iPad横：ptは枠なしの数値だけで、カード右下に必ず表示 */
+@media (min-width:701px) and (max-width:1180px){
+
+  .neo-player-grid .player-row,
+  .admin-mode .neo-player-grid .player-row{
+    position:relative!important;
+    overflow:hidden!important;
+  }
+
+  .neo-player-grid .player-scoreline{
+    position:relative!important;
+    display:grid!important;
+    grid-template-columns:50px minmax(0,1fr)!important;
+    gap:6px!important;
+    padding-right:56px!important;
+    min-width:0!important;
+  }
+
+  .neo-player-grid .pt,
+  .neo-player-grid .player-scoreline .pt{
+    position:absolute!important;
+    right:4px!important;
+    bottom:6px!important;
+    width:50px!important;
+    min-width:50px!important;
+    max-width:50px!important;
+    height:auto!important;
+
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+
+    background:transparent!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    outline:0!important;
+
+    padding:0!important;
+    margin:0!important;
+
+    text-align:right!important;
+    font-size:14px!important;
+    font-weight:950!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+    overflow:visible!important;
+    z-index:5!important;
+  }
+
+  .neo-player-grid .pt.plus{
+    color:#e8891e!important;
+  }
+  .neo-player-grid .pt.minus{
+    color:#22a7c7!important;
+  }
+}
+
+/* スマホ側のpt表示は既存のv28系レイアウトを優先 */
+@media (max-width:700px) and (orientation:portrait){
+  .neo-player-grid .pt{
+    position:static!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -4182,7 +4257,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v31</span></div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v2.1</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5896,7 +5971,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=31", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=201", {
         updateViaCache: "none"
       });
 
