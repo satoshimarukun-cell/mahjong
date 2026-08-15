@@ -1,28 +1,16 @@
 {
-  "name": "雀譜 — 麻雀成績管理",
+  "name": "雀譜 - 麻雀成績管理",
   "short_name": "雀譜",
-  "description": "4人麻雀の成績入力・履歴・通算集計アプリ",
+  "description": "麻雀の対局成績を記録・集計するWebアプリ",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#a01414",
-  "theme_color": "#a01414",
+  "background_color": "#fffaf0",
+  "theme_color": "#00633f",
   "orientation": "any",
   "icons": [
-    {
-      "src": "./icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    },
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    {"src":"./icon-180.png","sizes":"180x180","type":"image/png"},
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png"}
   ]
 }

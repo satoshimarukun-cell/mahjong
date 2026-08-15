@@ -4784,6 +4784,118 @@ body::before{
 }
 </style>
 
+
+<style id="v2_8-input-layout-fix">
+/* v2.8: 入力カードの重なり解消 + 名前欄を拡大 + トップを3段目中央へ */
+#inputCard .wind-badge::after{content:none!important;display:none!important;}
+
+@media (min-width:701px){
+  #inputCard.neo-player-grid.seat-diamond{
+    position:relative!important;
+    display:block!important;
+    height:590px!important;
+    min-height:590px!important;
+    overflow:visible!important;
+  }
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    position:absolute!important;
+    width:min(44%,260px)!important;
+    min-width:240px!important;
+    max-width:260px!important;
+    height:174px!important;
+    min-height:174px!important;
+    padding:11px!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    grid-template-areas:
+      "wind top"
+      "score score"
+      "footer footer"!important;
+    gap:8px 10px!important;
+  }
+  #inputCard .player-row.pos-north{top:0!important;left:50%!important;transform:translateX(-50%)!important;z-index:3!important;}
+  #inputCard .player-row.pos-west{top:198px!important;left:0!important;transform:none!important;z-index:2!important;}
+  #inputCard .player-row.pos-east{top:198px!important;right:0!important;left:auto!important;transform:none!important;z-index:2!important;}
+  #inputCard .player-row.pos-south{top:396px!important;left:50%!important;transform:translateX(-50%)!important;z-index:3!important;}
+
+  #inputCard .player-topline{
+    grid-area:top!important;
+    display:block!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select-wrap,
+  #inputCard .player-select{
+    width:100%!important;
+    min-width:0!important;
+  }
+  #inputCard .player-select{
+    height:44px!important;
+    font-size:18px!important;
+    padding:0 28px 0 10px!important;
+  }
+  #inputCard .player-scoreline{
+    grid-template-columns:58px minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+  #inputCard .score-btn{height:50px!important;font-size:31px!important;padding:0 12px!important;}
+  #inputCard .player-footer{
+    grid-area:footer!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  #inputCard .player-footer .pt{font-size:22px!important;}
+  #inputCard .footer-top-check{
+    width:auto!important;
+    min-width:64px!important;
+    max-width:none!important;
+    height:30px!important;
+    padding:3px 8px!important;
+    justify-self:center!important;
+    font-size:10px!important;
+  }
+  #inputCard .footer-top-check input{width:13px!important;height:13px!important;}
+  #inputCard .player-footer .live-rank{font-size:10px!important;padding:3px 8px!important;justify-self:end!important;}
+}
+
+@media (min-width:701px) and (max-width:980px){
+  #inputCard.neo-player-grid.seat-diamond{height:566px!important;min-height:566px!important;}
+  #inputCard.neo-player-grid.seat-diamond .player-row,
+  .admin-mode #inputCard.neo-player-grid.seat-diamond .player-row{
+    width:min(45%,244px)!important;
+    min-width:220px!important;
+    max-width:244px!important;
+    height:166px!important;
+    min-height:166px!important;
+    padding:9px!important;
+  }
+  #inputCard .player-row.pos-west,#inputCard .player-row.pos-east{top:190px!important;}
+  #inputCard .player-row.pos-south{top:380px!important;}
+  #inputCard .player-select{font-size:16px!important;}
+  #inputCard .player-footer .pt{font-size:19px!important;}
+}
+
+@media (max-width:700px){
+  #inputCard .player-topline{grid-template-columns:minmax(0,1fr)!important;}
+  #inputCard .player-footer{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    align-items:center!important;
+    gap:6px!important;
+  }
+  #inputCard .footer-top-check{
+    min-width:54px!important;
+    width:auto!important;
+    height:28px!important;
+    padding:2px 6px!important;
+    font-size:9px!important;
+    justify-self:center!important;
+  }
+  #inputCard .footer-top-check input{width:12px!important;height:12px!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -4796,7 +4908,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">雀譜 <span class="app-version">v2.7</span></div>
+        <div class="neo-brand-name">雀譜 <span class="app-version">v2.8</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5535,10 +5647,6 @@ function renderInput(){
         <div class="player-select-wrap" style="--player-color:#${liveColor(id)};background:#${liveColor(id)}22">
           <select class="player-select" data-sel="${i}"></select>
         </div>
-        <label class="top-check ${isTop?"checked":""}" title="この人をトップにして持ち点を自動計算">
-          <input type="checkbox" data-top="${i}" ${isTop?"checked":""}>
-          <span>トップ</span>
-        </label>
       </div>
 
       <div class="player-scoreline">
@@ -5551,6 +5659,10 @@ function renderInput(){
 
       <div class="player-footer">
         <div class="pt ${pts[i]>=0?"plus":"minus"}">${pts[i]>0?"+":""}${pts[i]} pt</div>
+        <label class="top-check footer-top-check ${isTop?"checked":""}" title="この人をトップにして持ち点を自動計算">
+          <input type="checkbox" data-top="${i}" ${isTop?"checked":""}>
+          <span>トップ</span>
+        </label>
         <div class="live-rank" style="background:${rank?rankColor(rank):'#efe8da'};color:${rank?rankText(rank):'#7b705a'}">${rank?rank+'位':'未確定'}</div>
       </div>
     `;
@@ -6543,7 +6655,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=207", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=208", {
         updateViaCache: "none"
       });
 
