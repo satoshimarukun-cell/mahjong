@@ -5056,7 +5056,7 @@ body::before{
 
 
 <style id="mobile-history-delete-v212">
-/* v2.13: スマホの履歴編集で修正・削除を縦2段にして確実に押せるようにする */
+/* v2.14: スマホの履歴編集で修正・削除を縦2段にして確実に押せるようにする */
 @media (max-width:700px) and (orientation:portrait){
   .history-table th.op,
   .history-table td.op{
@@ -5108,7 +5108,7 @@ body::before{
 
 
 <style id="mobile-seat-ccw-v213">
-/* v2.13: スマホ版2x2席配置を逆時計回り表示へ修正
+/* v2.14: スマホ版2x2席配置を逆時計回り表示へ修正
    上段: 東 / 北
    下段: 南 / 西
    ※ 既存の席インデックスはそのまま、スマホ表示だけ北と南の配置を入れ替える */
@@ -5146,7 +5146,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.13</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.14</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5399,7 +5399,7 @@ let form = {
   eastIndex:0
 };
 let historyEditing=false;
-let selectedDate=fmtDate(new Date());
+let selectedDate=fmtDate(businessDate());
 
 function loadState(){
   try{
@@ -5513,7 +5513,7 @@ function applyAdminUI(){
 
   // 閲覧者は必ず今日の成績だけ。
   if(!isAdmin){
-    selectedDate=fmtDate(new Date());
+    selectedDate=fmtDate(businessDate());
     historyEditing=false;
   }
 
@@ -5728,10 +5728,18 @@ sb.auth.onAuthStateChange((event,session)=>{
 });
 
 
+function businessDate(value=new Date()){
+  const d=new Date(value);
+  // 勝中麻雀では朝7:00を日付の切り替え時刻とする。
+  // 0:00〜6:59は前日の対局日として扱う。
+  if(d.getHours()<7) d.setDate(d.getDate()-1);
+  return d;
+}
+function businessToday(){
+  return fmtDate(businessDate());
+}
 function defaultGameDate(){
-  const now=new Date();
-  if(now.getHours()<7) now.setDate(now.getDate()-1);
-  return toDateInput(now);
+  return toDateInput(businessDate());
 }
 function toDateInput(d){
   const z=new Date(d);
@@ -6014,7 +6022,7 @@ function saveGame(){
 
 function dates(){
   // 成績が無い日でも「今日」をダッシュボードの先頭に表示する。
-  const today=fmtDate(new Date());
+  const today=businessToday();
   return [...new Set([today,...state.history.map(h=>fmtDate(h.date))])].sort().reverse();
 }
 function filteredHistory(){
@@ -6048,7 +6056,7 @@ function calcDaily(filtered){
 }
 
 function renderHistory(){
-  const today=fmtDate(new Date());
+  const today=businessToday();
   const ds=isAdmin?dates():[today];
 
   if(!isAdmin){
@@ -6073,7 +6081,7 @@ function renderHistory(){
   const content=document.getElementById("historyContent");
   const filtered=state.history.filter(h=>fmtDate(h.date)===selectedDate);
   if(!filtered.length){
-    const today=fmtDate(new Date());
+    const today=businessToday();
     content.innerHTML=`<div class="empty">${selectedDate===today?"本日の成績はまだありません 🀄️":escapeHtml(selectedDate)+" の成績はありません"}</div>`;
     return;
   }
@@ -6274,7 +6282,7 @@ function selectedStatsYear(){
     const y=parseInt(String(form.gameDate).slice(0,4),10);
     if(Number.isFinite(y)) return y;
   }
-  return new Date().getFullYear();
+  return businessDate().getFullYear();
 }
 function championHtml(year=selectedStatsYear()){
   const ys=yearStats(year);
@@ -6893,7 +6901,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=211", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=214", {
         updateViaCache: "none"
       });
 
