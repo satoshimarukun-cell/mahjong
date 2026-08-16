@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.21 年間レース */
+/* v2.22 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5300,7 +5300,7 @@ body::before{
 
 
 <style id="mobile-header-overlap-fix-v219">
-/* v2.21: スマホでヘッダーと年間モーダルの被りを解消 */
+/* v2.22: スマホでヘッダーと年間モーダルの被りを解消 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-header{
     overflow:visible!important;
@@ -5347,7 +5347,7 @@ body::before{
 
 
 <style id="mobile-header-tabs-fix-v220">
-/* v2.21: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
+/* v2.22: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
 @media (max-width:700px) and (orientation:portrait){
   /* 管理者ボタンはロゴ帯右上へ。actionsを基準にしない */
   .neo-header{position:relative!important;overflow:visible!important;}
@@ -5446,7 +5446,7 @@ body::before{
 
 
 <style id="mobile-admin-in-brand-v221">
-/* v2.21: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
+/* v2.22: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5494,6 +5494,116 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-admin-settings-and-total-v222">
+/* v2.22: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
+@media (max-width:700px) and (orientation:portrait){
+  .neo-brand{
+    position:relative!important;
+    padding-right:126px!important;
+  }
+  .neo-brand > #settingsBtn,
+  .neo-brand > #adminLoginBtn{
+    position:absolute!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    z-index:100!important;
+    width:48px!important;
+    min-width:48px!important;
+    max-width:48px!important;
+    height:48px!important;
+    min-height:48px!important;
+    margin:0!important;
+    padding:4px 3px!important;
+    border-radius:12px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:1px!important;
+    background:rgba(4,70,45,.78)!important;
+    border:1px solid rgba(255,255,255,.25)!important;
+    box-shadow:none!important;
+  }
+  .neo-brand > #settingsBtn{right:60px!important;}
+  .neo-brand > #adminLoginBtn{right:8px!important;}
+  .neo-brand > #settingsBtn img,
+  .neo-brand > #adminLoginBtn img{
+    width:20px!important;
+    height:25px!important;
+    object-fit:contain!important;
+    margin:0!important;
+  }
+  .neo-brand > #settingsBtn span,
+  .neo-brand > #adminLoginBtn span{
+    display:block!important;
+    max-width:44px!important;
+    font-size:7px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    color:#fff!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+  }
+
+  .public-dashboard .neo-dashboard-head{
+    display:flex!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    flex-wrap:wrap!important;
+  }
+  .public-dashboard .neo-dashboard-head > div:first-child{
+    flex:1 1 auto!important;
+    min-width:0!important;
+  }
+  #dashboardHeadActions{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:8px!important;
+    flex:0 0 auto!important;
+    margin-left:auto!important;
+    flex-wrap:nowrap!important;
+  }
+  #dashboardHeadActions > *{flex:0 0 auto!important;}
+
+  .public-dashboard #yearStatsBtn,
+  .public-dashboard #totalStatsBtn{
+    display:inline-flex!important;
+    flex:0 0 auto!important;
+    min-width:72px!important;
+    width:auto!important;
+    height:52px!important;
+    padding:4px 8px!important;
+    border:1px solid #dfd2b8!important;
+    border-radius:13px!important;
+    background:#fffdf8!important;
+    color:#285846!important;
+    box-shadow:0 2px 0 #d8ccb8!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:1px!important;
+    font-size:9px!important;
+    font-weight:900!important;
+  }
+  .public-dashboard #yearStatsBtn img,
+  .public-dashboard #totalStatsBtn img{
+    width:21px!important;
+    height:27px!important;
+    object-fit:contain!important;
+    margin:0!important;
+  }
+  .public-dashboard #editHistoryBtn{
+    flex:0 0 auto!important;
+    height:52px!important;
+    min-width:56px!important;
+    padding:0 14px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5506,7 +5616,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.21</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.22</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5523,8 +5633,8 @@ body::before{
       <button class="btn primary pop-nav-btn admin-only" id="totalStatsBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/pin1-66-90-s.png" alt=""><span>通算成績</span>
     </button>
-      <button class="icon-btn pop-nav-btn icon-only admin-only" id="settingsBtn" title="設定">
-      <img src="https://majandofu.com/wp-content/uploads/2014/09/man1-66-90-s.png" alt="設定">
+      <button class="btn pop-nav-btn admin-only" id="settingsBtn" title="設定">
+      <img src="https://majandofu.com/wp-content/uploads/2014/09/man1-66-90-s.png" alt="設定"><span>設定</span>
     </button>
     </div>
   </header>
@@ -5868,33 +5978,52 @@ async function refreshAdmin(showError=false){
 }
 function placeResponsiveHeaderButtons(){
   const yearBtn=document.getElementById("yearStatsBtn");
+  const totalBtn=document.getElementById("totalStatsBtn");
+  const settingsBtn=document.getElementById("settingsBtn");
   const adminBtn=document.getElementById("adminLoginBtn");
+  const editBtn=document.getElementById("editHistoryBtn");
   const headerActions=document.querySelector(".neo-header-actions");
   const brand=document.querySelector(".neo-brand");
   const dashHead=document.querySelector(".public-dashboard .neo-dashboard-head");
-  if(!yearBtn || !adminBtn || !headerActions || !brand || !dashHead) return;
+  if(!yearBtn || !totalBtn || !settingsBtn || !adminBtn || !headerActions || !brand || !dashHead) return;
   const mobile=window.matchMedia("(max-width:700px) and (orientation:portrait)").matches;
 
-  if(mobile){
-    // スマホでは管理者ボタンそのものを緑のロゴ帯へ移す
-    if(adminBtn.parentElement!==brand) brand.appendChild(adminBtn);
+  let dashActions=document.getElementById("dashboardHeadActions");
+  if(!dashActions){
+    dashActions=document.createElement("div");
+    dashActions.id="dashboardHeadActions";
+  }
 
-    // 年度別成績はダッシュボード見出しへ
-    if(yearBtn.parentElement!==dashHead){
-      const editBtn=document.getElementById("editHistoryBtn");
-      if(editBtn && editBtn.parentElement===dashHead) dashHead.insertBefore(yearBtn,editBtn);
-      else dashHead.appendChild(yearBtn);
+  if(mobile){
+    if(settingsBtn.parentElement!==brand) brand.appendChild(settingsBtn);
+    if(adminBtn.parentElement!==brand) brand.appendChild(adminBtn);
+    if(settingsBtn.parentElement===brand && adminBtn.parentElement===brand){
+      brand.insertBefore(settingsBtn, adminBtn);
     }
+
+    if(dashActions.parentElement!==dashHead) dashHead.appendChild(dashActions);
+    [yearBtn,totalBtn,editBtn].forEach(btn=>{
+      if(btn && btn.parentElement!==dashActions) dashActions.appendChild(btn);
+    });
   }else{
-    // iPad/PCでは従来どおりヘッダー操作領域へ戻す
     if(adminBtn.parentElement!==headerActions){
-      headerActions.insertBefore(adminBtn,headerActions.firstChild);
+      headerActions.insertBefore(adminBtn, headerActions.firstChild);
     }
     if(yearBtn.parentElement!==headerActions){
-      const totalBtn=document.getElementById("totalStatsBtn");
-      if(totalBtn && totalBtn.parentElement===headerActions) headerActions.insertBefore(yearBtn,totalBtn);
-      else headerActions.appendChild(yearBtn);
+      headerActions.appendChild(yearBtn);
     }
+    if(totalBtn.parentElement!==headerActions){
+      headerActions.appendChild(totalBtn);
+    }
+    if(settingsBtn.parentElement!==headerActions){
+      headerActions.appendChild(settingsBtn);
+    }
+
+    const desired=[adminBtn,yearBtn,totalBtn,settingsBtn].filter(Boolean);
+    desired.forEach(btn=>{ if(btn.parentElement===headerActions) headerActions.appendChild(btn); });
+
+    if(editBtn && editBtn.parentElement!==dashHead) dashHead.appendChild(editBtn);
+    if(dashActions.parentElement===dashHead) dashActions.remove();
   }
 }
 
