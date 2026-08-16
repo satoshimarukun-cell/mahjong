@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.23 年間レース */
+/* v2.24 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5300,7 +5300,7 @@ body::before{
 
 
 <style id="mobile-header-overlap-fix-v219">
-/* v2.23: スマホでヘッダーと年間モーダルの被りを解消 */
+/* v2.24: スマホでヘッダーと年間モーダルの被りを解消 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-header{
     overflow:visible!important;
@@ -5347,7 +5347,7 @@ body::before{
 
 
 <style id="mobile-header-tabs-fix-v220">
-/* v2.23: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
+/* v2.24: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
 @media (max-width:700px) and (orientation:portrait){
   /* 管理者ボタンはロゴ帯右上へ。actionsを基準にしない */
   .neo-header{position:relative!important;overflow:visible!important;}
@@ -5446,7 +5446,7 @@ body::before{
 
 
 <style id="mobile-admin-in-brand-v221">
-/* v2.23: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
+/* v2.24: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5496,7 +5496,7 @@ body::before{
 
 
 <style id="mobile-admin-settings-and-total-v222">
-/* v2.23: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
+/* v2.24: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5606,7 +5606,7 @@ body::before{
 
 
 <style id="mobile-total-stats-v223">
-/* v2.23: スマホ通算成績の雀王バナーはみ出し防止 + 公開通算成績 */
+/* v2.24: スマホ通算成績の雀王バナーはみ出し防止 + 公開通算成績 */
 @media (max-width:700px) and (orientation:portrait){
   #statsModal .champion-card,
   #statsModal .total-champion{
@@ -5660,6 +5660,26 @@ body::before{
 }
 </style>
 
+
+<style id="v224-public-total-and-race-fit">
+/* v2.24: 一般公開の通算成績 + 年間レース通算 + スマホグラフ横はみ出し抑制 */
+#totalStatsBtn.admin-visible{display:flex!important;}
+@media (max-width:700px) and (orientation:portrait){
+  .viewer-mode #dashboardHeadActions{display:flex!important;}
+  .viewer-mode #totalStatsBtn{display:inline-flex!important;}
+  .year-race-chart-wrap{overflow-x:hidden!important;}
+  .year-race-chart{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+  }
+  .year-race-card{overflow:hidden!important;}
+  .year-race-toolbar{gap:6px!important;}
+  .year-race-year{padding:7px 11px!important;font-size:12px!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -5672,7 +5692,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.23</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.24</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5686,7 +5706,7 @@ body::before{
       <button class="btn pop-nav-btn admin-only" id="yearStatsBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/sou1-66-90-s.png" alt=""><span>年度別成績</span>
     </button>
-      <button class="btn primary pop-nav-btn admin-only" id="totalStatsBtn">
+      <button class="btn primary pop-nav-btn" id="totalStatsBtn">
       <img src="https://majandofu.com/wp-content/uploads/2014/09/pin1-66-90-s.png" alt=""><span>通算成績</span>
     </button>
       <button class="btn pop-nav-btn admin-only" id="settingsBtn" title="設定">
@@ -6098,8 +6118,8 @@ function applyAdminUI(){
   // 通算成績は一般公開対象。閲覧者は公開開始年度以降だけで再集計する。
   const totalStatsButton=document.getElementById("totalStatsBtn");
   if(totalStatsButton){
-    totalStatsButton.classList.add("admin-only");
-    totalStatsButton.classList.toggle("admin-visible", true);
+    totalStatsButton.classList.remove("admin-only");
+    totalStatsButton.classList.add("admin-visible");
     totalStatsButton.style.removeProperty("display");
     totalStatsButton.title=isAdmin
       ? "全期間の通算成績"
@@ -7127,9 +7147,14 @@ function setYearStatsView(view,year=null){
   if(yearStatsView==="archive") renderYearArchive();
   else renderAnnualRace(year);
 }
-function annualRaceData(year){
+function annualRaceData(scope){
+  const allMode=scope==="all";
   const games=state.history
-    .filter(h=>new Date(h.date).getFullYear()===year)
+    .filter(h=>{
+      const y=new Date(h.date).getFullYear();
+      if(allMode) return isAdmin ? true : y>=publicStartYear();
+      return y===Number(scope);
+    })
     .slice()
     .reverse()
     .sort((a,b)=>new Date(a.date)-new Date(b.date)); // 日付順。同日内は保存順。
@@ -7145,7 +7170,8 @@ function annualRaceData(year){
       totals.set(id,(totals.get(id)||0)+(Number(h.points?.[i])||0));
     });
     ids.forEach(id=>series.get(id).push(totals.get(id)||0));
-    dates.push(fmtDate(h.date).slice(5));
+    const d=fmtDate(h.date);
+    dates.push(allMode?d.slice(2):d.slice(5));
     const vals=ids.map(id=>({id,v:totals.get(id)||0})).sort((a,b)=>b.v-a.v);
     const unique=vals.length && (vals.length===1 || vals[0].v!==vals[1].v) ? vals[0].id : null;
     if(unique && prevUniqueLeader && unique!==prevUniqueLeader){
@@ -7153,21 +7179,25 @@ function annualRaceData(year){
     }
     if(unique) prevUniqueLeader=unique;
   });
-  return {games,ids,series,dates,crowns,totals};
+  return {games,ids,series,dates,crowns,totals,allMode};
 }
 function renderAnnualRace(requestedYear=null){
   const host=document.getElementById("yearRaceContent");
   if(!host)return;
   const years=visibleAnnualYears();
-  if(!years.length){
+  const hasAny=(isAdmin ? state.history : state.history.filter(h=>new Date(h.date).getFullYear()>=publicStartYear())).length>0;
+  if(!hasAny){
     host.innerHTML=`<div class="empty">${isAdmin?"年間レースの記録はまだありません。":`${publicStartYear()}年以降の年間レースはまだありません。`}</div>`;
     return;
   }
-  let year=Number(requestedYear??raceSelectedYear??selectedStatsYear());
-  if(!years.includes(year)) year=years[0];
-  raceSelectedYear=year;
-  const d=annualRaceData(year);
-  if(!d.games.length){host.innerHTML='<div class="empty">この年度の対局はありません。</div>';return;}
+  let scope=requestedYear??raceSelectedYear??selectedStatsYear();
+  if(scope!=="all"){
+    scope=Number(scope);
+    if(!years.includes(scope)) scope=years[0]??"all";
+  }
+  raceSelectedYear=scope;
+  const d=annualRaceData(scope);
+  if(!d.games.length){host.innerHTML='<div class="empty">この範囲の対局はありません。</div>';return;}
 
   const ranked=[...d.totals.entries()].map(([id,pts])=>({id,pts})).sort((a,b)=>b.pts-a.pts);
   const championId=ranked[0]?.id;
@@ -7175,7 +7205,7 @@ function renderAnnualRace(requestedYear=null){
   let min=Math.min(...allVals),max=Math.max(...allVals);
   if(min===max){min-=20;max+=20;}
   const pad=Math.max(15,(max-min)*.12); min-=pad;max+=pad;
-  const W=1000,H=410,L=58,R=105,T=28,B=48;
+  const W=920,H=390,L=54,R=86,T=26,B=44;
   const chartW=W-L-R,chartH=H-T-B;
   const n=d.games.length;
   const x=i=>L+(i/Math.max(1,n))*chartW;
@@ -7189,7 +7219,7 @@ function renderAnnualRace(requestedYear=null){
   }
   if(min<=0 && max>=0){const yy=y(0);grid+=`<line class="race-zero" x1="${L}" y1="${yy.toFixed(1)}" x2="${W-R}" y2="${yy.toFixed(1)}"/>`;}
   const dateIdx=[0,Math.floor((n-1)/3),Math.floor((n-1)*2/3),n-1].filter((v,i,a)=>v>=0&&a.indexOf(v)===i);
-  let dateLabels=dateIdx.map(idx=>`<text class="race-date-label" x="${x(idx+1).toFixed(1)}" y="${H-17}" text-anchor="middle">${esc(d.dates[idx]||"")}</text>`).join('');
+  let dateLabels=dateIdx.map(idx=>`<text class="race-date-label" x="${x(idx+1).toFixed(1)}" y="${H-15}" text-anchor="middle">${esc(d.dates[idx]||"")}</text>`).join('');
   let lines='';
   d.ids.forEach(id=>{
     const vals=d.series.get(id)||[0];
@@ -7198,23 +7228,24 @@ function renderAnnualRace(requestedYear=null){
     const width=id===championId?5:3;
     lines+=`<polyline class="race-line-back" points="${points}" stroke-width="${width+4}"/><polyline class="race-line" points="${points}" stroke="${color}" stroke-width="${width}"/>`;
     const end=vals[vals.length-1]||0;
-    lines+=`<circle cx="${x(n).toFixed(1)}" cy="${y(end).toFixed(1)}" r="${id===championId?5:4}" fill="${color}" stroke="#fff" stroke-width="2"/><text class="race-end-name" x="${(x(n)+9).toFixed(1)}" y="${(y(end)+4).toFixed(1)}" fill="${color}">${esc(liveName(id))}</text>`;
+    lines+=`<circle cx="${x(n).toFixed(1)}" cy="${y(end).toFixed(1)}" r="${id===championId?5:4}" fill="${color}" stroke="#fff" stroke-width="2"/><text class="race-end-name" x="${(x(n)+8).toFixed(1)}" y="${(y(end)+4).toFixed(1)}" fill="${color}">${esc(liveName(id))}</text>`;
   });
   let crowns=d.crowns.map(c=>`<text class="race-crown" x="${x(c.x).toFixed(1)}" y="${(y(c.value)-10).toFixed(1)}" text-anchor="middle">👑</text>`).join('');
   const legend=d.ids.map(id=>`<span class="race-legend-item"><span class="race-dot" style="background:#${liveColor(id)}"></span>${esc(liveName(id))}</span>`).join('');
   const ranking=ranked.map((r,i)=>`<div class="race-rank-card"><div class="race-rank-no">${i===0?'👑':i+1+'位'}</div><div class="race-rank-name" style="color:#${liveColor(r.id)}">${esc(liveName(r.id))}</div><div class="race-rank-pt ${r.pts>=0?'plus':'minus'}">${r.pts>=0?'+':''}${r.pts} pt</div></div>`).join('');
   const gap=ranked.length>=2 ? ranked[0].pts-ranked[1].pts : 0;
   const gapHtml=ranked.length>=2?`<div class="race-gap">👑 首位 ${esc(liveName(ranked[0].id))} と2位 ${esc(liveName(ranked[1].id))} の差：<strong>${gap} pt</strong></div>`:'';
+  const titleText=scope==="all" ? (isAdmin?"通算 雀王レース":`${publicStartYear()}年以降 通算雀王レース`) : `${scope}年 雀王レース`;
   host.innerHTML=`<div class="year-race-shell">
-    <div class="year-race-toolbar"><span class="year-race-label">年度</span>${years.map(yv=>`<button class="year-race-year ${yv===year?'active':''}" data-race-year="${yv}">${yv}</button>`).join('')}</div>
+    <div class="year-race-toolbar"><span class="year-race-label">範囲</span><button class="year-race-year ${scope==='all'?'active':''}" data-race-year="all">通算</button>${years.map(yv=>`<button class="year-race-year ${yv===scope?'active':''}" data-race-year="${yv}">${yv}</button>`).join('')}</div>
     <div class="year-race-card">
-      <div class="year-race-head"><h4>🏁 ${year}年 雀王レース</h4><div class="race-sub">${d.games.length}対局 ・ 👑 は首位交代</div></div>
-      <div class="year-race-chart-wrap"><svg class="year-race-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${year}年の年間累積ポイント推移">${grid}${dateLabels}${lines}${crowns}</svg></div>
+      <div class="year-race-head"><h4>🏁 ${titleText}</h4><div class="race-sub">${d.games.length}対局 ・ 👑 は首位交代</div></div>
+      <div class="year-race-chart-wrap"><svg class="year-race-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${titleText}の累積ポイント推移">${grid}${dateLabels}${lines}${crowns}</svg></div>
       <div class="year-race-legend">${legend}</div>
       <div class="year-race-ranking">${ranking}</div>${gapHtml}
-      <div class="race-note">各対局終了時点の年間累積ptを時系列で表示しています。現在の雀王の線は太く、首位が入れ替わった地点に 👑 を表示します。</div>
+      <div class="race-note">各対局終了時点の累積ptを時系列で表示しています。現在の雀王の線は太く、首位が入れ替わった地点に 👑 を表示します。</div>
     </div></div>`;
-  host.querySelectorAll('[data-race-year]').forEach(btn=>btn.onclick=()=>renderAnnualRace(Number(btn.dataset.raceYear)));
+  host.querySelectorAll('[data-race-year]').forEach(btn=>btn.onclick=()=>renderAnnualRace(btn.dataset.raceYear==="all"?"all":Number(btn.dataset.raceYear)));
 }
 
 function renderYearArchive(){
