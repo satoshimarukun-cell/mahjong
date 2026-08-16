@@ -5134,6 +5134,17 @@ body::before{
   #inputCard .player-row.pos-west{grid-area:west!important;}
 }
 </style>
+
+<style id="public-dashboard-year-v215">
+/* v2.15: 一般公開開始年度以降の日付タブを閲覧者にも表示 */
+.viewer-mode #dateTabs{display:flex!important;}
+.viewer-mode .date-tabs{overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
+.viewer-mode .date-tabs::-webkit-scrollbar{display:none!important;}
+@media (max-width:700px) and (orientation:portrait){
+  .viewer-mode #dateTabs{padding:8px 7px!important;gap:6px!important;}
+  .viewer-mode #dateTabs .date-tab{flex:0 0 auto!important;min-width:96px!important;font-size:11px!important;padding:8px 10px!important;}
+}
+</style>
 </head>
 <body>
 
@@ -5146,7 +5157,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.14</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.15</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5249,6 +5260,11 @@ body::before{
         <div class="form-row"><label>ウマ（大）</label><input type="number" step="1" id="umaHighInput"></div>
         <div class="form-row"><label>ウマ（小）</label><input type="number" step="1" id="umaLowInput"></div>
         <div class="form-row"><label>役満賞</label><input type="number" step="10" id="yakumanBonusInput"></div>
+      </div>
+      <div class="section">
+        <h4>公開設定</h4>
+        <div class="form-row"><label>一般公開開始年度</label><input type="number" step="1" min="2000" max="2100" id="publicStartYearInput" inputmode="numeric"></div>
+        <div style="font-size:12px;color:#777;line-height:1.6">管理者以外には、この年度以降の成績ダッシュボードだけを公開します。</div>
       </div>
       <div class="section">
         <h4>名簿</h4>
@@ -5378,7 +5394,8 @@ function defaultState(){
       umaHigh:CONFIG.defaultUmaHigh,
       umaLow:CONFIG.defaultUmaLow,
       yakumanBonus:CONFIG.defaultYakumanBonus,
-      rate:CONFIG.defaultRate
+      rate:CONFIG.defaultRate,
+      publicStartYear:2026
     }
   };
 }
@@ -5412,7 +5429,8 @@ function loadState(){
       umaHigh:s.settings.umaHigh ?? CONFIG.defaultUmaHigh,
       umaLow:s.settings.umaLow ?? CONFIG.defaultUmaLow,
       yakumanBonus:s.settings.yakumanBonus ?? CONFIG.defaultYakumanBonus,
-      rate:s.settings.rate ?? CONFIG.defaultRate
+      rate:s.settings.rate ?? CONFIG.defaultRate,
+      publicStartYear:(Number.isInteger(Number(s.settings.publicStartYear)) ? Number(s.settings.publicStartYear) : 2026)
     };
     s.players=s.players||[];
     s.history=s.history||[];
@@ -5495,7 +5513,7 @@ async function refreshAdmin(showError=false){
   }
 }
 function applyAdminUI(){
-  // 管理者専用UI。閲覧者には本日のダッシュボードだけ見せる。
+  // 管理者専用UI。閲覧者には設定年度以降のダッシュボードを見せる。
   ["settingsBtn","editHistoryBtn","yearStatsBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
     if(el){
@@ -5511,9 +5529,13 @@ function applyAdminUI(){
   const workspace=document.querySelector(".admin-workspace");
   if(workspace) workspace.classList.toggle("admin-visible", !!isAdmin);
 
-  // 閲覧者は必ず今日の成績だけ。
+  // 閲覧者は公開開始年度以降の日付だけ選択可能。
   if(!isAdmin){
-    selectedDate=fmtDate(businessDate());
+    const allowed=publicDates();
+    const today=businessToday();
+    if(!allowed.includes(selectedDate)){
+      selectedDate=allowed.includes(today)?today:(allowed[0]||today);
+    }
     historyEditing=false;
   }
 
@@ -6020,10 +6042,22 @@ function saveGame(){
   }
 }
 
+function publicStartYear(){
+  const y=parseInt(state?.settings?.publicStartYear,10);
+  return Number.isInteger(y) && y>=2000 && y<=2100 ? y : 2026;
+}
+function dashboardDateYear(dateText){
+  const y=parseInt(String(dateText||"").slice(0,4),10);
+  return Number.isInteger(y)?y:0;
+}
 function dates(){
   // 成績が無い日でも「今日」をダッシュボードの先頭に表示する。
   const today=businessToday();
   return [...new Set([today,...state.history.map(h=>fmtDate(h.date))])].sort().reverse();
+}
+function publicDates(){
+  const start=publicStartYear();
+  return dates().filter(d=>dashboardDateYear(d)>=start);
 }
 function filteredHistory(){
   return state.history.filter(h=>fmtDate(h.date)===selectedDate);
@@ -6057,25 +6091,26 @@ function calcDaily(filtered){
 
 function renderHistory(){
   const today=businessToday();
-  const ds=isAdmin?dates():[today];
+  const ds=isAdmin?dates():publicDates();
 
-  if(!isAdmin){
-    selectedDate=today;
-  }else{
-    if(!selectedDate) selectedDate=today;
-    if(!ds.includes(selectedDate)) selectedDate=today;
+  if(!selectedDate || !ds.includes(selectedDate)){
+    selectedDate=ds.includes(today)?today:(ds[0]||today);
   }
 
   const tabs=document.getElementById("dateTabs");
   tabs.innerHTML="";
-  if(isAdmin){
-    ds.forEach(d=>{
-      const b=document.createElement("button");
-      b.className="date-tab"+(d===selectedDate?" active":"");
-      b.textContent=d;
-      b.onclick=()=>{selectedDate=d;renderAll()};
-      tabs.appendChild(b);
-    });
+  ds.forEach(d=>{
+    const b=document.createElement("button");
+    b.className="date-tab"+(d===selectedDate?" active":"");
+    b.textContent=d;
+    b.onclick=()=>{selectedDate=d;renderAll()};
+    tabs.appendChild(b);
+  });
+
+  if(!isAdmin && !ds.length){
+    const content=document.getElementById("historyContent");
+    content.innerHTML=`<div class="empty">${publicStartYear()}年以降の公開成績はまだありません 🀄️</div>`;
+    return;
   }
 
   const content=document.getElementById("historyContent");
@@ -6098,7 +6133,7 @@ function renderHistory(){
     </div>`;
   });
   html+=`</div>`;
-  // 閲覧者にも「当日分だけ」の対局履歴は表示する。過去日への移動は管理者だけ。
+  // 閲覧者にも公開開始年度以降の選択日の対局履歴を表示する。編集は管理者だけ。
   html+=`<div class="history-wrap"><table class="history-table"><thead><tr><th>回</th>`;
   if(historyEditing) html+=`<th class="op">操作</th>`;
   daily.forEach(p=>html+=`<th class="player-head" style="--player-color:#${liveColor(p.id)};--player-text:${contrastText(liveColor(p.id))};background:#${liveColor(p.id)}!important;color:${contrastText(liveColor(p.id))}!important"><span class="h-player" style="background:transparent;color:inherit">${escapeHtml(p.name)}</span></th>`);
@@ -6155,6 +6190,7 @@ function renderSettings(){
   document.getElementById("umaHighInput").value=state.settings.umaHigh;
   document.getElementById("umaLowInput").value=state.settings.umaLow;
   document.getElementById("yakumanBonusInput").value=state.settings.yakumanBonus;
+  document.getElementById("publicStartYearInput").value=publicStartYear();
   const editor=document.getElementById("playerEditor");
   editor.innerHTML="";
   state.players.forEach((p,i)=>{
@@ -6188,6 +6224,8 @@ function applySettings(){
   state.settings.umaHigh=parseInt(document.getElementById("umaHighInput").value)||0;
   state.settings.umaLow=parseInt(document.getElementById("umaLowInput").value)||0;
   state.settings.yakumanBonus=parseInt(document.getElementById("yakumanBonusInput").value)||0;
+  const publicYear=parseInt(document.getElementById("publicStartYearInput").value,10);
+  state.settings.publicStartYear=(Number.isInteger(publicYear) && publicYear>=2000 && publicYear<=2100)?publicYear:2026;
   saveState();
   renderAll();
 }
