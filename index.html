@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.22 年間レース */
+/* v2.23 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5300,7 +5300,7 @@ body::before{
 
 
 <style id="mobile-header-overlap-fix-v219">
-/* v2.22: スマホでヘッダーと年間モーダルの被りを解消 */
+/* v2.23: スマホでヘッダーと年間モーダルの被りを解消 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-header{
     overflow:visible!important;
@@ -5347,7 +5347,7 @@ body::before{
 
 
 <style id="mobile-header-tabs-fix-v220">
-/* v2.22: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
+/* v2.23: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
 @media (max-width:700px) and (orientation:portrait){
   /* 管理者ボタンはロゴ帯右上へ。actionsを基準にしない */
   .neo-header{position:relative!important;overflow:visible!important;}
@@ -5446,7 +5446,7 @@ body::before{
 
 
 <style id="mobile-admin-in-brand-v221">
-/* v2.22: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
+/* v2.23: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5496,7 +5496,7 @@ body::before{
 
 
 <style id="mobile-admin-settings-and-total-v222">
-/* v2.22: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
+/* v2.23: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5604,6 +5604,62 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-total-stats-v223">
+/* v2.23: スマホ通算成績の雀王バナーはみ出し防止 + 公開通算成績 */
+@media (max-width:700px) and (orientation:portrait){
+  #statsModal .champion-card,
+  #statsModal .total-champion{
+    width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    grid-template-areas:
+      "title name"
+      "meta meta"!important;
+    column-gap:8px!important;
+    row-gap:4px!important;
+    padding:8px 10px!important;
+    overflow:hidden!important;
+  }
+  #statsModal .champion-title{
+    grid-area:title!important;
+    min-width:0!important;
+    white-space:nowrap!important;
+    align-self:center!important;
+  }
+  #statsModal .champion-name{
+    grid-area:name!important;
+    min-width:0!important;
+    max-width:100%!important;
+    text-align:center!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  #statsModal .champion-meta{
+    grid-area:meta!important;
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+    text-align:right!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    line-height:1.25!important;
+  }
+  #dashboardHeadActions{
+    gap:6px!important;
+  }
+  .public-dashboard #yearStatsBtn,
+  .public-dashboard #totalStatsBtn{
+    min-width:68px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5616,7 +5672,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.22</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.23</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5772,7 +5828,7 @@ body::before{
 <div class="modal" id="statsModal">
   <div class="modal-card" style="width:min(1320px,96vw)">
     <div class="modal-head">
-      <div><div class="neo-eyebrow">👑 通算雀王</div><h3>通算成績</h3></div><div class="spacer"></div>
+      <div><div class="neo-eyebrow" id="totalStatsEyebrow">👑 通算雀王</div><h3 id="totalStatsTitle">通算成績</h3></div><div class="spacer"></div>
       <button class="btn active" id="statsDone">完了</button>
     </div>
     <div class="modal-body">
@@ -6030,7 +6086,7 @@ function placeResponsiveHeaderButtons(){
 function applyAdminUI(){
   placeResponsiveHeaderButtons();
   // 管理者専用UI。閲覧者には設定年度以降のダッシュボードと年度別成績を見せる。
-  ["settingsBtn","editHistoryBtn","totalStatsBtn"].forEach(id=>{
+  ["settingsBtn","editHistoryBtn"].forEach(id=>{
     const el=document.getElementById(id);
     if(el){
       el.classList.add("admin-only");
@@ -6038,6 +6094,17 @@ function applyAdminUI(){
       el.style.removeProperty("display");
     }
   });
+
+  // 通算成績は一般公開対象。閲覧者は公開開始年度以降だけで再集計する。
+  const totalStatsButton=document.getElementById("totalStatsBtn");
+  if(totalStatsButton){
+    totalStatsButton.classList.add("admin-only");
+    totalStatsButton.classList.toggle("admin-visible", true);
+    totalStatsButton.style.removeProperty("display");
+    totalStatsButton.title=isAdmin
+      ? "全期間の通算成績"
+      : `${publicStartYear()}年以降の通算成績`;
+  }
 
   // 年度別成績だけは一般公開対象。一般ユーザーには公開開始年度以降のみ表示する。
   const yearStatsButton=document.getElementById("yearStatsBtn");
@@ -6856,6 +6923,14 @@ function championHtml(year=selectedStatsYear()){
   const avg=(c.ranks[0]+c.ranks[1]*2+c.ranks[2]*3+c.ranks[3]*4)/Math.max(1,c.count);
   return `<div class="champion-card"><div class="champion-title">👑 ${year}年 雀王</div><div class="champion-name">${escapeHtml(liveName(c.id))}</div><div class="champion-meta">${c.pts>=0?"+":""}${c.pts} pt ・ ${c.count}戦 ・ 平均${avg.toFixed(2)}位</div></div>`;
 }
+function totalStatsHistory(){
+  if(isAdmin) return state.history;
+  const start=publicStartYear();
+  return state.history.filter(h=>{
+    const y=parseInt(String(h.date||"").slice(0,4),10);
+    return Number.isFinite(y) && y>=start;
+  });
+}
 function totalChampionHtml(stats=calculateStats()){
   if(!stats.length)return `<div class="champion-card"><div class="champion-title">👑 通算雀王</div><div class="champion-name">記録なし</div><div class="champion-meta">通算成績はまだありません</div></div>`;
   const c=[...stats].sort((a,b)=>b.totalPts-a.totalPts)[0];
@@ -6961,9 +7036,17 @@ function statsCardHtml(s,best=null){
 }
 function renderStats(){
   const list=document.getElementById("statsList");
-  const stats=calculateStats();
+  const eyebrow=document.getElementById("totalStatsEyebrow");
+  const title=document.getElementById("totalStatsTitle");
+  const start=publicStartYear();
+  if(eyebrow) eyebrow.textContent=isAdmin ? "👑 通算雀王" : `👑 ${start}年以降 通算雀王`;
+  if(title) title.textContent=isAdmin ? "通算成績" : `${start}年以降の通算成績`;
+
+  const stats=calculateStats(totalStatsHistory());
   if(!stats.length){
-    list.innerHTML='<div class="empty">通算成績はまだありません。</div>';
+    list.innerHTML=isAdmin
+      ? '<div class="empty">通算成績はまだありません。</div>'
+      : `<div class="empty">${start}年以降の通算成績はまだありません。</div>`;
     return;
   }
   const best=totalBestStats(stats);
@@ -7591,7 +7674,7 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
 
 window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=221", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=223", {
         updateViaCache: "none"
       });
 
