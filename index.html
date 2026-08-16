@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.19 年間レース */
+/* v2.20 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5300,7 +5300,7 @@ body::before{
 
 
 <style id="mobile-header-overlap-fix-v219">
-/* v2.19: スマホでヘッダーと年間モーダルの被りを解消 */
+/* v2.20: スマホでヘッダーと年間モーダルの被りを解消 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-header{
     overflow:visible!important;
@@ -5345,6 +5345,105 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-header-tabs-fix-v220">
+/* v2.20: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
+@media (max-width:700px) and (orientation:portrait){
+  /* 管理者ボタンはロゴ帯右上へ。actionsを基準にしない */
+  .neo-header{position:relative!important;overflow:visible!important;}
+  .neo-header-actions{position:static!important;margin:0!important;padding:0!important;}
+  #adminLoginBtn{
+    position:absolute!important;
+    top:calc(14px + env(safe-area-inset-top))!important;
+    right:14px!important;
+    z-index:80!important;
+  }
+  .viewer-mode .neo-header-actions,
+  .admin-mode .neo-header-actions{
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+  }
+
+  /* 年度別成績はダッシュボード見出し右側へ */
+  .public-dashboard .neo-dashboard-head{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    flex-wrap:nowrap!important;
+  }
+  .public-dashboard #yearStatsBtn{
+    display:inline-flex!important;
+    flex:0 0 auto!important;
+    min-width:72px!important;
+    width:auto!important;
+    height:52px!important;
+    padding:4px 8px!important;
+    border:1px solid #dfd2b8!important;
+    border-radius:13px!important;
+    background:#fffdf8!important;
+    color:#285846!important;
+    box-shadow:0 2px 0 #d8ccb8!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:1px!important;
+    font-size:9px!important;
+    font-weight:900!important;
+  }
+  .public-dashboard #yearStatsBtn img{
+    width:21px!important;
+    height:27px!important;
+    object-fit:contain!important;
+    margin:0!important;
+  }
+  .public-dashboard #editHistoryBtn{flex:0 0 auto!important;}
+
+  /* 年度別モーダル上部を2段にしてタブを表から完全分離 */
+  #yearStatsModal .year-modal-head{
+    flex:0 0 auto!important;
+    min-height:0!important;
+    height:auto!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    grid-template-areas:
+      "title done"
+      "tabs tabs"!important;
+    gap:8px 10px!important;
+    padding:12px 12px 10px!important;
+    position:relative!important;
+    top:auto!important;
+    z-index:70!important;
+    background:#fff8e9!important;
+  }
+  #yearStatsModal .year-modal-head > div:first-child{grid-area:title!important;min-width:0!important;}
+  #yearStatsModal .year-modal-head .year-view-tabs{
+    grid-area:tabs!important;
+    order:initial!important;
+    width:100%!important;
+    margin:0!important;
+    position:relative!important;
+    z-index:75!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+  }
+  #yearStatsModal .year-modal-head .spacer{display:none!important;}
+  #yearStatsModal #yearStatsDone{grid-area:done!important;align-self:start!important;}
+  #yearStatsModal .year-history-body{
+    position:relative!important;
+    z-index:1!important;
+    padding-top:0!important;
+  }
+  #yearStatsModal .year-archive-table thead th{
+    top:0!important;
+    z-index:30!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5357,7 +5456,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.19</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.20</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5717,7 +5816,27 @@ async function refreshAdmin(showError=false){
     return false;
   }
 }
+function placeResponsiveHeaderButtons(){
+  const yearBtn=document.getElementById("yearStatsBtn");
+  const headerActions=document.querySelector(".neo-header-actions");
+  const dashHead=document.querySelector(".public-dashboard .neo-dashboard-head");
+  if(!yearBtn || !headerActions || !dashHead) return;
+  const mobile=window.matchMedia("(max-width:700px) and (orientation:portrait)").matches;
+  if(mobile){
+    if(yearBtn.parentElement!==dashHead){
+      const editBtn=document.getElementById("editHistoryBtn");
+      if(editBtn && editBtn.parentElement===dashHead) dashHead.insertBefore(yearBtn,editBtn);
+      else dashHead.appendChild(yearBtn);
+    }
+  }else if(yearBtn.parentElement!==headerActions){
+    const totalBtn=document.getElementById("totalStatsBtn");
+    if(totalBtn && totalBtn.parentElement===headerActions) headerActions.insertBefore(yearBtn,totalBtn);
+    else headerActions.appendChild(yearBtn);
+  }
+}
+
 function applyAdminUI(){
+  placeResponsiveHeaderButtons();
   // 管理者専用UI。閲覧者には設定年度以降のダッシュボードと年度別成績を見せる。
   ["settingsBtn","editHistoryBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
@@ -7276,9 +7395,11 @@ initCloud();
 
 <script>
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  window.addEventListener("load", async () => {
+  window.addEventListener("resize",()=>{ placeResponsiveHeaderButtons(); });
+
+window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=218", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=220", {
         updateViaCache: "none"
       });
 
