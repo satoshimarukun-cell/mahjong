@@ -5145,6 +5145,159 @@ body::before{
   .viewer-mode #dateTabs .date-tab{flex:0 0 auto!important;min-width:96px!important;font-size:11px!important;padding:8px 10px!important;}
 }
 </style>
+
+<style id="mobile-safearea-v217">
+/* v2.17: スマホPWAのステータスバー被り防止 */
+@media (max-width:700px) and (orientation:portrait){
+  .neo-header{
+    padding-top:calc(10px + env(safe-area-inset-top))!important;
+    min-height:calc(98px + env(safe-area-inset-top))!important;
+  }
+  #adminLoginBtn{
+    top:calc(14px + env(safe-area-inset-top))!important;
+  }
+  .neo-champion{
+    margin-top:4px!important;
+  }
+}
+</style>
+
+<style id="annual-race-v218">
+/* v2.18 年間レース */
+.neo-champion .champion-card{cursor:pointer!important;}
+.neo-champion .champion-card::after{
+  content:"年間レース ›";
+  display:block;
+  margin-top:3px;
+  font-size:9px;
+  font-weight:900;
+  opacity:.55;
+}
+.year-modal-head{gap:12px!important;}
+.year-view-tabs{
+  display:flex;
+  gap:5px;
+  padding:4px;
+  background:#f4efe3;
+  border:1px solid #dfd2b8;
+  border-radius:12px;
+}
+.year-view-tab{
+  border:0;
+  border-radius:9px;
+  padding:8px 13px;
+  background:transparent;
+  color:#6b6254;
+  font-weight:900;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.year-view-tab.active{
+  background:#0b6842;
+  color:#fff;
+  box-shadow:0 2px 6px rgba(7,80,50,.18);
+}
+#yearRacePane[hidden],#yearArchivePane[hidden]{display:none!important;}
+.year-race-shell{
+  padding:14px;
+  min-height:100%;
+  background:linear-gradient(180deg,#fffdf7,#f7f1e5);
+}
+.year-race-toolbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.year-race-label{font-weight:950;color:#315044;margin-right:3px;}
+.year-race-year{
+  border:2px solid #ded3bf;
+  background:#fff;
+  color:#635c50;
+  border-radius:999px;
+  padding:7px 13px;
+  font-weight:900;
+  cursor:pointer;
+}
+.year-race-year.active{background:#0b6842;color:#fff;border-color:#0b6842;}
+.year-race-card{
+  background:#fff;
+  border:2px solid #e8decc;
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 7px 18px rgba(59,49,27,.07);
+}
+.year-race-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+}
+.year-race-head h4{margin:0;color:#17553d;font-size:22px;}
+.year-race-head .race-sub{font-size:11px;color:#887a64;font-weight:700;}
+.year-race-chart-wrap{width:100%;overflow-x:auto;padding:2px 0 5px;}
+.year-race-chart{display:block;width:100%;min-width:760px;height:auto;}
+.race-grid{stroke:#dfd9ce;stroke-width:1;stroke-dasharray:4 5;}
+.race-zero{stroke:#b9ab91;stroke-width:1.6;}
+.race-axis-label{font-size:11px;fill:#877b69;font-weight:700;}
+.race-date-label{font-size:10px;fill:#8c806f;font-weight:700;}
+.race-line-back{fill:none;stroke:#fff;stroke-linejoin:round;stroke-linecap:round;opacity:.95;}
+.race-line{fill:none;stroke-linejoin:round;stroke-linecap:round;}
+.race-end-name{font-size:11px;font-weight:950;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;}
+.race-crown{font-size:20px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18));}
+.year-race-legend{display:flex;gap:8px 15px;flex-wrap:wrap;margin:9px 2px 2px;}
+.race-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:900;color:#4c4a44;}
+.race-dot{width:11px;height:11px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.14);}
+.year-race-ranking{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:7px;
+}
+.race-rank-card{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  padding:8px 10px;
+  background:#fbfaf6;
+  border:1px solid #e8dfd0;
+  border-radius:12px;
+}
+.race-rank-no{font-weight:950;font-size:13px;color:#6d6252;}
+.race-rank-name{font-weight:950;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.race-rank-pt{font-weight:950;white-space:nowrap;}
+.race-gap{
+  margin-top:10px;
+  padding:9px 12px;
+  border-radius:11px;
+  background:#fff4cb;
+  border:1px solid #e6c85c;
+  color:#69561a;
+  font-size:12px;
+  font-weight:900;
+}
+.race-note{margin-top:8px;font-size:10px;color:#918572;line-height:1.5;}
+@media(max-width:700px) and (orientation:portrait){
+  #yearStatsModal .year-history-card{width:98vw!important;height:94vh!important;}
+  #yearStatsModal .year-modal-head{padding:9px 10px!important;gap:6px!important;flex-wrap:wrap!important;}
+  #yearStatsModal .year-modal-head h3{font-size:17px!important;}
+  #yearStatsModal .year-view-tabs{order:3;width:100%;display:grid;grid-template-columns:1fr 1fr;}
+  #yearStatsModal .year-view-tab{font-size:11px;padding:7px 5px;}
+  .year-race-shell{padding:8px;}
+  .year-race-card{padding:9px;border-radius:13px;}
+  .year-race-head{align-items:flex-start;flex-direction:column;gap:2px;}
+  .year-race-head h4{font-size:18px;}
+  .year-race-chart{min-width:680px;}
+  .year-race-ranking{grid-template-columns:1fr 1fr;gap:5px;}
+  .race-rank-card{grid-template-columns:25px minmax(0,1fr);padding:7px;gap:4px;}
+  .race-rank-pt{grid-column:2;font-size:11px;}
+  .neo-champion .champion-card::after{font-size:8px;}
+}
+</style>
+
 </head>
 <body>
 
@@ -5157,7 +5310,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.16</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.18</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5324,16 +5477,21 @@ body::before{
 
 <div class="modal" id="yearStatsModal">
   <div class="modal-card year-history-card">
-    <div class="modal-head">
+    <div class="modal-head year-modal-head">
       <div>
-        <div class="neo-eyebrow">🏆 歴代戦績</div>
-        <h3>年度別成績・歴代タイトル</h3>
+        <div class="neo-eyebrow">🏆 年間戦績</div>
+        <h3 id="yearStatsTitle">年度別成績・歴代タイトル</h3>
+      </div>
+      <div class="year-view-tabs" role="tablist" aria-label="年度別成績の表示切替">
+        <button class="year-view-tab active" id="yearArchiveTab" type="button">🏆 歴代タイトル</button>
+        <button class="year-view-tab" id="yearRaceTab" type="button">📈 年間レース</button>
       </div>
       <div class="spacer"></div>
       <button class="btn active" id="yearStatsDone">完了</button>
     </div>
     <div class="modal-body year-history-body">
-      <div id="yearStatsList"></div>
+      <div id="yearArchivePane"><div id="yearStatsList"></div></div>
+      <div id="yearRacePane" hidden><div id="yearRaceContent"></div></div>
     </div>
   </div>
 </div>
@@ -6508,6 +6666,116 @@ function annualTitles(year){
   };
 }
 
+
+let yearStatsView="archive";
+let raceSelectedYear=null;
+
+function visibleAnnualYears(){
+  const ys=availableYears();
+  return isAdmin ? ys : ys.filter(y=>y>=publicStartYear());
+}
+function setYearStatsView(view,year=null){
+  yearStatsView=view==="race"?"race":"archive";
+  document.getElementById("yearArchiveTab")?.classList.toggle("active",yearStatsView==="archive");
+  document.getElementById("yearRaceTab")?.classList.toggle("active",yearStatsView==="race");
+  const ap=document.getElementById("yearArchivePane"),rp=document.getElementById("yearRacePane");
+  if(ap) ap.hidden=yearStatsView!=="archive";
+  if(rp) rp.hidden=yearStatsView!=="race";
+  const title=document.getElementById("yearStatsTitle");
+  if(title) title.textContent=yearStatsView==="race"?"年間レース":"年度別成績・歴代タイトル";
+  if(yearStatsView==="archive") renderYearArchive();
+  else renderAnnualRace(year);
+}
+function annualRaceData(year){
+  const games=state.history
+    .filter(h=>new Date(h.date).getFullYear()===year)
+    .slice()
+    .reverse()
+    .sort((a,b)=>new Date(a.date)-new Date(b.date)); // 日付順。同日内は保存順。
+  const ids=[...new Set(games.flatMap(h=>h.playerIDs||[]))];
+  const totals=new Map(ids.map(id=>[id,0]));
+  const series=new Map(ids.map(id=>[id,[0]]));
+  const dates=[];
+  const crowns=[];
+  let prevUniqueLeader=null;
+  games.forEach((h,gameIndex)=>{
+    (h.playerIDs||[]).forEach((id,i)=>{
+      if(!totals.has(id))totals.set(id,0);
+      totals.set(id,(totals.get(id)||0)+(Number(h.points?.[i])||0));
+    });
+    ids.forEach(id=>series.get(id).push(totals.get(id)||0));
+    dates.push(fmtDate(h.date).slice(5));
+    const vals=ids.map(id=>({id,v:totals.get(id)||0})).sort((a,b)=>b.v-a.v);
+    const unique=vals.length && (vals.length===1 || vals[0].v!==vals[1].v) ? vals[0].id : null;
+    if(unique && prevUniqueLeader && unique!==prevUniqueLeader){
+      crowns.push({x:gameIndex+1,id:unique,value:totals.get(unique)||0});
+    }
+    if(unique) prevUniqueLeader=unique;
+  });
+  return {games,ids,series,dates,crowns,totals};
+}
+function renderAnnualRace(requestedYear=null){
+  const host=document.getElementById("yearRaceContent");
+  if(!host)return;
+  const years=visibleAnnualYears();
+  if(!years.length){
+    host.innerHTML=`<div class="empty">${isAdmin?"年間レースの記録はまだありません。":`${publicStartYear()}年以降の年間レースはまだありません。`}</div>`;
+    return;
+  }
+  let year=Number(requestedYear??raceSelectedYear??selectedStatsYear());
+  if(!years.includes(year)) year=years[0];
+  raceSelectedYear=year;
+  const d=annualRaceData(year);
+  if(!d.games.length){host.innerHTML='<div class="empty">この年度の対局はありません。</div>';return;}
+
+  const ranked=[...d.totals.entries()].map(([id,pts])=>({id,pts})).sort((a,b)=>b.pts-a.pts);
+  const championId=ranked[0]?.id;
+  const allVals=[0,...[...d.series.values()].flat()];
+  let min=Math.min(...allVals),max=Math.max(...allVals);
+  if(min===max){min-=20;max+=20;}
+  const pad=Math.max(15,(max-min)*.12); min-=pad;max+=pad;
+  const W=1000,H=410,L=58,R=105,T=28,B=48;
+  const chartW=W-L-R,chartH=H-T-B;
+  const n=d.games.length;
+  const x=i=>L+(i/Math.max(1,n))*chartW;
+  const y=v=>T+(max-v)/(max-min)*chartH;
+  const esc=escapeHtml;
+  const tickCount=5;
+  let grid='';
+  for(let i=0;i<=tickCount;i++){
+    const v=max-(max-min)*i/tickCount, yy=y(v);
+    grid+=`<line class="race-grid" x1="${L}" y1="${yy.toFixed(1)}" x2="${W-R}" y2="${yy.toFixed(1)}"/><text class="race-axis-label" x="${L-8}" y="${(yy+4).toFixed(1)}" text-anchor="end">${Math.round(v)}</text>`;
+  }
+  if(min<=0 && max>=0){const yy=y(0);grid+=`<line class="race-zero" x1="${L}" y1="${yy.toFixed(1)}" x2="${W-R}" y2="${yy.toFixed(1)}"/>`;}
+  const dateIdx=[0,Math.floor((n-1)/3),Math.floor((n-1)*2/3),n-1].filter((v,i,a)=>v>=0&&a.indexOf(v)===i);
+  let dateLabels=dateIdx.map(idx=>`<text class="race-date-label" x="${x(idx+1).toFixed(1)}" y="${H-17}" text-anchor="middle">${esc(d.dates[idx]||"")}</text>`).join('');
+  let lines='';
+  d.ids.forEach(id=>{
+    const vals=d.series.get(id)||[0];
+    const points=vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const color='#'+liveColor(id);
+    const width=id===championId?5:3;
+    lines+=`<polyline class="race-line-back" points="${points}" stroke-width="${width+4}"/><polyline class="race-line" points="${points}" stroke="${color}" stroke-width="${width}"/>`;
+    const end=vals[vals.length-1]||0;
+    lines+=`<circle cx="${x(n).toFixed(1)}" cy="${y(end).toFixed(1)}" r="${id===championId?5:4}" fill="${color}" stroke="#fff" stroke-width="2"/><text class="race-end-name" x="${(x(n)+9).toFixed(1)}" y="${(y(end)+4).toFixed(1)}" fill="${color}">${esc(liveName(id))}</text>`;
+  });
+  let crowns=d.crowns.map(c=>`<text class="race-crown" x="${x(c.x).toFixed(1)}" y="${(y(c.value)-10).toFixed(1)}" text-anchor="middle">👑</text>`).join('');
+  const legend=d.ids.map(id=>`<span class="race-legend-item"><span class="race-dot" style="background:#${liveColor(id)}"></span>${esc(liveName(id))}</span>`).join('');
+  const ranking=ranked.map((r,i)=>`<div class="race-rank-card"><div class="race-rank-no">${i===0?'👑':i+1+'位'}</div><div class="race-rank-name" style="color:#${liveColor(r.id)}">${esc(liveName(r.id))}</div><div class="race-rank-pt ${r.pts>=0?'plus':'minus'}">${r.pts>=0?'+':''}${r.pts} pt</div></div>`).join('');
+  const gap=ranked.length>=2 ? ranked[0].pts-ranked[1].pts : 0;
+  const gapHtml=ranked.length>=2?`<div class="race-gap">👑 首位 ${esc(liveName(ranked[0].id))} と2位 ${esc(liveName(ranked[1].id))} の差：<strong>${gap} pt</strong></div>`:'';
+  host.innerHTML=`<div class="year-race-shell">
+    <div class="year-race-toolbar"><span class="year-race-label">年度</span>${years.map(yv=>`<button class="year-race-year ${yv===year?'active':''}" data-race-year="${yv}">${yv}</button>`).join('')}</div>
+    <div class="year-race-card">
+      <div class="year-race-head"><h4>🏁 ${year}年 雀王レース</h4><div class="race-sub">${d.games.length}対局 ・ 👑 は首位交代</div></div>
+      <div class="year-race-chart-wrap"><svg class="year-race-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${year}年の年間累積ポイント推移">${grid}${dateLabels}${lines}${crowns}</svg></div>
+      <div class="year-race-legend">${legend}</div>
+      <div class="year-race-ranking">${ranking}</div>${gapHtml}
+      <div class="race-note">各対局終了時点の年間累積ptを時系列で表示しています。現在の雀王の線は太く、首位が入れ替わった地点に 👑 を表示します。</div>
+    </div></div>`;
+  host.querySelectorAll('[data-race-year]').forEach(btn=>btn.onclick=()=>renderAnnualRace(Number(btn.dataset.raceYear)));
+}
+
 function renderYearArchive(){
   const host=document.getElementById("yearStatsList");
   const allYears=availableYears();
@@ -6762,7 +7030,15 @@ function renderAll(){
   if(isAdmin) renderInput();
   renderHistory();
   const championBanner=document.getElementById("championBanner");
-  if(championBanner) championBanner.innerHTML=championHtml(selectedStatsYear());
+  if(championBanner){
+    championBanner.innerHTML=championHtml(selectedStatsYear());
+    championBanner.onclick=()=>{
+      if(historyEditing)return;
+      setYearStatsView("race",selectedStatsYear());
+      document.getElementById("yearStatsModal").classList.add("show");
+    };
+    championBanner.title="年間レースを見る";
+  }
   document.getElementById("editHistoryBtn").textContent=historyEditing?"完了":"編集";
   document.getElementById("editHistoryBtn").className="btn"+(historyEditing?" active":"");
   document.getElementById("totalStatsBtn").disabled=historyEditing;
@@ -6816,9 +7092,11 @@ document.getElementById("statsDone").onclick=()=>document.getElementById("statsM
 
 document.getElementById("yearStatsBtn").onclick=()=>{
   if(historyEditing)return;
-  renderYearArchive();
+  setYearStatsView("archive");
   document.getElementById("yearStatsModal").classList.add("show");
 };
+document.getElementById("yearArchiveTab").onclick=()=>setYearStatsView("archive");
+document.getElementById("yearRaceTab").onclick=()=>setYearStatsView("race",raceSelectedYear||selectedStatsYear());
 document.getElementById("yearStatsDone").onclick=()=>document.getElementById("yearStatsModal").classList.remove("show");
 
 document.getElementById("settingsBtn").onclick=()=>{
@@ -6953,7 +7231,7 @@ initCloud();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js?v=214", {
+      const reg = await navigator.serviceWorker.register("./sw.js?v=218", {
         updateViaCache: "none"
       });
 
