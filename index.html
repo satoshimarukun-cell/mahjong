@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.18 年間レース */
+/* v2.19 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5298,6 +5298,53 @@ body::before{
 }
 </style>
 
+
+<style id="mobile-header-overlap-fix-v219">
+/* v2.19: スマホでヘッダーと年間モーダルの被りを解消 */
+@media (max-width:700px) and (orientation:portrait){
+  .neo-header{
+    overflow:visible!important;
+    padding-bottom:12px!important;
+  }
+  .admin-mode .neo-header-actions,
+  .viewer-mode .neo-header-actions{
+    position:relative!important;
+    z-index:2!important;
+    margin-top:6px!important;
+    margin-bottom:6px!important;
+  }
+  .admin-mode .neo-main,
+  .viewer-mode .neo-main{
+    margin-top:12px!important;
+  }
+  .public-dashboard{
+    margin-top:8px!important;
+  }
+  .public-dashboard .neo-dashboard-head{
+    padding-top:14px!important;
+  }
+
+  #yearStatsModal{
+    align-items:flex-start!important;
+    padding:calc(env(safe-area-inset-top) + 8px) 8px 8px!important;
+  }
+  #yearStatsModal .modal-card,
+  #yearStatsModal .year-history-card{
+    margin:0 auto!important;
+    width:min(96vw, 820px)!important;
+    height:calc(100dvh - env(safe-area-inset-top) - 16px)!important;
+    max-height:calc(100dvh - env(safe-area-inset-top) - 16px)!important;
+  }
+  #yearStatsModal .year-modal-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    padding-top:12px!important;
+    background:#fffaf0!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -5310,7 +5357,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.18</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.19</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
