@@ -5163,7 +5163,7 @@ body::before{
 </style>
 
 <style id="annual-race-v218">
-/* v2.24 年間レース */
+/* v2.25 年間レース */
 .neo-champion .champion-card{cursor:pointer!important;}
 .neo-champion .champion-card::after{
   content:"年間レース ›";
@@ -5300,7 +5300,7 @@ body::before{
 
 
 <style id="mobile-header-overlap-fix-v219">
-/* v2.24: スマホでヘッダーと年間モーダルの被りを解消 */
+/* v2.25: スマホでヘッダーと年間モーダルの被りを解消 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-header{
     overflow:visible!important;
@@ -5347,7 +5347,7 @@ body::before{
 
 
 <style id="mobile-header-tabs-fix-v220">
-/* v2.24: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
+/* v2.25: スマホの管理者/年度別ボタン配置と年度別タブ被りを整理 */
 @media (max-width:700px) and (orientation:portrait){
   /* 管理者ボタンはロゴ帯右上へ。actionsを基準にしない */
   .neo-header{position:relative!important;overflow:visible!important;}
@@ -5446,7 +5446,7 @@ body::before{
 
 
 <style id="mobile-admin-in-brand-v221">
-/* v2.24: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
+/* v2.25: スマホでは管理者ボタンをDOMごとロゴ帯右側へ固定 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5496,7 +5496,7 @@ body::before{
 
 
 <style id="mobile-admin-settings-and-total-v222">
-/* v2.24: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
+/* v2.25: スマホ管理者時の設定ボタン/通算成績ボタン配置調整 */
 @media (max-width:700px) and (orientation:portrait){
   .neo-brand{
     position:relative!important;
@@ -5606,7 +5606,7 @@ body::before{
 
 
 <style id="mobile-total-stats-v223">
-/* v2.24: スマホ通算成績の雀王バナーはみ出し防止 + 公開通算成績 */
+/* v2.25: スマホ通算成績の雀王バナーはみ出し防止 + 公開通算成績 */
 @media (max-width:700px) and (orientation:portrait){
   #statsModal .champion-card,
   #statsModal .total-champion{
@@ -5662,7 +5662,7 @@ body::before{
 
 
 <style id="v224-public-total-and-race-fit">
-/* v2.24: 一般公開の通算成績 + 年間レース通算 + スマホグラフ横はみ出し抑制 */
+/* v2.25: 一般公開の通算成績 + 年間レース通算 + スマホグラフ横はみ出し抑制 */
 #totalStatsBtn.admin-visible{display:flex!important;}
 @media (max-width:700px) and (orientation:portrait){
   .viewer-mode #dashboardHeadActions{display:flex!important;}
@@ -5680,6 +5680,29 @@ body::before{
 }
 </style>
 
+
+<style id="v225-admin-visibility-fix">
+/* v2.25: 一般ユーザーは設定を絶対非表示。通算成績は公開維持 */
+.viewer-mode #settingsBtn,
+.viewer-mode .neo-brand > #settingsBtn,
+.viewer-mode .neo-header-actions > #settingsBtn{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+.admin-mode #settingsBtn.admin-visible{
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+#totalStatsBtn.admin-visible{
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+@media (max-width:700px) and (orientation:portrait){
+  .viewer-mode .neo-brand{padding-right:70px!important;}
+  .viewer-mode #dashboardHeadActions #totalStatsBtn{display:inline-flex!important;}
+}
+</style>
 </head>
 <body>
 
@@ -5692,7 +5715,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.24</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.25</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
