@@ -5135,8 +5135,8 @@ body::before{
 }
 </style>
 
-<style id="public-dashboard-year-v215">
-/* v2.15: 一般公開開始年度以降の日付タブを閲覧者にも表示 */
+<style id="public-dashboard-year-v216">
+/* v2.16: 一般公開開始年度以降の日付タブを閲覧者にも表示 */
 .viewer-mode #dateTabs{display:flex!important;}
 .viewer-mode .date-tabs{overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
 .viewer-mode .date-tabs::-webkit-scrollbar{display:none!important;}
@@ -5157,7 +5157,7 @@ body::before{
       <img src="https://majandofu.com/wp-content/uploads/2014/09/ji7-66-90-s.png" alt="中">
     </div>
       <div>
-        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.15</span></div>
+        <div class="neo-brand-name">勝中麻雀 <span class="app-version">v2.16</span></div>
         <div class="neo-brand-sub">MAHJONG SCOREBOARD</div>
       </div>
     </div>
@@ -5264,7 +5264,7 @@ body::before{
       <div class="section">
         <h4>公開設定</h4>
         <div class="form-row"><label>一般公開開始年度</label><input type="number" step="1" min="2000" max="2100" id="publicStartYearInput" inputmode="numeric"></div>
-        <div style="font-size:12px;color:#777;line-height:1.6">管理者以外には、この年度以降の成績ダッシュボードだけを公開します。</div>
+        <div style="font-size:12px;color:#777;line-height:1.6">管理者以外には、この年度以降の成績ダッシュボードと年度別成績を公開します。</div>
       </div>
       <div class="section">
         <h4>名簿</h4>
@@ -5513,8 +5513,8 @@ async function refreshAdmin(showError=false){
   }
 }
 function applyAdminUI(){
-  // 管理者専用UI。閲覧者には設定年度以降のダッシュボードを見せる。
-  ["settingsBtn","editHistoryBtn","yearStatsBtn","totalStatsBtn"].forEach(id=>{
+  // 管理者専用UI。閲覧者には設定年度以降のダッシュボードと年度別成績を見せる。
+  ["settingsBtn","editHistoryBtn","totalStatsBtn"].forEach(id=>{
     const el=document.getElementById(id);
     if(el){
       el.classList.add("admin-only");
@@ -5522,6 +5522,17 @@ function applyAdminUI(){
       el.style.removeProperty("display");
     }
   });
+
+  // 年度別成績だけは一般公開対象。一般ユーザーには公開開始年度以降のみ表示する。
+  const yearStatsButton=document.getElementById("yearStatsBtn");
+  if(yearStatsButton){
+    yearStatsButton.classList.add("admin-only");
+    yearStatsButton.classList.toggle("admin-visible", true);
+    yearStatsButton.style.removeProperty("display");
+    yearStatsButton.title=isAdmin
+      ? "全年度の年度別成績"
+      : `${publicStartYear()}年以降の年度別成績`;
+  }
 
   document.body.classList.toggle("viewer-mode", !isAdmin);
   document.body.classList.toggle("admin-mode", !!isAdmin);
@@ -6499,10 +6510,13 @@ function annualTitles(year){
 
 function renderYearArchive(){
   const host=document.getElementById("yearStatsList");
-  const years=availableYears();
+  const allYears=availableYears();
+  const years=isAdmin ? allYears : allYears.filter(year=>year>=publicStartYear());
 
   if(!years.length){
-    host.innerHTML='<div class="empty">年度別成績はまだありません。</div>';
+    host.innerHTML=isAdmin
+      ? '<div class="empty">年度別成績はまだありません。</div>'
+      : `<div class="empty">${publicStartYear()}年以降の年度別成績はまだありません。</div>`;
     return;
   }
 
@@ -6801,7 +6815,7 @@ document.getElementById("totalStatsBtn").onclick=()=>{
 document.getElementById("statsDone").onclick=()=>document.getElementById("statsModal").classList.remove("show");
 
 document.getElementById("yearStatsBtn").onclick=()=>{
-  if(!isAdmin || historyEditing)return;
+  if(historyEditing)return;
   renderYearArchive();
   document.getElementById("yearStatsModal").classList.add("show");
 };
